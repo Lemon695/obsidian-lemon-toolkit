@@ -28,6 +28,13 @@ export interface LemonToolkitSettings {
 		outgoingLinks?: boolean;
 		incomingLinks?: boolean;
 	};
+	frontmatterEditor: {
+		templates: any[];
+		quickActions: any[];
+		dateFormat: string;
+		closeAfterSave: boolean;
+		showTypeIcons: boolean;
+	};
 }
 
 export const DEFAULT_SETTINGS: LemonToolkitSettings = {
@@ -43,5 +50,15 @@ export const DEFAULT_SETTINGS: LemonToolkitSettings = {
 	fileInfoCollapsedSections: {
 		outgoingLinks: true,
 		incomingLinks: true,
+	},
+	frontmatterEditor: {
+		templates: [],
+		quickActions: [
+			{ id: "status-done", label: "status:done", action: "set", field: "status", value: "done" },
+			{ id: "add-rating", label: "+rating", action: "add", field: "rating", value: "" },
+		],
+		dateFormat: "YYYY-MM-DD",
+		closeAfterSave: false,
+		showTypeIcons: true,
 	},
 };

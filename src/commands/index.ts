@@ -13,6 +13,7 @@ import { moveFileToFolder } from "./moveFile";
 import { viewCurrentTags, insertTags } from "./tags";
 import { openCommandPalette } from "./commandPalette";
 import { openSettings } from "./openSettings";
+import { editFrontmatter } from "./editFrontmatter";
 import LemonToolkitPlugin from "../main";
 
 /**
@@ -108,5 +109,12 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "open-file-info",
 		name: "Open file info",
 		callback: () => plugin.activateFileInfoView(),
+	});
+
+	// Edit frontmatter
+	plugin.addCommand({
+		id: "edit-frontmatter",
+		name: "Edit frontmatter",
+		callback: () => editFrontmatter(plugin),
 	});
 }

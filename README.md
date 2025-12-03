@@ -48,6 +48,17 @@ Manage file deletion with two options:
   - Auto-updates when switching files or modifying content
   - Click on file name/path to copy
 
+### Frontmatter Editor
+
+- **Edit frontmatter** - Open a modal dialog to edit frontmatter fields without entering edit mode:
+  - View and edit all frontmatter fields
+  - Add new fields with type selection
+  - Delete existing fields
+  - Search/filter fields
+  - Quick actions for common operations
+  - Type-aware editing (string, number, boolean, date, array)
+  - Auto-save with validation
+
 ## Usage
 
 1. Open any file in your vault
@@ -73,6 +84,7 @@ Manage file deletion with two options:
 | `Lemon Toolkit: Open command palette` | Open the Lemon Toolkit command palette |
 | `Lemon Toolkit: Open settings` | Open the plugin settings page |
 | `Lemon Toolkit: Open file info` | Open the file information sidebar |
+| `Lemon Toolkit: Edit frontmatter` | Edit frontmatter fields in a modal dialog |
 
 ## Installation
 
@@ -129,6 +141,12 @@ Note: The plugin automatically tracks tag usage when you manually type tags in y
 
 - **Show reading time** - Display estimated reading time based on word count (default: enabled)
 - **Date time format** - Customize the format for displaying dates and times (default: YYYY-MM-DD HH:mm)
+
+### Frontmatter Editor
+
+- **Show type icons** - Display type icons next to field names (default: enabled)
+- **Close after save** - Automatically close the editor after saving (default: disabled)
+- **Date format** - Format for date fields (default: YYYY-MM-DD)
 
 ## Compatibility
 

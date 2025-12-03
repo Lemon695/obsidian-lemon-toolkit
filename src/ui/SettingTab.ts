@@ -109,6 +109,46 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
+
+		// Frontmatter editor settings
+		containerEl.createEl("h3", { text: "Frontmatter Editor" });
+
+		new Setting(containerEl)
+			.setName("Show type icons")
+			.setDesc("Display type icons next to field names")
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.frontmatterEditor.showTypeIcons)
+					.onChange(async (value) => {
+						this.plugin.settings.frontmatterEditor.showTypeIcons = value;
+						await this.plugin.saveSettings();
+					})
+			);
+
+		new Setting(containerEl)
+			.setName("Close after save")
+			.setDesc("Automatically close the editor after saving")
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.frontmatterEditor.closeAfterSave)
+					.onChange(async (value) => {
+						this.plugin.settings.frontmatterEditor.closeAfterSave = value;
+						await this.plugin.saveSettings();
+					})
+			);
+
+		new Setting(containerEl)
+			.setName("Date format")
+			.setDesc("Format for date fields (e.g., YYYY-MM-DD)")
+			.addText((text) =>
+				text
+					.setPlaceholder("YYYY-MM-DD")
+					.setValue(this.plugin.settings.frontmatterEditor.dateFormat)
+					.onChange(async (value) => {
+						this.plugin.settings.frontmatterEditor.dateFormat = value || "YYYY-MM-DD";
+						await this.plugin.saveSettings();
+					})
+			);
 	}
 
 	private showPinnedCommandsModal(): void {

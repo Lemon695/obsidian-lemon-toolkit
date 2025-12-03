@@ -48,6 +48,17 @@
   - 切换文件或修改内容时自动更新
   - 点击文件名/路径可复制
 
+### Frontmatter 编辑器
+
+- **编辑 Frontmatter** - 打开模态对话框编辑 frontmatter 字段，无需进入编辑模式：
+  - 查看和编辑所有 frontmatter 字段
+  - 添加新字段并选择类型
+  - 删除现有字段
+  - 搜索/筛选字段
+  - 常用操作的快捷按钮
+  - 类型感知编辑（字符串、数字、布尔值、日期、数组）
+  - 自动保存并验证
+
 ## 使用方法
 
 1. 在仓库中打开任意文件
@@ -73,6 +84,7 @@
 | `Lemon Toolkit: Open command palette` | 打开 Lemon Toolkit 命令面板 |
 | `Lemon Toolkit: Open settings` | 打开插件设置页面 |
 | `Lemon Toolkit: Open file info` | 打开文件信息侧边栏 |
+| `Lemon Toolkit: Edit frontmatter` | 在模态对话框中编辑 frontmatter 字段 |
 
 ## 安装方法
 
@@ -129,6 +141,12 @@
 
 - **显示阅读时间** - 根据字数显示预估阅读时间（默认：启用）
 - **日期时间格式** - 自定义日期和时间的显示格式（默认：YYYY-MM-DD HH:mm）
+
+### Frontmatter 编辑器
+
+- **显示类型图标** - 在字段名旁显示类型图标（默认：启用）
+- **保存后关闭** - 保存后自动关闭编辑器（默认：禁用）
+- **日期格式** - 日期字段的格式（默认：YYYY-MM-DD）
 
 ## 兼容性
 

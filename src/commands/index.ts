@@ -102,4 +102,11 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		name: "Open settings",
 		callback: () => openSettings(plugin),
 	});
+
+	// Open file info view
+	plugin.addCommand({
+		id: "open-file-info",
+		name: "Open file info",
+		callback: () => plugin.activateFileInfoView(),
+	});
 }

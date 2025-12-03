@@ -1,7 +1,8 @@
-import { Plugin } from "obsidian";
+import { Plugin, WorkspaceLeaf } from "obsidian";
 import { registerCommands } from "./commands";
 import { LemonToolkitSettings, DEFAULT_SETTINGS } from "./settings";
 import { LemonToolkitSettingTab } from "./ui/SettingTab";
+import { FileInfoView, FILE_INFO_VIEW_TYPE } from "./views/FileInfoView";
 
 export default class LemonToolkitPlugin extends Plugin {
 	settings: LemonToolkitSettings;
@@ -9,6 +10,18 @@ export default class LemonToolkitPlugin extends Plugin {
 
 	async onload() {
 		await this.loadSettings();
+		
+		// Register file info view
+		this.registerView(
+			FILE_INFO_VIEW_TYPE,
+			(leaf) => new FileInfoView(leaf, this)
+		);
+
+		// Add ribbon icon
+		this.addRibbonIcon("info", "Open File Info", () => {
+			this.activateFileInfoView();
+		});
+
 		registerCommands(this);
 		this.addSettingTab(new LemonToolkitSettingTab(this.app, this));
 		this.registerEventListeners();
@@ -130,7 +143,29 @@ export default class LemonToolkitPlugin extends Plugin {
 	}
 
 	onunload() {
-		// Cleanup handled automatically by Obsidian
+		// Detach file info view
+		this.app.workspace.detachLeavesOfType(FILE_INFO_VIEW_TYPE);
+	}
+
+	async activateFileInfoView() {
+		const { workspace } = this.app;
+
+		let leaf: WorkspaceLeaf | null = null;
+		const leaves = workspace.getLeavesOfType(FILE_INFO_VIEW_TYPE);
+
+		if (leaves.length > 0) {
+			// View already exists, reveal it
+			leaf = leaves[0];
+		} else {
+			// Create new view in right sidebar
+			leaf = workspace.getRightLeaf(false);
+			await leaf?.setViewState({ type: FILE_INFO_VIEW_TYPE, active: true });
+		}
+
+		// Reveal the leaf
+		if (leaf) {
+			workspace.revealLeaf(leaf);
+		}
 	}
 
 	async loadSettings() {

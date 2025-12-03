@@ -83,6 +83,32 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 					this.showPinnedCommandsModal();
 				})
 			);
+
+		// File info view settings
+		containerEl.createEl("h3", { text: "File Info View" });
+
+		new Setting(containerEl)
+			.setName("Show reading time")
+			.setDesc("Display estimated reading time in file info")
+			.addToggle((toggle) =>
+				toggle.setValue(this.plugin.settings.showReadingTime).onChange(async (value) => {
+					this.plugin.settings.showReadingTime = value;
+					await this.plugin.saveSettings();
+				})
+			);
+
+		new Setting(containerEl)
+			.setName("Date time format")
+			.setDesc("Format for displaying dates and times (e.g., YYYY-MM-DD HH:mm)")
+			.addText((text) =>
+				text
+					.setPlaceholder("YYYY-MM-DD HH:mm")
+					.setValue(this.plugin.settings.dateTimeFormat)
+					.onChange(async (value) => {
+						this.plugin.settings.dateTimeFormat = value || "YYYY-MM-DD HH:mm";
+						await this.plugin.saveSettings();
+					})
+			);
 	}
 
 	private showPinnedCommandsModal(): void {

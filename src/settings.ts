@@ -22,6 +22,12 @@ export interface LemonToolkitSettings {
 	tagUsageHistory: Record<string, TagUsageHistory>;
 	commandHistory: Record<string, CommandHistory>;
 	pinnedCommands: string[];
+	showReadingTime: boolean;
+	dateTimeFormat: string;
+	fileInfoCollapsedSections?: {
+		outgoingLinks?: boolean;
+		incomingLinks?: boolean;
+	};
 }
 
 export const DEFAULT_SETTINGS: LemonToolkitSettings = {
@@ -32,4 +38,10 @@ export const DEFAULT_SETTINGS: LemonToolkitSettings = {
 	tagUsageHistory: {},
 	commandHistory: {},
 	pinnedCommands: [],
+	showReadingTime: true,
+	dateTimeFormat: "YYYY-MM-DD HH:mm",
+	fileInfoCollapsedSections: {
+		outgoingLinks: true,
+		incomingLinks: true,
+	},
 };

@@ -37,6 +37,17 @@ Manage file deletion with two options:
 - **Open command palette** - Open a dedicated command palette showing only Lemon Toolkit commands. Commands are sorted by most recently used, with pinned commands always at the top. Includes fuzzy search and usage statistics
 - **Open settings** - Quickly open the plugin settings page to modify configurations
 
+### File Information View
+
+- **Open file info** - Open a sidebar view displaying comprehensive information about the active file:
+  - Basic information (name, path, dates, size, word count, reading time)
+  - Frontmatter fields with formatted display
+  - All tags (clickable to search)
+  - Outgoing and incoming links (clickable to navigate)
+  - File location breadcrumb
+  - Auto-updates when switching files or modifying content
+  - Click on file name/path to copy
+
 ## Usage
 
 1. Open any file in your vault
@@ -61,6 +72,7 @@ Manage file deletion with two options:
 | `Lemon Toolkit: Insert tags` | Insert tags at cursor position |
 | `Lemon Toolkit: Open command palette` | Open the Lemon Toolkit command palette |
 | `Lemon Toolkit: Open settings` | Open the plugin settings page |
+| `Lemon Toolkit: Open file info` | Open the file information sidebar |
 
 ## Installation
 
@@ -113,6 +125,11 @@ Note: The plugin automatically tracks tag usage when you manually type tags in y
 
 - **Pinned commands** - Select commands to pin at the top of the command palette. Pinned commands will always appear first, followed by recently used commands
 
+### File Info View
+
+- **Show reading time** - Display estimated reading time based on word count (default: enabled)
+- **Date time format** - Customize the format for displaying dates and times (default: YYYY-MM-DD HH:mm)
+
 ## Compatibility
 
 - Minimum Obsidian version: 1.0.0
@@ -152,6 +169,8 @@ src/
 │   ├── tags.ts          # Tag management feature implementation
 │   ├── commandPalette.ts # Command palette feature implementation
 │   └── openSettings.ts  # Open settings feature implementation
+├── views/
+│   └── FileInfoView.ts  # File information sidebar view
 ├── ui/
 │   ├── DuplicateFileModal.ts # Modal for renaming duplicated file
 │   ├── MoveFileModal.ts      # Modal for moving file with history

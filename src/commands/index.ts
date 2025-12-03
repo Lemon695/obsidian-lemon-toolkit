@@ -5,6 +5,10 @@ import {
 	copyFileName,
 	copyFileNameWithoutExtension,
 } from "./copyPath";
+import {
+	deleteFilePermanently,
+	deleteFileToTrash,
+} from "./deleteFile";
 
 /**
  * Register all plugin commands
@@ -36,5 +40,19 @@ export function registerCommands(plugin: Plugin): void {
 		id: "copy-file-name-without-ext",
 		name: "Copy file name (no extension)",
 		callback: () => copyFileNameWithoutExtension(plugin),
+	});
+
+	// Delete file permanently
+	plugin.addCommand({
+		id: "delete-file-permanently",
+		name: "Delete file permanently",
+		callback: () => deleteFilePermanently(plugin),
+	});
+
+	// Delete file to trash
+	plugin.addCommand({
+		id: "delete-file-to-trash",
+		name: "Delete file to trash",
+		callback: () => deleteFileToTrash(plugin),
 	});
 }

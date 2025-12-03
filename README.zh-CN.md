@@ -15,6 +15,13 @@
 
 所有命令都会显示确认通知，展示已复制的内容。
 
+### 删除文件命令
+
+提供两种文件删除选项：
+
+- **永久删除文件** - 从仓库中永久删除当前文件
+- **删除文件到回收站** - 将当前文件移动到 Obsidian 回收站（.trash 文件夹）
+
 ## 使用方法
 
 1. 在仓库中打开任意文件
@@ -31,6 +38,8 @@
 | `Lemon Toolkit: Copy absolute path` | 复制完整的系统路径 |
 | `Lemon Toolkit: Copy file name` | 复制带扩展名的文件名 |
 | `Lemon Toolkit: Copy file name (no extension)` | 复制不带扩展名的文件名 |
+| `Lemon Toolkit: Delete file permanently` | 永久删除当前文件 |
+| `Lemon Toolkit: Delete file to trash` | 将当前文件移动到 Obsidian 回收站 |
 
 ## 安装方法
 
@@ -79,7 +88,8 @@ src/
 ├── main.ts              # 插件入口
 ├── commands/
 │   ├── index.ts         # 命令注册
-│   └── copyPath.ts      # 复制路径功能实现
+│   ├── copyPath.ts      # 复制路径功能实现
+│   └── deleteFile.ts    # 删除文件功能实现
 └── utils/
     └── clipboard.ts     # 剪贴板工具
 ```

@@ -15,6 +15,13 @@ Quickly copy file paths in various formats with keyboard shortcuts:
 
 All commands show a confirmation notice with the copied content.
 
+### Delete File Commands
+
+Manage file deletion with two options:
+
+- **Delete file permanently** - Permanently delete the active file from your vault
+- **Delete file to trash** - Move the active file to Obsidian's trash folder (.trash)
+
 ## Usage
 
 1. Open any file in your vault
@@ -31,6 +38,8 @@ All commands show a confirmation notice with the copied content.
 | `Lemon Toolkit: Copy absolute path` | Copy full system path |
 | `Lemon Toolkit: Copy file name` | Copy filename with extension |
 | `Lemon Toolkit: Copy file name (no extension)` | Copy filename without extension |
+| `Lemon Toolkit: Delete file permanently` | Permanently delete the active file |
+| `Lemon Toolkit: Delete file to trash` | Move the active file to Obsidian's trash |
 
 ## Installation
 
@@ -79,7 +88,8 @@ src/
 ├── main.ts              # Plugin entry point
 ├── commands/
 │   ├── index.ts         # Command registration
-│   └── copyPath.ts      # Copy path feature implementation
+│   ├── copyPath.ts      # Copy path feature implementation
+│   └── deleteFile.ts    # Delete file feature implementation
 └── utils/
     └── clipboard.ts     # Clipboard utility
 ```

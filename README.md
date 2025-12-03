@@ -35,6 +35,7 @@ Manage file deletion with two options:
 ### Command Palette
 
 - **Open command palette** - Open a dedicated command palette showing only Lemon Toolkit commands. Commands are sorted by most recently used, with pinned commands always at the top. Includes fuzzy search and usage statistics
+- **Open settings** - Quickly open the plugin settings page to modify configurations
 
 ## Usage
 
@@ -59,6 +60,7 @@ Manage file deletion with two options:
 | `Lemon Toolkit: View current tags` | View all tags in the current file |
 | `Lemon Toolkit: Insert tags` | Insert tags at cursor position |
 | `Lemon Toolkit: Open command palette` | Open the Lemon Toolkit command palette |
+| `Lemon Toolkit: Open settings` | Open the plugin settings page |
 
 ## Installation
 
@@ -148,7 +150,8 @@ src/
 │   ├── duplicateFile.ts # Duplicate file feature implementation
 │   ├── moveFile.ts      # Move file feature implementation
 │   ├── tags.ts          # Tag management feature implementation
-│   └── commandPalette.ts # Command palette feature implementation
+│   ├── commandPalette.ts # Command palette feature implementation
+│   └── openSettings.ts  # Open settings feature implementation
 ├── ui/
 │   ├── DuplicateFileModal.ts # Modal for renaming duplicated file
 │   ├── MoveFileModal.ts      # Modal for moving file with history

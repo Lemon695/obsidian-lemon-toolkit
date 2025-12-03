@@ -35,6 +35,7 @@
 ### 命令面板
 
 - **打开命令面板** - 打开专属的命令面板，仅显示 Lemon Toolkit 的命令。命令按最近使用时间排序，固定的命令始终显示在最上面。支持模糊搜索和使用统计
+- **打开设置** - 快速打开插件设置页面，修改配置
 
 ## 使用方法
 
@@ -59,6 +60,7 @@
 | `Lemon Toolkit: View current tags` | 查看当前文件的所有标签 |
 | `Lemon Toolkit: Insert tags` | 在光标位置插入标签 |
 | `Lemon Toolkit: Open command palette` | 打开 Lemon Toolkit 命令面板 |
+| `Lemon Toolkit: Open settings` | 打开插件设置页面 |
 
 ## 安装方法
 
@@ -148,7 +150,8 @@ src/
 │   ├── duplicateFile.ts # 复制文件功能实现
 │   ├── moveFile.ts      # 移动文件功能实现
 │   ├── tags.ts          # 标签管理功能实现
-│   └── commandPalette.ts # 命令面板功能实现
+│   ├── commandPalette.ts # 命令面板功能实现
+│   └── openSettings.ts  # 打开设置功能实现
 ├── ui/
 │   ├── DuplicateFileModal.ts # 重命名复制文件的弹窗
 │   ├── MoveFileModal.ts      # 移动文件的弹窗（带历史记录）

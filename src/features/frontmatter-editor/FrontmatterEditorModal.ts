@@ -1,8 +1,9 @@
 import { App, Modal, Notice, TFile, Setting } from "obsidian";
 import LemonToolkitPlugin from "../../main";
 import { FieldData, FieldType } from "./types";
-import { inferFieldType, getTypeIcon, convertValueToType } from "./utils/typeInference";
+import { inferFieldType, convertValueToType } from "./utils/typeInference";
 import { replaceVariables } from "./utils/variableReplacer";
+import { getTypeIconSVG, icons } from "./utils/icons";
 
 export class FrontmatterEditorModal extends Modal {
 	private plugin: LemonToolkitPlugin;
@@ -25,14 +26,25 @@ export class FrontmatterEditorModal extends Modal {
 		contentEl.empty();
 		contentEl.addClass("lemon-frontmatter-editor");
 
+		// Set modal size
+		this.modalEl.style.width = "600px";
+		this.modalEl.style.maxWidth = "90vw";
+
 		// Load frontmatter
 		await this.loadFrontmatter();
 
-		// Render modal
+		// Render modal structure
 		this.renderHeader();
 		this.renderSearchBar();
+		
+		// Main content area (scrollable fields)
 		this.contentContainer = contentEl.createDiv({ cls: "lemon-fm-content" });
+		this.contentContainer.style.flex = "1";
+		this.contentContainer.style.overflowY = "auto";
+		this.contentContainer.style.minHeight = "0";
 		this.renderFields();
+		
+		// Fixed bottom sections
 		this.renderAddFieldButton();
 		this.renderQuickActions();
 		this.renderFooter();
@@ -62,29 +74,47 @@ export class FrontmatterEditorModal extends Modal {
 		header.style.display = "flex";
 		header.style.justifyContent = "space-between";
 		header.style.alignItems = "center";
-		header.style.padding = "16px";
+		header.style.padding = "16px 16px 16px 24px";
 		header.style.borderBottom = "1px solid var(--background-modifier-border)";
 
 		const title = header.createEl("h2", { text: "Frontmatter Editor" });
 		title.style.margin = "0";
-
-		const closeBtn = header.createEl("button", { cls: "modal-close-button" });
-		closeBtn.innerHTML = "×";
-		closeBtn.addEventListener("click", () => this.tryClose());
+		title.style.fontSize = "1.2em";
 	}
 
 	private renderSearchBar(): void {
 		const searchContainer = this.contentEl.createDiv({ cls: "lemon-fm-search" });
 		searchContainer.style.padding = "12px 16px";
 
-		const searchInput = searchContainer.createEl("input", {
+		const searchWrapper = searchContainer.createDiv({ cls: "lemon-fm-search-wrapper" });
+		searchWrapper.style.position = "relative";
+		searchWrapper.style.display = "flex";
+		searchWrapper.style.alignItems = "center";
+		searchWrapper.style.width = "100%";
+
+		const searchIcon = searchWrapper.createDiv({ cls: "lemon-fm-search-icon" });
+		searchIcon.innerHTML = icons.search;
+		searchIcon.style.position = "absolute";
+		searchIcon.style.left = "12px";
+		searchIcon.style.top = "50%";
+		searchIcon.style.transform = "translateY(-50%)";
+		searchIcon.style.display = "flex";
+		searchIcon.style.alignItems = "center";
+		searchIcon.style.color = "var(--text-muted)";
+		searchIcon.style.pointerEvents = "none";
+		searchIcon.style.zIndex = "1";
+
+		const searchInput = searchWrapper.createEl("input", {
 			type: "text",
-			placeholder: "🔍 Search fields...",
+			placeholder: "Search fields...",
 		});
 		searchInput.style.width = "100%";
-		searchInput.style.padding = "8px 12px";
+		searchInput.style.padding = "8px 12px 8px 36px";
 		searchInput.style.border = "1px solid var(--background-modifier-border)";
 		searchInput.style.borderRadius = "4px";
+		searchInput.style.backgroundColor = "var(--background-primary)";
+		searchInput.style.color = "var(--text-normal)";
+		searchInput.style.boxSizing = "border-box";
 
 		searchInput.addEventListener("input", () => {
 			this.searchQuery = searchInput.value.toLowerCase();
@@ -93,12 +123,17 @@ export class FrontmatterEditorModal extends Modal {
 	}
 
 	private renderFields(): void {
-		this.contentContainer.empty();
+		// Only clear the fields container, not the entire content
+		const existingFieldsContainer = this.contentContainer.querySelector(".lemon-fm-fields");
+		if (existingFieldsContainer) {
+			existingFieldsContainer.remove();
+		}
 
 		const fieldsContainer = this.contentContainer.createDiv({ cls: "lemon-fm-fields" });
 		fieldsContainer.style.maxHeight = "400px";
 		fieldsContainer.style.overflowY = "auto";
 		fieldsContainer.style.padding = "8px 16px";
+		fieldsContainer.style.minHeight = "200px";
 
 		const filteredFields = Array.from(this.fields.values()).filter((field) => {
 			if (field.isDeleted) return false;
@@ -141,38 +176,78 @@ export class FrontmatterEditorModal extends Modal {
 
 		// Type icon
 		if (this.plugin.settings.frontmatterEditor.showTypeIcons) {
-			const icon = row.createSpan({ text: getTypeIcon(field.type) });
-			icon.style.fontSize = "1.2em";
+			const iconContainer = row.createDiv({ cls: "lemon-fm-icon" });
+			iconContainer.innerHTML = getTypeIconSVG(field.type);
+			iconContainer.style.display = "flex";
+			iconContainer.style.alignItems = "center";
+			iconContainer.style.color = "var(--text-muted)";
 		}
 
-		// Field key
+		// Field key (editable on click)
 		const keyEl = row.createEl("strong", { text: field.key });
 		keyEl.style.minWidth = "120px";
 		keyEl.style.color = "var(--text-muted)";
+		keyEl.style.cursor = "pointer";
+		keyEl.style.padding = "4px";
+		keyEl.style.borderRadius = "3px";
+		keyEl.setAttribute("title", "Click to edit field name");
 
-		// Field value
+		keyEl.addEventListener("click", () => {
+			this.editFieldKey(field, keyEl);
+		});
+
+		keyEl.addEventListener("mouseenter", () => {
+			keyEl.style.backgroundColor = "var(--background-modifier-hover)";
+		});
+
+		keyEl.addEventListener("mouseleave", () => {
+			keyEl.style.backgroundColor = "";
+		});
+
+		// Field value (editable on click)
 		const valueContainer = row.createDiv({ cls: "lemon-fm-value" });
 		valueContainer.style.flex = "1";
+		valueContainer.style.cursor = "pointer";
+		valueContainer.style.padding = "4px";
+		valueContainer.style.borderRadius = "3px";
+		valueContainer.setAttribute("title", "Click to edit value");
+
 		this.renderFieldValue(valueContainer, field);
 
-		// Actions
-		const actions = row.createDiv({ cls: "lemon-fm-actions" });
-		actions.style.display = "flex";
-		actions.style.gap = "4px";
+		valueContainer.addEventListener("click", () => {
+			this.editFieldInline(field, valueContainer);
+		});
 
-		// Edit button
-		const editBtn = actions.createEl("button", { text: "✎", cls: "lemon-fm-btn" });
-		editBtn.setAttribute("aria-label", "Edit");
-		editBtn.addEventListener("click", () => this.editField(field));
+		valueContainer.addEventListener("mouseenter", () => {
+			valueContainer.style.backgroundColor = "var(--background-modifier-hover)";
+		});
+
+		valueContainer.addEventListener("mouseleave", () => {
+			valueContainer.style.backgroundColor = "";
+		});
 
 		// Delete button
-		const deleteBtn = actions.createEl("button", { text: "🗑", cls: "lemon-fm-btn" });
+		const deleteBtn = row.createEl("button", { cls: "lemon-fm-btn" });
+		deleteBtn.innerHTML = icons.delete;
 		deleteBtn.setAttribute("aria-label", "Delete");
-		deleteBtn.addEventListener("click", () => this.deleteField(field));
+		deleteBtn.style.padding = "4px";
+		deleteBtn.style.display = "flex";
+		deleteBtn.style.alignItems = "center";
+		deleteBtn.style.cursor = "pointer";
+		deleteBtn.style.border = "none";
+		deleteBtn.style.background = "none";
+		deleteBtn.style.color = "var(--text-muted)";
+		deleteBtn.addEventListener("click", (e) => {
+			e.stopPropagation();
+			this.deleteField(field);
+		});
 	}
 
 	private renderFieldValue(container: HTMLElement, field: FieldData): void {
 		container.empty();
+		container.style.minHeight = "24px";
+		container.style.display = "flex";
+		container.style.alignItems = "center";
 
 		switch (field.type) {
 			case "boolean":
@@ -186,15 +261,22 @@ export class FrontmatterEditorModal extends Modal {
 				tagsContainer.style.display = "flex";
 				tagsContainer.style.flexWrap = "wrap";
 				tagsContainer.style.gap = "4px";
+				tagsContainer.style.alignItems = "center";
 
 				const items = Array.isArray(field.value) ? field.value : [];
-				items.forEach((item) => {
-					const tag = tagsContainer.createEl("span", { text: String(item) });
-					tag.style.padding = "2px 8px";
-					tag.style.backgroundColor = "var(--background-modifier-border)";
-					tag.style.borderRadius = "12px";
-					tag.style.fontSize = "0.9em";
-				});
+				if (items.length === 0) {
+					const emptyText = tagsContainer.createSpan({ text: "empty array" });
+					emptyText.style.color = "var(--text-muted)";
+					emptyText.style.fontStyle = "italic";
+				} else {
+					items.forEach((item) => {
+						const tag = tagsContainer.createEl("span", { text: String(item) });
+						tag.style.padding = "2px 8px";
+						tag.style.backgroundColor = "var(--background-modifier-border)";
+						tag.style.borderRadius = "12px";
+						tag.style.fontSize = "0.9em";
+					});
+				}
 				break;
 
 			case "object":
@@ -210,19 +292,234 @@ export class FrontmatterEditorModal extends Modal {
 				break;
 
 			default:
-				container.textContent = String(field.value);
+				const valueText = String(field.value);
+				if (!valueText || valueText.trim() === "") {
+					container.textContent = "empty";
+					container.style.color = "var(--text-muted)";
+					container.style.fontStyle = "italic";
+				} else {
+					container.textContent = valueText;
+				}
 				break;
 		}
 	}
 
-	private editField(field: FieldData): void {
-		const modal = new EditFieldModal(this.app, field, (newValue) => {
-			field.value = newValue;
+	private editFieldKey(field: FieldData, keyEl: HTMLElement): void {
+		const input = document.createElement("input");
+		input.type = "text";
+		input.value = field.key;
+		input.style.width = "100%";
+		input.style.padding = "4px";
+		input.style.border = "1px solid var(--interactive-accent)";
+		input.style.borderRadius = "3px";
+		input.style.backgroundColor = "var(--background-primary)";
+		input.style.color = "var(--text-normal)";
+
+		const originalText = keyEl.textContent || "";
+		keyEl.textContent = "";
+		keyEl.appendChild(input);
+		input.focus();
+		input.select();
+
+		const save = () => {
+			const newKey = input.value.trim();
+			if (!newKey) {
+				new Notice("Field name cannot be empty");
+				keyEl.textContent = originalText;
+				return;
+			}
+
+			if (newKey !== field.key && this.fields.has(newKey)) {
+				new Notice(`Field '${newKey}' already exists`);
+				keyEl.textContent = originalText;
+				return;
+			}
+
+			if (newKey !== field.key) {
+				this.fields.delete(field.key);
+				field.key = newKey;
+				this.fields.set(newKey, field);
+				field.isModified = true;
+				this.hasUnsavedChanges = true;
+			}
+
+			this.renderFields();
+		};
+
+		input.addEventListener("blur", save);
+		input.addEventListener("keydown", (e) => {
+			if (e.key === "Enter") {
+				e.preventDefault();
+				save();
+			} else if (e.key === "Escape") {
+				e.preventDefault();
+				keyEl.textContent = originalText;
+			}
+		});
+	}
+
+	private editFieldInline(field: FieldData, valueContainer: HTMLElement): void {
+		// For boolean, toggle directly
+		if (field.type === "boolean") {
+			field.value = !field.value;
 			field.isModified = true;
 			this.hasUnsavedChanges = true;
 			this.renderFields();
+			return;
+		}
+
+		// For other types, show inline editor
+		const input = this.createInlineEditor(field);
+		valueContainer.textContent = "";
+		valueContainer.appendChild(input);
+		input.focus();
+
+		if (input instanceof HTMLInputElement) {
+			input.select();
+		}
+
+		const save = () => {
+			const newValue = this.getInputValue(input, field.type);
+			if (this.validateValue(newValue, field.type)) {
+				field.value = newValue;
+				field.isModified = true;
+				this.hasUnsavedChanges = true;
+			}
+			this.renderFields();
+		};
+
+		input.addEventListener("blur", save);
+		input.addEventListener("keydown", (e: KeyboardEvent) => {
+			if (e.key === "Enter" && !(e.target instanceof HTMLTextAreaElement)) {
+				e.preventDefault();
+				save();
+			} else if (e.key === "Escape") {
+				e.preventDefault();
+				this.renderFields();
+			}
 		});
-		modal.open();
+	}
+
+	private createInlineEditor(field: FieldData): HTMLInputElement | HTMLTextAreaElement {
+		switch (field.type) {
+			case "number":
+				const numInput = document.createElement("input");
+				numInput.type = "number";
+				numInput.value = String(field.value);
+				numInput.style.width = "100%";
+				numInput.style.padding = "4px";
+				numInput.style.border = "1px solid var(--interactive-accent)";
+				numInput.style.borderRadius = "3px";
+				numInput.style.backgroundColor = "var(--background-primary)";
+				numInput.style.color = "var(--text-normal)";
+				return numInput;
+
+			case "date":
+				const dateInput = document.createElement("input");
+				dateInput.type = "date";
+				dateInput.value = String(field.value);
+				dateInput.style.width = "100%";
+				dateInput.style.padding = "4px";
+				dateInput.style.border = "1px solid var(--interactive-accent)";
+				dateInput.style.borderRadius = "3px";
+				dateInput.style.backgroundColor = "var(--background-primary)";
+				dateInput.style.color = "var(--text-normal)";
+				return dateInput;
+
+			case "array":
+				const arrayInput = document.createElement("input");
+				arrayInput.type = "text";
+				const arrayValue = Array.isArray(field.value) ? field.value.join(", ") : String(field.value);
+				arrayInput.value = arrayValue;
+				arrayInput.placeholder = "Separate values with commas";
+				arrayInput.style.width = "100%";
+				arrayInput.style.padding = "4px";
+				arrayInput.style.border = "1px solid var(--interactive-accent)";
+				arrayInput.style.borderRadius = "3px";
+				arrayInput.style.backgroundColor = "var(--background-primary)";
+				arrayInput.style.color = "var(--text-normal)";
+				return arrayInput;
+
+			default:
+				const textInput = document.createElement("input");
+				textInput.type = "text";
+				textInput.value = String(field.value);
+				textInput.style.width = "100%";
+				textInput.style.padding = "4px";
+				textInput.style.border = "1px solid var(--interactive-accent)";
+				textInput.style.borderRadius = "3px";
+				textInput.style.backgroundColor = "var(--background-primary)";
+				textInput.style.color = "var(--text-normal)";
+
+				// Add autocomplete for existing field values
+				this.addAutocomplete(textInput, field.key);
+
+				return textInput;
+		}
+	}
+
+	private addAutocomplete(input: HTMLInputElement, fieldKey: string): void {
+		// Collect all values for this field from all files
+		const allValues = new Set<string>();
+		const allFiles = this.app.vault.getMarkdownFiles();
+
+		allFiles.forEach((file) => {
+			const cache = this.app.metadataCache.getFileCache(file);
+			if (cache?.frontmatter && cache.frontmatter[fieldKey]) {
+				const value = cache.frontmatter[fieldKey];
+				if (typeof value === "string") {
+					allValues.add(value);
+				}
+			}
+		});
+
+		if (allValues.size === 0) return;
+
+		// Create datalist for autocomplete
+		const datalistId = `datalist-${fieldKey}-${Date.now()}`;
+		const datalist = document.createElement("datalist");
+		datalist.id = datalistId;
+
+		allValues.forEach((value) => {
+			const option = document.createElement("option");
+			option.value = value;
+			datalist.appendChild(option);
+		});
+
+		input.setAttribute("list", datalistId);
+		input.parentElement?.appendChild(datalist);
+	}
+
+	private getInputValue(input: HTMLInputElement | HTMLTextAreaElement, type: FieldType): any {
+		const value = input.value;
+
+		switch (type) {
+			case "number":
+				return parseFloat(value);
+			case "array":
+				return value.split(",").map((v) => v.trim()).filter((v) => v);
+			default:
+				return value;
+		}
+	}
+
+	private validateValue(value: any, type: FieldType): boolean {
+		switch (type) {
+			case "number":
+				if (isNaN(value)) {
+					new Notice("Invalid number");
+					return false;
+				}
+				return true;
+			case "date":
+				if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+					new Notice("Invalid date format. Use YYYY-MM-DD");
+					return false;
+				}
+				return true;
+			default:
+				return true;
+		}
 	}
 
 	private deleteField(field: FieldData): void {
@@ -234,12 +531,14 @@ export class FrontmatterEditorModal extends Modal {
 	}
 
 	private renderAddFieldButton(): void {
-		const btnContainer = this.contentContainer.createDiv({ cls: "lemon-fm-add-field" });
+		const btnContainer = this.contentEl.createDiv({ cls: "lemon-fm-add-field" });
 		btnContainer.style.padding = "8px 16px";
+		btnContainer.style.borderTop = "1px solid var(--background-modifier-border)";
 
 		const addBtn = btnContainer.createEl("button", { text: "+ Add Field" });
 		addBtn.style.width = "100%";
 		addBtn.style.padding = "8px";
+		addBtn.style.cursor = "pointer";
 		addBtn.addEventListener("click", () => this.addNewField());
 	}
 
@@ -269,7 +568,7 @@ export class FrontmatterEditorModal extends Modal {
 		const quickActions = this.plugin.settings.frontmatterEditor.quickActions;
 		if (quickActions.length === 0) return;
 
-		const container = this.contentContainer.createDiv({ cls: "lemon-fm-quick-actions" });
+		const container = this.contentEl.createDiv({ cls: "lemon-fm-quick-actions" });
 		container.style.padding = "8px 16px";
 		container.style.borderTop = "1px solid var(--background-modifier-border)";
 
@@ -287,6 +586,7 @@ export class FrontmatterEditorModal extends Modal {
 			const btn = buttonsContainer.createEl("button", { text: action.label });
 			btn.style.padding = "4px 12px";
 			btn.style.fontSize = "0.9em";
+			btn.style.cursor = "pointer";
 			btn.addEventListener("click", () => this.executeQuickAction(action));
 		});
 	}
@@ -372,9 +672,8 @@ export class FrontmatterEditorModal extends Modal {
 			new Notice("Frontmatter saved successfully");
 			this.hasUnsavedChanges = false;
 
-			if (this.plugin.settings.frontmatterEditor.closeAfterSave) {
-				this.close();
-			}
+			// Always close after save (as requested)
+			this.close();
 		} catch (error) {
 			new Notice(`Failed to save frontmatter: ${error.message}`);
 			console.error("Save frontmatter error:", error);

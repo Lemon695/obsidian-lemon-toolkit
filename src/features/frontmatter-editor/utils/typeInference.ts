@@ -55,26 +55,4 @@ export function convertValueToType(value: string, type: FieldType): any {
 	}
 }
 
-/**
- * Get icon for field type
- */
-export function getTypeIcon(type: FieldType): string {
-	switch (type) {
-		case "string":
-			return "📝";
-		case "number":
-			return "🔢";
-		case "boolean":
-			return "☑️";
-		case "date":
-			return "📅";
-		case "array":
-			return "🏷️";
-		case "object":
-			return "📦";
-		case "null":
-			return "∅";
-		default:
-			return "❓";
-	}
-}
+

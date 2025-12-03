@@ -9,6 +9,8 @@ import {
 	deleteFileToTrash,
 } from "./deleteFile";
 import { duplicateFile } from "./duplicateFile";
+import { moveFileToFolder } from "./moveFile";
+import { viewCurrentTags, insertTags } from "./tags";
 import LemonToolkitPlugin from "../main";
 
 /**
@@ -62,5 +64,26 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "duplicate-file",
 		name: "Duplicate file",
 		callback: () => duplicateFile(plugin),
+	});
+
+	// Move file to folder
+	plugin.addCommand({
+		id: "move-file-to-folder",
+		name: "Move file to folder",
+		callback: () => moveFileToFolder(plugin),
+	});
+
+	// View current tags
+	plugin.addCommand({
+		id: "view-current-tags",
+		name: "View current tags",
+		callback: () => viewCurrentTags(plugin),
+	});
+
+	// Insert tags
+	plugin.addCommand({
+		id: "insert-tags",
+		name: "Insert tags",
+		editorCallback: (editor) => insertTags(plugin, editor),
 	});
 }

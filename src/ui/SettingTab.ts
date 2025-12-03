@@ -15,6 +15,9 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 
 		containerEl.createEl("h2", { text: "Lemon Toolkit Settings" });
 
+		// Duplicate file settings
+		containerEl.createEl("h3", { text: "Duplicate File" });
+
 		new Setting(containerEl)
 			.setName("Duplicate file suffix type")
 			.setDesc("Choose the suffix format for duplicated file names")
@@ -25,6 +28,45 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.duplicateFileSuffixType)
 					.onChange(async (value: "timestamp" | "uuid") => {
 						this.plugin.settings.duplicateFileSuffixType = value;
+						await this.plugin.saveSettings();
+					})
+			);
+
+		// Move file settings
+		containerEl.createEl("h3", { text: "Move File" });
+
+		new Setting(containerEl)
+			.setName("Folder list sort order")
+			.setDesc("Choose how to sort the folder list when moving files")
+			.addDropdown((dropdown) =>
+				dropdown
+					.addOption("recent", "Most recently used")
+					.addOption("day", "Most used in last 24 hours")
+					.addOption("week", "Most used in last 7 days")
+					.addOption("month", "Most used in last 30 days")
+					.setValue(this.plugin.settings.folderSortType)
+					.onChange(async (value: "recent" | "day" | "week" | "month") => {
+						this.plugin.settings.folderSortType = value;
+						await this.plugin.saveSettings();
+					})
+			);
+
+		// Tag settings
+		containerEl.createEl("h3", { text: "Tags" });
+
+		new Setting(containerEl)
+			.setName("Tag list sort order")
+			.setDesc("Choose how to sort the tag list when inserting tags")
+			.addDropdown((dropdown) =>
+				dropdown
+					.addOption("recent", "Most recently used")
+					.addOption("day", "Most used in last 24 hours")
+					.addOption("week", "Most used in last 7 days")
+					.addOption("month", "Most used in last 30 days")
+					.addOption("alphabetical", "Alphabetical order")
+					.setValue(this.plugin.settings.tagSortType)
+					.onChange(async (value: "recent" | "day" | "week" | "month" | "alphabetical") => {
+						this.plugin.settings.tagSortType = value;
 						await this.plugin.saveSettings();
 					})
 			);

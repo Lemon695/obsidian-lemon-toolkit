@@ -25,6 +25,12 @@ Manage file deletion with two options:
 ### File Management Commands
 
 - **Duplicate file** - Duplicate the current file with a modal dialog to rename. The default name includes a suffix (timestamp or UUID, configurable in settings), which you can modify before confirming
+- **Move file to folder** - Move the current file to a folder with smart history. The folder list shows recently used folders first, and you can filter by typing
+
+### Tag Management Commands
+
+- **View current tags** - Display all tags in the current file in a modal. Click any tag to copy it to clipboard
+- **Insert tags** - Insert tags at cursor position with a multi-select modal. Tags are sorted by usage frequency or recency (configurable in settings)
 
 ## Usage
 
@@ -45,6 +51,9 @@ Manage file deletion with two options:
 | `Lemon Toolkit: Delete file permanently` | Permanently delete the active file |
 | `Lemon Toolkit: Delete file to trash` | Move the active file to Obsidian's trash |
 | `Lemon Toolkit: Duplicate file` | Duplicate the current file with a rename dialog |
+| `Lemon Toolkit: Move file to folder` | Move the current file to a folder with smart history |
+| `Lemon Toolkit: View current tags` | View all tags in the current file |
+| `Lemon Toolkit: Insert tags` | Insert tags at cursor position |
 
 ## Installation
 
@@ -66,9 +75,28 @@ Manage file deletion with two options:
 
 Configure the plugin in **Settings** → **Lemon Toolkit**:
 
+### Duplicate File
+
 - **Duplicate file suffix type** - Choose the suffix format for duplicated file names
   - Timestamp (default): `filename-1733234567890.md`
   - UUID: `filename-a1b2c3d4.md`
+
+### Move File
+
+- **Folder list sort order** - Choose how to sort the folder list when moving files
+  - Most recently used (default): Shows the most recently moved-to folder first
+  - Most used in last 24 hours: Sorts by move frequency in the last day
+  - Most used in last 7 days: Sorts by move frequency in the last week
+  - Most used in last 30 days: Sorts by move frequency in the last month
+
+### Tags
+
+- **Tag list sort order** - Choose how to sort the tag list when inserting tags
+  - Most recently used (default): Shows the most recently used tags first
+  - Most used in last 24 hours: Sorts by usage frequency in the last day
+  - Most used in last 7 days: Sorts by usage frequency in the last week
+  - Most used in last 30 days: Sorts by usage frequency in the last month
+  - Alphabetical order: Sorts tags alphabetically
 
 ## Compatibility
 
@@ -104,10 +132,15 @@ src/
 │   ├── index.ts         # Command registration
 │   ├── copyPath.ts      # Copy path feature implementation
 │   ├── deleteFile.ts    # Delete file feature implementation
-│   └── duplicateFile.ts # Duplicate file feature implementation
+│   ├── duplicateFile.ts # Duplicate file feature implementation
+│   ├── moveFile.ts      # Move file feature implementation
+│   └── tags.ts          # Tag management feature implementation
 ├── ui/
 │   ├── DuplicateFileModal.ts # Modal for renaming duplicated file
-│   └── SettingTab.ts    # Plugin settings tab
+│   ├── MoveFileModal.ts      # Modal for moving file with history
+│   ├── ViewCurrentTagsModal.ts # Modal for viewing current tags
+│   ├── InsertTagsModal.ts    # Modal for inserting tags
+│   └── SettingTab.ts         # Plugin settings tab
 └── utils/
     ├── clipboard.ts     # Clipboard utility
     └── suffix.ts        # Suffix generation utility

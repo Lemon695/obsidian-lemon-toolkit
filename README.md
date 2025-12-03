@@ -24,7 +24,7 @@ Manage file deletion with two options:
 
 ### File Management Commands
 
-- **Duplicate file** - Duplicate the current file with a modal dialog to rename. The default name includes a timestamp (e.g., `filename-1733234567890.md`), which you can modify before confirming
+- **Duplicate file** - Duplicate the current file with a modal dialog to rename. The default name includes a suffix (timestamp or UUID, configurable in settings), which you can modify before confirming
 
 ## Usage
 
@@ -62,6 +62,14 @@ Manage file deletion with two options:
 3. Reload Obsidian
 4. Enable the plugin in **Settings** → **Community plugins**
 
+## Settings
+
+Configure the plugin in **Settings** → **Lemon Toolkit**:
+
+- **Duplicate file suffix type** - Choose the suffix format for duplicated file names
+  - Timestamp (default): `filename-1733234567890.md`
+  - UUID: `filename-a1b2c3d4.md`
+
 ## Compatibility
 
 - Minimum Obsidian version: 1.0.0
@@ -91,15 +99,18 @@ npm run build
 ```
 src/
 ├── main.ts              # Plugin entry point
+├── settings.ts          # Plugin settings interface
 ├── commands/
 │   ├── index.ts         # Command registration
 │   ├── copyPath.ts      # Copy path feature implementation
 │   ├── deleteFile.ts    # Delete file feature implementation
 │   └── duplicateFile.ts # Duplicate file feature implementation
 ├── ui/
-│   └── DuplicateFileModal.ts # Modal for renaming duplicated file
+│   ├── DuplicateFileModal.ts # Modal for renaming duplicated file
+│   └── SettingTab.ts    # Plugin settings tab
 └── utils/
-    └── clipboard.ts     # Clipboard utility
+    ├── clipboard.ts     # Clipboard utility
+    └── suffix.ts        # Suffix generation utility
 ```
 
 ## Support

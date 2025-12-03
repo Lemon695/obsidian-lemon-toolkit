@@ -22,6 +22,10 @@
 - **永久删除文件** - 从仓库中永久删除当前文件
 - **删除文件到回收站** - 将当前文件移动到 Obsidian 回收站（.trash 文件夹）
 
+### 文件管理命令
+
+- **复制文件** - 复制当前文件并弹出重命名对话框。默认文件名包含后缀（如时间戳：`filename-1733234567890.md` 或 UUID：`filename-a1b2c3d4.md`），可在确认前修改
+
 ## 使用方法
 
 1. 在仓库中打开任意文件
@@ -40,6 +44,7 @@
 | `Lemon Toolkit: Copy file name (no extension)` | 复制不带扩展名的文件名 |
 | `Lemon Toolkit: Delete file permanently` | 永久删除当前文件 |
 | `Lemon Toolkit: Delete file to trash` | 将当前文件移动到 Obsidian 回收站 |
+| `Lemon Toolkit: Duplicate file` | 复制当前文件并弹出重命名对话框 |
 
 ## 安装方法
 
@@ -56,6 +61,14 @@
 2. 将文件解压到仓库的插件文件夹：`<vault>/.obsidian/plugins/lemon-toolkit/`
 3. 重新加载 Obsidian
 4. 在 **设置** → **第三方插件** 中启用该插件
+
+## 设置
+
+在 **设置** → **Lemon Toolkit** 中可以配置：
+
+- **复制文件后缀类型** - 选择复制文件时添加的后缀格式
+  - 时间戳（默认）：`filename-1733234567890.md`
+  - UUID：`filename-a1b2c3d4.md`
 
 ## 兼容性
 
@@ -86,12 +99,18 @@ npm run build
 ```
 src/
 ├── main.ts              # 插件入口
+├── settings.ts          # 插件设置接口
 ├── commands/
 │   ├── index.ts         # 命令注册
 │   ├── copyPath.ts      # 复制路径功能实现
-│   └── deleteFile.ts    # 删除文件功能实现
+│   ├── deleteFile.ts    # 删除文件功能实现
+│   └── duplicateFile.ts # 复制文件功能实现
+├── ui/
+│   ├── DuplicateFileModal.ts # 重命名复制文件的弹窗
+│   └── SettingTab.ts    # 插件设置面板
 └── utils/
-    └── clipboard.ts     # 剪贴板工具
+    ├── clipboard.ts     # 剪贴板工具
+    └── suffix.ts        # 后缀生成工具
 ```
 
 ## 支持

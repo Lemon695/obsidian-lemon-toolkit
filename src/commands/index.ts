@@ -1,4 +1,3 @@
-import { Plugin } from "obsidian";
 import {
 	copyRelativePath,
 	copyAbsolutePath,
@@ -10,11 +9,12 @@ import {
 	deleteFileToTrash,
 } from "./deleteFile";
 import { duplicateFile } from "./duplicateFile";
+import LemonToolkitPlugin from "../main";
 
 /**
  * Register all plugin commands
  */
-export function registerCommands(plugin: Plugin): void {
+export function registerCommands(plugin: LemonToolkitPlugin): void {
 	// Copy relative path
 	plugin.addCommand({
 		id: "copy-relative-path",

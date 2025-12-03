@@ -33,54 +33,97 @@ export class InsertTagsModal extends Modal {
 		// Sort tags based on settings
 		this.sortTags();
 
+		// Create search input
+		const searchContainer = contentEl.createDiv({ cls: "lemon-search-container" });
+		searchContainer.style.marginTop = "16px";
+		searchContainer.style.marginBottom = "8px";
+
+		const searchInput = searchContainer.createEl("input", {
+			type: "text",
+			placeholder: "Filter tags...",
+		});
+		searchInput.style.width = "100%";
+		searchInput.style.padding = "8px";
+		searchInput.style.boxSizing = "border-box";
+
 		// Create tag list
 		const tagListContainer = contentEl.createDiv({ cls: "lemon-insert-tags-container" });
-		tagListContainer.style.marginTop = "16px";
+		tagListContainer.style.marginTop = "8px";
 		tagListContainer.style.maxHeight = "400px";
 		tagListContainer.style.overflowY = "auto";
 
-		this.allTags.forEach((tagItem) => {
-			const tagElement = tagListContainer.createDiv({ cls: "lemon-tag-checkbox-item" });
-			tagElement.style.padding = "8px 12px";
-			tagElement.style.marginBottom = "4px";
-			tagElement.style.backgroundColor = "var(--background-secondary)";
-			tagElement.style.borderRadius = "4px";
-			tagElement.style.cursor = "pointer";
-			tagElement.style.display = "flex";
-			tagElement.style.alignItems = "center";
-			tagElement.style.gap = "8px";
+		// Function to render tags
+		const renderTags = (filterText: string = "") => {
+			tagListContainer.empty();
+			const filter = filterText.toLowerCase();
 
-			const checkbox = tagElement.createEl("input", { type: "checkbox" });
-			checkbox.style.cursor = "pointer";
+			const filteredTags = this.allTags.filter((tagItem) =>
+				tagItem.tag.toLowerCase().includes(filter)
+			);
 
-			const label = tagElement.createEl("span");
-			label.textContent = tagItem.tag;
-			label.style.flex = "1";
+			if (filteredTags.length === 0) {
+				const noResults = tagListContainer.createDiv();
+				noResults.style.padding = "16px";
+				noResults.style.textAlign = "center";
+				noResults.style.color = "var(--text-muted)";
+				noResults.textContent = "No tags found";
+				return;
+			}
 
-			const count = tagElement.createEl("span");
-			count.textContent = `(${tagItem.count})`;
-			count.style.color = "var(--text-muted)";
-			count.style.fontSize = "0.9em";
+			filteredTags.forEach((tagItem) => {
+				const tagElement = tagListContainer.createDiv({ cls: "lemon-tag-checkbox-item" });
+				tagElement.style.padding = "8px 12px";
+				tagElement.style.marginBottom = "4px";
+				tagElement.style.backgroundColor = this.selectedTags.has(tagItem.tag)
+					? "var(--background-modifier-hover)"
+					: "var(--background-secondary)";
+				tagElement.style.borderRadius = "4px";
+				tagElement.style.cursor = "pointer";
+				tagElement.style.display = "flex";
+				tagElement.style.alignItems = "center";
+				tagElement.style.gap = "8px";
 
-			// Toggle selection
-			const toggleSelection = () => {
-				if (this.selectedTags.has(tagItem.tag)) {
-					this.selectedTags.delete(tagItem.tag);
-					checkbox.checked = false;
-					tagElement.style.backgroundColor = "var(--background-secondary)";
-				} else {
-					this.selectedTags.add(tagItem.tag);
-					checkbox.checked = true;
-					tagElement.style.backgroundColor = "var(--background-modifier-hover)";
-				}
-			};
+				const checkbox = tagElement.createEl("input", { type: "checkbox" });
+				checkbox.checked = this.selectedTags.has(tagItem.tag);
+				checkbox.style.cursor = "pointer";
 
-			checkbox.addEventListener("change", toggleSelection);
-			tagElement.addEventListener("click", (e) => {
-				if (e.target !== checkbox) {
-					toggleSelection();
-				}
+				const label = tagElement.createEl("span");
+				label.textContent = tagItem.tag;
+				label.style.flex = "1";
+
+				const count = tagElement.createEl("span");
+				count.textContent = `(${tagItem.count})`;
+				count.style.color = "var(--text-muted)";
+				count.style.fontSize = "0.9em";
+
+				// Toggle selection
+				const toggleSelection = () => {
+					if (this.selectedTags.has(tagItem.tag)) {
+						this.selectedTags.delete(tagItem.tag);
+						checkbox.checked = false;
+						tagElement.style.backgroundColor = "var(--background-secondary)";
+					} else {
+						this.selectedTags.add(tagItem.tag);
+						checkbox.checked = true;
+						tagElement.style.backgroundColor = "var(--background-modifier-hover)";
+					}
+				};
+
+				checkbox.addEventListener("change", toggleSelection);
+				tagElement.addEventListener("click", (e) => {
+					if (e.target !== checkbox) {
+						toggleSelection();
+					}
+				});
 			});
+		};
+
+		// Initial render
+		renderTags();
+
+		// Add search listener
+		searchInput.addEventListener("input", () => {
+			renderTags(searchInput.value);
 		});
 
 		// Buttons
@@ -201,33 +244,10 @@ export class InsertTagsModal extends Modal {
 		// Insert at cursor
 		this.editor.replaceSelection(tagsText);
 
-		// Update usage history
-		await this.updateTagHistory(tagsArray);
+		// Update usage history (with lastUsed update)
+		await this.plugin.recordTagUsage(tagsArray, true);
 
 		this.close();
-	}
-
-	private async updateTagHistory(tags: string[]): Promise<void> {
-		const now = Date.now();
-
-		tags.forEach((tag) => {
-			const history = this.plugin.settings.tagUsageHistory[tag] || {
-				lastUsed: 0,
-				timestamps: [],
-			};
-
-			history.lastUsed = now;
-			history.timestamps.push(now);
-
-			// Keep only last 100 timestamps
-			if (history.timestamps.length > 100) {
-				history.timestamps = history.timestamps.slice(-100);
-			}
-
-			this.plugin.settings.tagUsageHistory[tag] = history;
-		});
-
-		await this.plugin.saveSettings();
 	}
 
 	onClose() {

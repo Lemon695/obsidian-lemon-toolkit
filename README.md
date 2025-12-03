@@ -25,12 +25,12 @@ Manage file deletion with two options:
 ### File Management Commands
 
 - **Duplicate file** - Duplicate the current file with a modal dialog to rename. The default name includes a suffix (timestamp or UUID, configurable in settings), which you can modify before confirming
-- **Move file to folder** - Move the current file to a folder with smart history. The folder list shows recently used folders first, and you can filter by typing
+- **Move file to folder** - Move the current file to a folder with smart history. The folder list shows recently used folders first, and you can filter by typing. The plugin automatically tracks all file moves (including drag-and-drop and native Obsidian moves)
 
 ### Tag Management Commands
 
 - **View current tags** - Display all tags in the current file in a modal. Click any tag to copy it to clipboard
-- **Insert tags** - Insert tags at cursor position with a multi-select modal. Tags are sorted by usage frequency or recency (configurable in settings)
+- **Insert tags** - Insert tags at cursor position with a multi-select modal. Tags are sorted by usage frequency or recency (configurable in settings). Includes a search filter to quickly find tags. The plugin automatically tracks tag usage when you manually type tags in your notes
 
 ## Usage
 
@@ -89,6 +89,8 @@ Configure the plugin in **Settings** → **Lemon Toolkit**:
   - Most used in last 7 days: Sorts by move frequency in the last week
   - Most used in last 30 days: Sorts by move frequency in the last month
 
+Note: The plugin automatically tracks all file moves, including drag-and-drop, right-click moves, and native Obsidian file operations.
+
 ### Tags
 
 - **Tag list sort order** - Choose how to sort the tag list when inserting tags
@@ -97,6 +99,8 @@ Configure the plugin in **Settings** → **Lemon Toolkit**:
   - Most used in last 7 days: Sorts by usage frequency in the last week
   - Most used in last 30 days: Sorts by usage frequency in the last month
   - Alphabetical order: Sorts tags alphabetically
+
+Note: The plugin automatically tracks tag usage when you manually type tags in your notes, not just when using the insert tags command.
 
 ## Compatibility
 

@@ -120,34 +120,13 @@ export class MoveFileModal extends FuzzySuggestModal<FolderItem> {
 			// Move the file
 			await this.app.fileManager.renameFile(this.file, newPath);
 			
-			// Update history
-			await this.updateFolderHistory(item.path);
+			// Update history (will be recorded by the event listener, but we update it here too for immediate feedback)
+			await this.plugin.recordFolderMove(item.path);
 			
 			new Notice(`Moved to: ${item.displayName}`);
 		} catch (error) {
 			new Notice(`Failed to move file: ${error.message}`);
 			console.error("Move file error:", error);
 		}
-	}
-
-	private async updateFolderHistory(folderPath: string): Promise<void> {
-		const now = Date.now();
-		const history = this.plugin.settings.folderMoveHistory[folderPath] || {
-			count: 0,
-			lastMoved: 0,
-			timestamps: [],
-		};
-
-		history.count++;
-		history.lastMoved = now;
-		history.timestamps.push(now);
-
-		// Keep only last 100 timestamps to avoid bloat
-		if (history.timestamps.length > 100) {
-			history.timestamps = history.timestamps.slice(-100);
-		}
-
-		this.plugin.settings.folderMoveHistory[folderPath] = history;
-		await this.plugin.saveSettings();
 	}
 }

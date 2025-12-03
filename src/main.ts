@@ -5,6 +5,7 @@ import { LemonToolkitSettingTab } from "./ui/SettingTab";
 
 export default class LemonToolkitPlugin extends Plugin {
 	settings: LemonToolkitSettings;
+	private fileTagsCache: Map<string, Set<string>> = new Map();
 
 	async onload() {
 		await this.loadSettings();
@@ -36,23 +37,33 @@ export default class LemonToolkitPlugin extends Plugin {
 				const cache = this.app.metadataCache.getFileCache(file);
 				if (!cache) return;
 
-				const tags: string[] = [];
+				const currentTags: string[] = [];
 
 				// Get inline tags
 				if (cache.tags) {
-					tags.push(...cache.tags.map((t) => t.tag));
+					currentTags.push(...cache.tags.map((t) => t.tag));
 				}
 
 				// Get frontmatter tags
 				if (cache.frontmatter?.tags) {
 					const frontmatterTags = cache.frontmatter.tags;
 					const tagList = Array.isArray(frontmatterTags) ? frontmatterTags : [frontmatterTags];
-					tags.push(...tagList.map((t) => (t.startsWith("#") ? t : `#${t}`)));
+					currentTags.push(...tagList.map((t) => (t.startsWith("#") ? t : `#${t}`)));
 				}
 
-				// Record tag usage (but don't update lastUsed, only count)
-				if (tags.length > 0) {
-					await this.recordTagUsage(tags, false);
+				// Check if tags have changed
+				const currentTagSet = new Set(currentTags);
+				const previousTagSet = this.fileTagsCache.get(file.path) || new Set();
+
+				// Find new tags (tags that weren't in the previous set)
+				const newTags = currentTags.filter((tag) => !previousTagSet.has(tag));
+
+				// Update cache
+				this.fileTagsCache.set(file.path, currentTagSet);
+
+				// Record only new tags with lastUsed update
+				if (newTags.length > 0) {
+					await this.recordTagUsage(newTags, true);
 				}
 			})
 		);

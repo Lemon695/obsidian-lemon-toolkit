@@ -9,12 +9,19 @@ export interface TagUsageHistory {
 	timestamps: number[];
 }
 
+export interface CommandHistory {
+	lastUsed: number;
+	useCount: number;
+}
+
 export interface LemonToolkitSettings {
 	duplicateFileSuffixType: "timestamp" | "uuid";
 	folderSortType: "recent" | "day" | "week" | "month";
 	folderMoveHistory: Record<string, FolderMoveHistory>;
 	tagSortType: "recent" | "day" | "week" | "month" | "alphabetical";
 	tagUsageHistory: Record<string, TagUsageHistory>;
+	commandHistory: Record<string, CommandHistory>;
+	pinnedCommands: string[];
 }
 
 export const DEFAULT_SETTINGS: LemonToolkitSettings = {
@@ -23,4 +30,6 @@ export const DEFAULT_SETTINGS: LemonToolkitSettings = {
 	folderMoveHistory: {},
 	tagSortType: "recent",
 	tagUsageHistory: {},
+	commandHistory: {},
+	pinnedCommands: [],
 };

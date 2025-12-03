@@ -32,6 +32,10 @@
 - **查看当前标签** - 在弹窗中显示当前文件的所有标签。点击任意标签可复制到剪贴板
 - **插入标签** - 在光标位置插入标签，支持多选。标签按使用频率或最近使用时间排序（可在设置中配置）。包含搜索筛选功能，快速查找标签。插件会自动追踪你在笔记中手动输入的标签
 
+### 命令面板
+
+- **打开命令面板** - 打开专属的命令面板，仅显示 Lemon Toolkit 的命令。命令按最近使用时间排序，固定的命令始终显示在最上面。支持模糊搜索和使用统计
+
 ## 使用方法
 
 1. 在仓库中打开任意文件
@@ -54,6 +58,7 @@
 | `Lemon Toolkit: Move file to folder` | 将当前文件移动到指定文件夹（带智能历史记录） |
 | `Lemon Toolkit: View current tags` | 查看当前文件的所有标签 |
 | `Lemon Toolkit: Insert tags` | 在光标位置插入标签 |
+| `Lemon Toolkit: Open command palette` | 打开 Lemon Toolkit 命令面板 |
 
 ## 安装方法
 
@@ -102,6 +107,10 @@
 
 注意：插件会自动追踪你在笔记中手动输入的标签，不仅限于使用插入标签命令时。
 
+### 命令面板
+
+- **固定命令** - 选择要固定在命令面板顶部的命令。固定的命令将始终显示在最前面，其后是最近使用的命令
+
 ## 兼容性
 
 - 最低 Obsidian 版本：1.0.0
@@ -138,12 +147,15 @@ src/
 │   ├── deleteFile.ts    # 删除文件功能实现
 │   ├── duplicateFile.ts # 复制文件功能实现
 │   ├── moveFile.ts      # 移动文件功能实现
-│   └── tags.ts          # 标签管理功能实现
+│   ├── tags.ts          # 标签管理功能实现
+│   └── commandPalette.ts # 命令面板功能实现
 ├── ui/
 │   ├── DuplicateFileModal.ts # 重命名复制文件的弹窗
 │   ├── MoveFileModal.ts      # 移动文件的弹窗（带历史记录）
 │   ├── ViewCurrentTagsModal.ts # 查看当前标签的弹窗
 │   ├── InsertTagsModal.ts    # 插入标签的弹窗
+│   ├── CommandPaletteModal.ts # Lemon Toolkit 命令面板弹窗
+│   ├── PinnedCommandsModal.ts # 管理固定命令的弹窗
 │   └── SettingTab.ts         # 插件设置面板
 └── utils/
     ├── clipboard.ts     # 剪贴板工具

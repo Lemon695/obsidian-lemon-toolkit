@@ -115,6 +115,20 @@ export default class LemonToolkitPlugin extends Plugin {
 		await this.saveSettings();
 	}
 
+	async recordCommandUsage(commandId: string): Promise<void> {
+		const now = Date.now();
+		const history = this.settings.commandHistory[commandId] || {
+			lastUsed: 0,
+			useCount: 0,
+		};
+
+		history.lastUsed = now;
+		history.useCount++;
+
+		this.settings.commandHistory[commandId] = history;
+		await this.saveSettings();
+	}
+
 	onunload() {
 		// Cleanup handled automatically by Obsidian
 	}

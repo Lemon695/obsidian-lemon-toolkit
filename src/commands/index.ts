@@ -11,6 +11,7 @@ import {
 import { duplicateFile } from "./duplicateFile";
 import { moveFileToFolder } from "./moveFile";
 import { viewCurrentTags, insertTags } from "./tags";
+import { openCommandPalette } from "./commandPalette";
 import LemonToolkitPlugin from "../main";
 
 /**
@@ -85,5 +86,12 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "insert-tags",
 		name: "Insert tags",
 		editorCallback: (editor) => insertTags(plugin, editor),
+	});
+
+	// Open command palette
+	plugin.addCommand({
+		id: "open-command-palette",
+		name: "Open command palette",
+		callback: () => openCommandPalette(plugin),
 	});
 }

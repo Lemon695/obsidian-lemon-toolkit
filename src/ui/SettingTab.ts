@@ -1,5 +1,6 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 import LemonToolkitPlugin from "../main";
+import { PinnedCommandsModal } from "./PinnedCommandsModal";
 
 export class LemonToolkitSettingTab extends PluginSettingTab {
 	plugin: LemonToolkitPlugin;
@@ -70,5 +71,22 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
+
+		// Command palette settings
+		containerEl.createEl("h3", { text: "Command Palette" });
+
+		new Setting(containerEl)
+			.setName("Pinned commands")
+			.setDesc("Select commands to pin at the top of the command palette")
+			.addButton((button) =>
+				button.setButtonText("Manage pinned commands").onClick(() => {
+					this.showPinnedCommandsModal();
+				})
+			);
+	}
+
+	private showPinnedCommandsModal(): void {
+		const modal = new PinnedCommandsModal(this.app, this.plugin);
+		modal.open();
 	}
 }

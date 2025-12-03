@@ -9,6 +9,7 @@ import {
 	deleteFilePermanently,
 	deleteFileToTrash,
 } from "./deleteFile";
+import { duplicateFile } from "./duplicateFile";
 
 /**
  * Register all plugin commands
@@ -54,5 +55,12 @@ export function registerCommands(plugin: Plugin): void {
 		id: "delete-file-to-trash",
 		name: "Delete file to trash",
 		callback: () => deleteFileToTrash(plugin),
+	});
+
+	// Duplicate file
+	plugin.addCommand({
+		id: "duplicate-file",
+		name: "Duplicate file",
+		callback: () => duplicateFile(plugin),
 	});
 }

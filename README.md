@@ -22,6 +22,10 @@ Manage file deletion with two options:
 - **Delete file permanently** - Permanently delete the active file from your vault
 - **Delete file to trash** - Move the active file to Obsidian's trash folder (.trash)
 
+### File Management Commands
+
+- **Duplicate file** - Duplicate the current file with a modal dialog to rename. The default name includes a timestamp (e.g., `filename-1733234567890.md`), which you can modify before confirming
+
 ## Usage
 
 1. Open any file in your vault
@@ -40,6 +44,7 @@ Manage file deletion with two options:
 | `Lemon Toolkit: Copy file name (no extension)` | Copy filename without extension |
 | `Lemon Toolkit: Delete file permanently` | Permanently delete the active file |
 | `Lemon Toolkit: Delete file to trash` | Move the active file to Obsidian's trash |
+| `Lemon Toolkit: Duplicate file` | Duplicate the current file with a rename dialog |
 
 ## Installation
 
@@ -89,7 +94,10 @@ src/
 ├── commands/
 │   ├── index.ts         # Command registration
 │   ├── copyPath.ts      # Copy path feature implementation
-│   └── deleteFile.ts    # Delete file feature implementation
+│   ├── deleteFile.ts    # Delete file feature implementation
+│   └── duplicateFile.ts # Duplicate file feature implementation
+├── ui/
+│   └── DuplicateFileModal.ts # Modal for renaming duplicated file
 └── utils/
     └── clipboard.ts     # Clipboard utility
 ```

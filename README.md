@@ -241,6 +241,56 @@ Use "Select code blocks to copy":
   
 - **Remove heading numbering** - Remove all numbering from headings in the document
 
+### Command Statistics & Analytics
+
+- **Show Statistics** - Open a comprehensive analytics dashboard to track your command usage and productivity:
+
+**Features**:
+- **Four analytical views**:
+  - **Overview**: Key metrics at a glance with today's activity summary
+  - **Commands**: Detailed statistics for each command with sortable table
+  - **Efficiency**: Time savings analysis showing how much time you've saved
+  - **Trends**: Visual charts and heatmaps of usage patterns
+
+- **Smart tracking**:
+  - Automatically tracks all command executions
+  - Records timestamp for each usage
+  - Calculates efficiency gains based on estimated manual operation time
+  - Batched storage writes for optimal performance
+
+- **Insightful metrics**:
+  - Total commands executed (with comparison to previous period)
+  - Most used commands with visual bars
+  - Time saved per command and cumulative totals
+  - Average uses per day for each command
+  - Usage trends over last 30 days
+  - Heatmap showing usage by day of week and hour
+
+- **Data management**:
+  - Export statistics as JSON for external analysis
+  - Clear all data with confirmation
+  - Configurable data retention periods
+  - Privacy-focused: all data stored locally
+
+- **Professional UI**:
+  - Fixed-size modal window (900x700px) for consistent experience
+  - Smooth tab switching without layout shifts
+  - Material Design-inspired interface
+  - Responsive charts and visualizations
+
+**Example insights**:
+- "You've executed 156 commands today, 23% more than yesterday"
+- "Smart Copy is your most used feature with 45 uses this week"
+- "You've saved 2.5 hours this month using automation commands"
+- "Peak usage time: Weekdays 2-4 PM"
+
+**Use cases**:
+- Track which features you use most
+- Quantify productivity improvements
+- Identify workflow patterns
+- Optimize your command usage
+- Justify plugin value with time savings data
+
 ## Usage
 
 1. Open any file in your vault
@@ -270,6 +320,7 @@ Use "Select code blocks to copy":
 | `Lemon Toolkit: Text selection actions` | Quick actions for selected text |
 | `Lemon Toolkit: Add/update heading numbering` | Add or update hierarchical numbering for headings |
 | `Lemon Toolkit: Remove heading numbering` | Remove all numbering from headings |
+| `Lemon Toolkit: Show Statistics` | Open command usage analytics dashboard |
 
 ## Installation
 

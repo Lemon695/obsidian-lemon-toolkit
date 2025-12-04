@@ -5,17 +5,27 @@ import { LemonToolkitSettingTab } from "./ui/SettingTab";
 import { FileInfoView, FILE_INFO_VIEW_TYPE } from "./views/FileInfoView";
 import { RecentFilesView, RECENT_FILES_VIEW_TYPE } from "./views/RecentFilesView";
 import { ExternalAppManager } from "./features/external-apps/ExternalAppManager";
+import { StatisticsManager } from "./features/statistics/StatisticsManager";
 
 export default class LemonToolkitPlugin extends Plugin {
 	settings: LemonToolkitSettings;
 	private fileTagsCache: Map<string, Set<string>> = new Map();
 	private externalAppManager: ExternalAppManager;
+	statisticsManager: StatisticsManager;
 
 	async onload() {
 		await this.loadSettings();
 		
 		// Initialize external app manager
 		this.externalAppManager = new ExternalAppManager(this);
+		
+		// Initialize statistics manager
+		this.statisticsManager = new StatisticsManager(
+			this,
+			this.app,
+			this.settings.statistics
+		);
+		await this.statisticsManager.initialize();
 		
 		// Register views
 		this.registerView(
@@ -35,6 +45,16 @@ export default class LemonToolkitPlugin extends Plugin {
 
 		registerCommands(this);
 		this.externalAppManager.registerCommands();
+		
+		// Register statistics command
+		this.addCommand({
+			id: 'show-statistics',
+			name: 'Show Statistics',
+			callback: () => {
+				this.statisticsManager.openModal();
+			}
+		});
+		
 		this.addSettingTab(new LemonToolkitSettingTab(this.app, this));
 		this.registerEventListeners();
 	}
@@ -162,6 +182,11 @@ export default class LemonToolkitPlugin extends Plugin {
 	}
 
 	onunload() {
+		// Cleanup statistics manager
+		if (this.statisticsManager) {
+			this.statisticsManager.destroy();
+		}
+		
 		// Detach views
 		this.app.workspace.detachLeavesOfType(FILE_INFO_VIEW_TYPE);
 		this.app.workspace.detachLeavesOfType(RECENT_FILES_VIEW_TYPE);

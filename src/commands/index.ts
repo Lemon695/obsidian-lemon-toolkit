@@ -37,6 +37,26 @@ import {
 import LemonToolkitPlugin from "../main";
 
 /**
+ * Wrap a callback to track command usage
+ */
+function trackCommand(plugin: LemonToolkitPlugin, commandId: string, commandName: string, callback: () => any) {
+	return () => {
+		plugin.statisticsManager?.recordUsage(commandId, commandName);
+		return callback();
+	};
+}
+
+/**
+ * Wrap an editor callback to track command usage
+ */
+function trackEditorCommand(plugin: LemonToolkitPlugin, commandId: string, commandName: string, callback: (editor: any) => any) {
+	return (editor: any) => {
+		plugin.statisticsManager?.recordUsage(commandId, commandName);
+		return callback(editor);
+	};
+}
+
+/**
  * Register all plugin commands
  */
 export function registerCommands(plugin: LemonToolkitPlugin): void {
@@ -44,213 +64,213 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 	plugin.addCommand({
 		id: "copy-relative-path",
 		name: "Copy relative path",
-		callback: () => copyRelativePath(plugin),
+		callback: trackCommand(plugin, "copy-relative-path", "Copy relative path", () => copyRelativePath(plugin)),
 	});
 
 	// Copy absolute path
 	plugin.addCommand({
 		id: "copy-absolute-path",
 		name: "Copy absolute path",
-		callback: () => copyAbsolutePath(plugin),
+		callback: trackCommand(plugin, "copy-absolute-path", "Copy absolute path", () => copyAbsolutePath(plugin)),
 	});
 
 	// Copy file name
 	plugin.addCommand({
 		id: "copy-file-name",
 		name: "Copy file name",
-		callback: () => copyFileName(plugin),
+		callback: trackCommand(plugin, "copy-file-name", "Copy file name", () => copyFileName(plugin)),
 	});
 
 	// Copy file name without extension
 	plugin.addCommand({
 		id: "copy-file-name-without-ext",
 		name: "Copy file name (no extension)",
-		callback: () => copyFileNameWithoutExtension(plugin),
+		callback: trackCommand(plugin, "copy-file-name-without-ext", "Copy file name (no extension)", () => copyFileNameWithoutExtension(plugin)),
 	});
 
 	// Delete file permanently
 	plugin.addCommand({
 		id: "delete-file-permanently",
 		name: "Delete file permanently",
-		callback: () => deleteFilePermanently(plugin),
+		callback: trackCommand(plugin, "delete-file-permanently", "Delete file permanently", () => deleteFilePermanently(plugin)),
 	});
 
 	// Delete file to trash
 	plugin.addCommand({
 		id: "delete-file-to-trash",
 		name: "Delete file to trash",
-		callback: () => deleteFileToTrash(plugin),
+		callback: trackCommand(plugin, "delete-file-to-trash", "Delete file to trash", () => deleteFileToTrash(plugin)),
 	});
 
 	// Duplicate file
 	plugin.addCommand({
 		id: "duplicate-file",
 		name: "Duplicate file",
-		callback: () => duplicateFile(plugin),
+		callback: trackCommand(plugin, "duplicate-file", "Duplicate file", () => duplicateFile(plugin)),
 	});
 
 	// Move file to folder
 	plugin.addCommand({
 		id: "move-file-to-folder",
 		name: "Move file to folder",
-		callback: () => moveFileToFolder(plugin),
+		callback: trackCommand(plugin, "move-file-to-folder", "Move file to folder", () => moveFileToFolder(plugin)),
 	});
 
 	// View current tags
 	plugin.addCommand({
 		id: "view-current-tags",
 		name: "View current tags",
-		callback: () => viewCurrentTags(plugin),
+		callback: trackCommand(plugin, "view-current-tags", "View current tags", () => viewCurrentTags(plugin)),
 	});
 
 	// Insert tags
 	plugin.addCommand({
 		id: "insert-tags",
 		name: "Insert tags",
-		editorCallback: (editor) => insertTags(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "insert-tags", "Insert tags", (editor) => insertTags(plugin, editor)),
 	});
 
 	// Open command palette
 	plugin.addCommand({
 		id: "open-command-palette",
 		name: "Open command palette",
-		callback: () => openCommandPalette(plugin),
+		callback: trackCommand(plugin, "open-command-palette", "Open command palette", () => openCommandPalette(plugin)),
 	});
 
 	// Open settings
 	plugin.addCommand({
 		id: "open-settings",
 		name: "Open settings",
-		callback: () => openSettings(plugin),
+		callback: trackCommand(plugin, "open-settings", "Open settings", () => openSettings(plugin)),
 	});
 
 	// Open file info view
 	plugin.addCommand({
 		id: "open-file-info",
 		name: "Open file info",
-		callback: () => plugin.activateFileInfoView(),
+		callback: trackCommand(plugin, "open-file-info", "Open file info", () => plugin.activateFileInfoView()),
 	});
 
 	// Edit frontmatter
 	plugin.addCommand({
 		id: "edit-frontmatter",
 		name: "Edit frontmatter",
-		callback: () => editFrontmatter(plugin),
+		callback: trackCommand(plugin, "edit-frontmatter", "Edit frontmatter", () => editFrontmatter(plugin)),
 	});
 
 	// Text selection actions
 	plugin.addCommand({
 		id: "text-selection-actions",
 		name: "Text selection actions",
-		editorCallback: (editor) => openTextSelectionActions(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "text-selection-actions", "Text selection actions", (editor) => openTextSelectionActions(plugin, editor)),
 	});
 
 	// Heading numbering
 	plugin.addCommand({
 		id: "add-heading-numbering",
 		name: "Add/update heading numbering",
-		editorCallback: (editor) => addHeadingNumbering(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "add-heading-numbering", "Add/update heading numbering", (editor) => addHeadingNumbering(plugin, editor)),
 	});
 
 	plugin.addCommand({
 		id: "remove-heading-numbering",
 		name: "Remove heading numbering",
-		editorCallback: (editor) => removeHeadingNumbering(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "remove-heading-numbering", "Remove heading numbering", (editor) => removeHeadingNumbering(plugin, editor)),
 	});
 
 	// Recent files
 	plugin.addCommand({
 		id: "open-recent-files",
 		name: "Open recent files",
-		callback: () => openRecentFilesView(plugin),
+		callback: trackCommand(plugin, "open-recent-files", "Open recent files", () => openRecentFilesView(plugin)),
 	});
 
 	// Link converter - File scope
 	plugin.addCommand({
 		id: "convert-wiki-to-markdown-file",
 		name: "Convert wiki links to markdown (file)",
-		editorCallback: (editor) => convertWikiToMarkdownInFile(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "convert-wiki-to-markdown-file", "Convert wiki links to markdown (file)", (editor) => convertWikiToMarkdownInFile(plugin, editor)),
 	});
 
 	plugin.addCommand({
 		id: "convert-markdown-to-wiki-file",
 		name: "Convert markdown links to wiki (file)",
-		editorCallback: (editor) => convertMarkdownToWikiInFile(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "convert-markdown-to-wiki-file", "Convert markdown links to wiki (file)", (editor) => convertMarkdownToWikiInFile(plugin, editor)),
 	});
 
 	// Link converter - Selection scope
 	plugin.addCommand({
 		id: "convert-wiki-to-markdown-selection",
 		name: "Convert wiki links to markdown (selection)",
-		editorCallback: (editor) => convertWikiToMarkdownInSelection(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "convert-wiki-to-markdown-selection", "Convert wiki links to markdown (selection)", (editor) => convertWikiToMarkdownInSelection(plugin, editor)),
 	});
 
 	plugin.addCommand({
 		id: "convert-markdown-to-wiki-selection",
 		name: "Convert markdown links to wiki (selection)",
-		editorCallback: (editor) => convertMarkdownToWikiInSelection(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "convert-markdown-to-wiki-selection", "Convert markdown links to wiki (selection)", (editor) => convertMarkdownToWikiInSelection(plugin, editor)),
 	});
 
 	// Smart paste
 	plugin.addCommand({
 		id: "smart-paste",
 		name: "Smart paste with rules",
-		editorCallback: (editor) => smartPaste(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "smart-paste", "Smart paste with rules", (editor) => smartPaste(plugin, editor)),
 	});
 
 	// Moment logger
 	plugin.addCommand({
 		id: "insert-moment",
 		name: "Insert moment (auto)",
-		editorCallback: (editor) => insertMoment(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "insert-moment", "Insert moment (auto)", (editor) => insertMoment(plugin, editor)),
 	});
 
 	plugin.addCommand({
 		id: "insert-moment-at-cursor",
 		name: "Insert moment (at cursor)",
-		editorCallback: (editor) => insertMomentAtCursor(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "insert-moment-at-cursor", "Insert moment (at cursor)", (editor) => insertMomentAtCursor(plugin, editor)),
 	});
 
 	// Smart copy
 	plugin.addCommand({
 		id: "copy-current-heading",
 		name: "Copy current heading section",
-		editorCallback: (editor) => copyCurrentHeading(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "copy-current-heading", "Copy current heading section", (editor) => copyCurrentHeading(plugin, editor)),
 	});
 
 	plugin.addCommand({
 		id: "copy-current-code-block",
 		name: "Copy current code block",
-		editorCallback: (editor) => copyCurrentCodeBlock(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "copy-current-code-block", "Copy current code block", (editor) => copyCurrentCodeBlock(plugin, editor)),
 	});
 
 	plugin.addCommand({
 		id: "copy-current-table",
 		name: "Copy current table",
-		editorCallback: (editor) => copyCurrentTable(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "copy-current-table", "Copy current table", (editor) => copyCurrentTable(plugin, editor)),
 	});
 
 	plugin.addCommand({
 		id: "smart-copy-selector",
 		name: "Smart copy selector",
-		editorCallback: (editor) => openSmartCopySelector(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "smart-copy-selector", "Smart copy selector", (editor) => openSmartCopySelector(plugin, editor)),
 	});
 
 	plugin.addCommand({
 		id: "select-table-rows",
 		name: "Select table rows to copy",
-		editorCallback: (editor) => selectTableRows(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "select-table-rows", "Select table rows to copy", (editor) => selectTableRows(plugin, editor)),
 	});
 
 	plugin.addCommand({
 		id: "select-code-lines",
 		name: "Select code lines to copy",
-		editorCallback: (editor) => selectCodeLines(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "select-code-lines", "Select code lines to copy", (editor) => selectCodeLines(plugin, editor)),
 	});
 
 	plugin.addCommand({
 		id: "select-code-blocks",
 		name: "Select code blocks to copy",
-		editorCallback: (editor) => selectCodeBlocks(plugin, editor),
+		editorCallback: trackEditorCommand(plugin, "select-code-blocks", "Select code blocks to copy", (editor) => selectCodeBlocks(plugin, editor)),
 	});
 }

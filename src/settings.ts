@@ -31,6 +31,18 @@ export interface ClipboardRule {
 	description?: string;
 }
 
+export interface StatisticsSettings {
+	enabled: boolean;
+	retentionDays: number;
+	efficiencyEstimates: Record<string, {
+		commandId: string;
+		manualTimeSeconds: number;
+		commandTimeSeconds: number;
+	}>;
+	showInStatusBar: boolean;
+	lastActiveTab: 'overview' | 'commands' | 'efficiency' | 'trends';
+}
+
 export interface LemonToolkitSettings {
 	duplicateFileSuffixType: "timestamp" | "uuid";
 	folderSortType: "recent" | "day" | "week" | "month";
@@ -55,6 +67,7 @@ export interface LemonToolkitSettings {
 	externalApps: ExternalApp[];
 	clipboardRules: ClipboardRule[];
 	momentLoggerFormat: string;
+	statistics: StatisticsSettings;
 }
 
 export const DEFAULT_SETTINGS: LemonToolkitSettings = {
@@ -93,4 +106,11 @@ export const DEFAULT_SETTINGS: LemonToolkitSettings = {
 		},
 	],
 	momentLoggerFormat: "YYYY-MM-DD HH:mm:ss",
+	statistics: {
+		enabled: true,
+		retentionDays: 365,
+		efficiencyEstimates: {},
+		showInStatusBar: false,
+		lastActiveTab: 'overview'
+	},
 };

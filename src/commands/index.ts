@@ -17,6 +17,12 @@ import { editFrontmatter } from "./editFrontmatter";
 import { openTextSelectionActions } from "./textSelection";
 import { addHeadingNumbering, removeHeadingNumbering } from "./headingNumbering";
 import { openRecentFilesView } from "./recentFiles";
+import {
+	convertWikiToMarkdownInFile,
+	convertMarkdownToWikiInFile,
+	convertWikiToMarkdownInSelection,
+	convertMarkdownToWikiInSelection,
+} from "./linkConverter";
 import LemonToolkitPlugin from "../main";
 
 /**
@@ -146,5 +152,31 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "open-recent-files",
 		name: "Open recent files",
 		callback: () => openRecentFilesView(plugin),
+	});
+
+	// Link converter - File scope
+	plugin.addCommand({
+		id: "convert-wiki-to-markdown-file",
+		name: "Convert wiki links to markdown (file)",
+		editorCallback: (editor) => convertWikiToMarkdownInFile(plugin, editor),
+	});
+
+	plugin.addCommand({
+		id: "convert-markdown-to-wiki-file",
+		name: "Convert markdown links to wiki (file)",
+		editorCallback: (editor) => convertMarkdownToWikiInFile(plugin, editor),
+	});
+
+	// Link converter - Selection scope
+	plugin.addCommand({
+		id: "convert-wiki-to-markdown-selection",
+		name: "Convert wiki links to markdown (selection)",
+		editorCallback: (editor) => convertWikiToMarkdownInSelection(plugin, editor),
+	});
+
+	plugin.addCommand({
+		id: "convert-markdown-to-wiki-selection",
+		name: "Convert markdown links to wiki (selection)",
+		editorCallback: (editor) => convertMarkdownToWikiInSelection(plugin, editor),
 	});
 }

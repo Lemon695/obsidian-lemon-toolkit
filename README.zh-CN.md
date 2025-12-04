@@ -58,6 +58,23 @@
   - **自动追踪** - 自动追踪文件的编辑、查看和创建记录
   - **简洁界面** - 现代化、有序的 UI 设计，清晰的视觉层次
 
+### 链接转换工具
+
+在 Wiki 链接和 Markdown 链接之间转换，支持预览和选择：
+
+- **转换 wiki 链接为 markdown（文件）** - 将整个文件中的所有 `[[wiki 链接]]` 转换为 `[markdown](链接)`
+- **转换 markdown 链接为 wiki（文件）** - 将整个文件中的所有 `[markdown](链接)` 转换为 `[[wiki 链接]]`
+- **转换 wiki 链接为 markdown（选区）** - 仅转换选中的 wiki 链接
+- **转换 markdown 链接为 wiki（选区）** - 仅转换选中的 markdown 链接
+
+**功能特性**：
+- 转换前预览，支持复选框选择
+- 保留别名：`[[链接|别名]]` → `[别名](./链接.md)`
+- 智能图片处理：图片保留原始扩展名（`.png`、`.jpg` 等）
+- Typora 兼容路径：使用相对路径如 `./folder/file.md` 或 `./_resources/image.png`
+- 转换为 wiki 链接时跳过外部链接（http/https）
+- 显示行号和转换前后对比
+
 ### Frontmatter 编辑器
 
 - **编辑 Frontmatter** - 打开模态对话框编辑 frontmatter 字段，无需进入编辑模式：

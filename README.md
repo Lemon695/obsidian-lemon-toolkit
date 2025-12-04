@@ -58,6 +58,23 @@ Manage file deletion with two options:
   - **Auto-tracking** - Automatically tracks file edits, views, and creations
   - **Clean interface** - Modern, organized UI with clear visual hierarchy
 
+### Link Converter
+
+Convert between Wiki links and Markdown links with preview and selection:
+
+- **Convert wiki links to markdown (file)** - Convert all `[[wiki links]]` to `[markdown](links)` in the entire file
+- **Convert markdown links to wiki (file)** - Convert all `[markdown](links)` to `[[wiki links]]` in the entire file
+- **Convert wiki links to markdown (selection)** - Convert only selected wiki links
+- **Convert markdown links to wiki (selection)** - Convert only selected markdown links
+
+**Features**:
+- Preview before converting with checkbox selection
+- Preserves aliases: `[[link|alias]]` → `[alias](./link.md)`
+- Smart image handling: Images keep original extensions (`.png`, `.jpg`, etc.)
+- Typora-compatible paths: Uses relative paths like `./folder/file.md` or `./_resources/image.png`
+- Skips external links (http/https) when converting to wiki links
+- Shows line numbers and before/after comparison
+
 ### Frontmatter Editor
 
 - **Edit frontmatter** - Open a modal dialog to edit frontmatter fields without entering edit mode:

@@ -410,3 +410,246 @@ available in the app when your plugin is enabled.
 .lemon-recent-content::-webkit-scrollbar-thumb:hover {
 	background: var(--background-modifier-border-hover);
 }
+
+/* ============================================
+   Link Converter Modal
+   ============================================ */
+
+.lemon-link-converter-modal .modal {
+	width: 750px;
+	max-width: 90vw;
+}
+
+/* Header */
+.lemon-link-converter-header {
+	padding: 20px 28px;
+	border-bottom: 1px solid var(--background-modifier-border);
+	background: var(--background-primary);
+}
+
+.lemon-link-converter-header h2 {
+	margin: 0;
+	font-size: 1.3em;
+	font-weight: 600;
+}
+
+/* Description */
+.lemon-link-converter-desc {
+	padding: 16px 28px;
+	color: var(--text-muted);
+	font-size: 0.95em;
+	line-height: 1.5;
+	background: var(--background-secondary);
+}
+
+/* Links List */
+.lemon-link-converter-list {
+	padding: 20px 28px;
+	max-height: 500px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+/* Link Item */
+.lemon-link-item {
+	display: flex;
+	align-items: flex-start;
+	gap: 14px;
+	padding: 16px;
+	margin-bottom: 12px;
+	border-radius: 8px;
+	background: var(--background-secondary);
+	border: 2px solid transparent;
+	transition: all 0.15s ease;
+	cursor: pointer;
+}
+
+.lemon-link-item:hover {
+	background: var(--background-modifier-hover);
+	border-color: var(--background-modifier-border);
+}
+
+.lemon-link-item-unselected {
+	opacity: 0.5;
+	background: var(--background-secondary-alt);
+}
+
+.lemon-link-item-unselected:hover {
+	opacity: 0.7;
+}
+
+/* Checkbox */
+.lemon-link-checkbox {
+	width: 18px;
+	height: 18px;
+	margin-top: 2px;
+	cursor: pointer;
+	flex-shrink: 0;
+}
+
+/* Content */
+.lemon-link-content {
+	flex: 1;
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+/* Header with line number and type */
+.lemon-link-header {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+/* Line Number */
+.lemon-link-line {
+	font-size: 0.8em;
+	color: var(--text-muted);
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+}
+
+/* Type Badge */
+.lemon-link-type-badge {
+	font-size: 0.75em;
+	padding: 2px 8px;
+	border-radius: 10px;
+	font-weight: 500;
+	text-transform: capitalize;
+}
+
+.lemon-type-image {
+	background: rgba(59, 130, 246, 0.15);
+	color: rgb(59, 130, 246);
+}
+
+.lemon-type-video {
+	background: rgba(168, 85, 247, 0.15);
+	color: rgb(168, 85, 247);
+}
+
+.lemon-type-document {
+	background: rgba(34, 197, 94, 0.15);
+	color: rgb(34, 197, 94);
+}
+
+/* Conversion Display */
+.lemon-link-conversion {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.lemon-link-from,
+.lemon-link-to {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.lemon-link-label {
+	font-size: 0.85em;
+	font-weight: 600;
+	color: var(--text-muted);
+	min-width: 45px;
+}
+
+.lemon-link-code {
+	font-family: var(--font-monospace);
+	font-size: 0.9em;
+	padding: 4px 10px;
+	background: var(--code-background);
+	border-radius: 4px;
+	color: var(--code-normal);
+	word-break: break-all;
+	flex: 1;
+	min-width: 0;
+}
+
+.lemon-link-code-new {
+	background: var(--interactive-accent-hover);
+	color: var(--text-on-accent);
+	font-weight: 500;
+}
+
+/* Arrow */
+.lemon-link-arrow {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--text-accent);
+	margin: 4px 0;
+}
+
+.lemon-link-arrow svg {
+	opacity: 0.7;
+}
+
+/* Summary */
+.lemon-link-summary {
+	margin-top: 20px;
+	padding: 14px 16px;
+	background: var(--background-primary-alt);
+	border-radius: 6px;
+	font-size: 0.9em;
+	color: var(--text-muted);
+	text-align: center;
+	font-weight: 500;
+}
+
+/* Footer */
+.lemon-link-converter-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	padding: 16px 28px;
+	border-top: 1px solid var(--background-modifier-border);
+	background: var(--background-primary);
+	flex-wrap: wrap;
+}
+
+.lemon-footer-left {
+	display: flex;
+	gap: 6px;
+	flex-wrap: wrap;
+}
+
+.lemon-type-filter-btn {
+	font-size: 0.85em;
+	padding: 6px 12px;
+	background: var(--interactive-accent);
+	color: var(--text-on-accent);
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.lemon-type-filter-btn:hover {
+	background: var(--interactive-accent-hover);
+	transform: translateY(-1px);
+}
+
+/* Scrollbar */
+.lemon-link-converter-list::-webkit-scrollbar {
+	width: 8px;
+}
+
+.lemon-link-converter-list::-webkit-scrollbar-track {
+	background: transparent;
+}
+
+.lemon-link-converter-list::-webkit-scrollbar-thumb {
+	background: var(--background-modifier-border);
+	border-radius: 4px;
+}
+
+.lemon-link-converter-list::-webkit-scrollbar-thumb:hover {
+	background: var(--background-modifier-border-hover);
+}

@@ -2203,3 +2203,176 @@ available in the app when your plugin is enabled.
 .lemon-code-line-item {
 	animation: fadeIn 0.2s ease;
 }
+
+/* ============================================
+   Efficiency Estimates Modal
+   ============================================ */
+
+.efficiency-estimates-modal .modal-description {
+	padding: 12px 16px;
+	background: var(--background-secondary);
+	border-radius: 6px;
+	line-height: 1.5;
+}
+
+.efficiency-scroll-container {
+	padding: 8px;
+}
+
+.efficiency-category {
+	margin-bottom: 24px;
+}
+
+.efficiency-estimate-row {
+	transition: all 0.2s ease;
+}
+
+.efficiency-estimate-row:hover {
+	background: var(--background-primary) !important;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.estimate-input {
+	padding: 6px 10px;
+	border: 1px solid var(--background-modifier-border);
+	border-radius: 4px;
+	background: var(--background-primary);
+	color: var(--text-normal);
+	font-size: 0.9em;
+}
+
+.estimate-input:focus {
+	outline: none;
+	border-color: var(--interactive-accent);
+}
+
+.time-saved-display {
+	font-size: 0.95em;
+	min-height: 28px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+/* ============================================
+   Statistics Modal Enhancements
+   ============================================ */
+
+.statistics-modal .efficiency-main-metric {
+	text-align: center;
+	padding: 32px 24px;
+	background: linear-gradient(135deg, var(--background-secondary) 0%, var(--background-primary) 100%);
+	border-radius: 12px;
+	margin-bottom: 24px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.statistics-modal .efficiency-time-value {
+	font-size: 3em;
+	font-weight: 700;
+	color: var(--text-accent);
+	margin: 16px 0;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.statistics-modal .efficiency-cumulative,
+.statistics-modal .efficiency-average {
+	padding: 20px;
+	background: var(--background-secondary);
+	border-radius: 8px;
+	margin-bottom: 16px;
+	text-align: center;
+}
+
+.statistics-modal .cumulative-value,
+.statistics-modal .average-value {
+	font-size: 1.8em;
+	font-weight: 600;
+	color: var(--text-accent);
+	margin-top: 8px;
+}
+
+.statistics-modal .efficiency-breakdown {
+	margin-top: 24px;
+}
+
+.statistics-modal .breakdown-item {
+	position: relative;
+	padding: 12px 16px;
+	margin-bottom: 8px;
+	background: var(--background-secondary);
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.statistics-modal .breakdown-bar {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	background: linear-gradient(90deg, var(--interactive-accent-hover) 0%, var(--interactive-accent) 100%);
+	opacity: 0.15;
+	transition: all 0.3s ease;
+	z-index: 0;
+}
+
+.statistics-modal .breakdown-item:hover .breakdown-bar {
+	opacity: 0.25;
+}
+
+.statistics-modal .breakdown-name,
+.statistics-modal .breakdown-stats {
+	position: relative;
+	z-index: 1;
+}
+
+.statistics-modal .breakdown-name {
+	font-weight: 500;
+	margin-bottom: 4px;
+}
+
+.statistics-modal .breakdown-stats {
+	font-size: 0.9em;
+	color: var(--text-muted);
+}
+
+/* Metric Cards */
+.statistics-modal .metric-card {
+	padding: 20px;
+	background: var(--background-secondary);
+	border-radius: 8px;
+	transition: all 0.2s ease;
+}
+
+.statistics-modal .metric-card:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.statistics-modal .metric-title {
+	font-size: 0.85em;
+	color: var(--text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	margin-bottom: 8px;
+}
+
+.statistics-modal .metric-value {
+	font-size: 2em;
+	font-weight: 700;
+	color: var(--text-normal);
+	margin-bottom: 4px;
+}
+
+.statistics-modal .metric-change {
+	font-size: 0.9em;
+	font-weight: 500;
+}
+
+.statistics-modal .metric-change.positive {
+	color: var(--text-success);
+}
+
+.statistics-modal .metric-change.negative {
+	color: var(--text-error);
+}

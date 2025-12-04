@@ -3,6 +3,9 @@ import LemonToolkitPlugin from "../main";
 import { PinnedCommandsModal } from "./PinnedCommandsModal";
 import { t } from "../i18n/locale";
 
+// 管理时间估算-是否显示
+const SHOW_EFFICIENCY_ESTIMATES_MANAGER = false;
+
 export class LemonToolkitSettingTab extends PluginSettingTab {
 	plugin: LemonToolkitPlugin;
 
@@ -206,6 +209,65 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 			HH (hour 24h), mm (minute), ss (second)<br>
 			<strong>Example:</strong> ${this.getMomentExample()}
 		`;
+
+		// Statistics settings
+		containerEl.createEl("h3", { text: t('statisticsSettings') });
+
+		new Setting(containerEl)
+			.setName(t('enableStatistics'))
+			.setDesc(t('enableStatisticsDesc'))
+			.addToggle((toggle) =>
+				toggle
+					.setValue(this.plugin.settings.statistics.enabled)
+					.onChange(async (value) => {
+						this.plugin.settings.statistics.enabled = value;
+						this.plugin.statisticsManager?.updateSettings(this.plugin.settings.statistics);
+						await this.plugin.saveSettings();
+					})
+			);
+
+		new Setting(containerEl)
+			.setName(t('dataRetention'))
+			.setDesc(t('dataRetentionDesc'))
+			.addDropdown((dropdown) =>
+				dropdown
+					.addOption("30", t('retention30Days'))
+					.addOption("90", t('retention90Days'))
+					.addOption("365", t('retention365Days'))
+					.addOption("-1", t('retentionForever'))
+					.setValue(this.plugin.settings.statistics.retentionDays.toString())
+					.onChange(async (value) => {
+						this.plugin.settings.statistics.retentionDays = parseInt(value);
+						this.plugin.statisticsManager?.updateSettings(this.plugin.settings.statistics);
+						await this.plugin.saveSettings();
+					})
+			);
+
+		// Efficiency Estimates Manager (can be hidden via feature flag)
+		if (SHOW_EFFICIENCY_ESTIMATES_MANAGER) {
+			new Setting(containerEl)
+				.setName(t('manageEfficiencyEstimates'))
+				.setDesc(t('manageEfficiencyEstimatesDesc'))
+				.addButton((button) =>
+					button.setButtonText(t('manage')).onClick(() => {
+						this.showEfficiencyEstimatesModal();
+					})
+				);
+		}
+
+		// Show current time saved
+		if (this.plugin.statisticsManager) {
+			const totalTimeSaved = this.plugin.statisticsManager.getCumulativeTimeSaved();
+			if (totalTimeSaved > 0) {
+				const { formatTimeSaved } = require("../features/statistics/efficiency-config");
+				const timeSavedInfo = containerEl.createDiv({ cls: "setting-item-description" });
+				timeSavedInfo.style.marginTop = "-10px";
+				timeSavedInfo.style.paddingLeft = "0";
+				timeSavedInfo.style.color = "var(--text-accent)";
+				timeSavedInfo.style.fontWeight = "500";
+				timeSavedInfo.innerHTML = `⏱️ ${t('totalTimeSavedSoFar')}: <strong>${formatTimeSaved(totalTimeSaved)}</strong>`;
+			}
+		}
 	}
 
 	private getMomentExample(): string {
@@ -236,6 +298,12 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 				this.display(); // Refresh to update rules count
 			}
 		);
+		modal.open();
+	}
+
+	private showEfficiencyEstimatesModal(): void {
+		const { EfficiencyEstimatesModal } = require("./EfficiencyEstimatesModal");
+		const modal = new EfficiencyEstimatesModal(this.app, this.plugin);
 		modal.open();
 	}
 }

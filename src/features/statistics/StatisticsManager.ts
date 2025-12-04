@@ -11,6 +11,7 @@ import {
 	DEFAULT_STATISTICS_SETTINGS
 } from './types';
 import { StatisticsModal } from './StatisticsModal';
+import { getAllEfficiencyEstimates, getEfficiencyEstimate } from './efficiency-config';
 
 const STORAGE_KEY = 'statistics-data';
 const PLUGIN_VERSION = '1.0.0';
@@ -64,38 +65,19 @@ export class StatisticsManager {
 	 * Get default efficiency estimates for common commands
 	 */
 	private getDefaultEfficiencyEstimates(): Record<string, EfficiencyEstimate> {
-		return {
-			'heading-numbering': {
-				commandId: 'heading-numbering',
-				manualTimeSeconds: 30,
-				commandTimeSeconds: 2
-			},
-			'smart-copy': {
-				commandId: 'smart-copy',
-				manualTimeSeconds: 15,
-				commandTimeSeconds: 1
-			},
-			'smart-paste': {
-				commandId: 'smart-paste',
-				manualTimeSeconds: 20,
-				commandTimeSeconds: 1
-			},
-			'link-converter': {
-				commandId: 'link-converter',
-				manualTimeSeconds: 25,
-				commandTimeSeconds: 2
-			},
-			'moment-logger': {
-				commandId: 'moment-logger',
-				manualTimeSeconds: 10,
-				commandTimeSeconds: 1
-			},
-			'recent-files': {
-				commandId: 'recent-files',
-				manualTimeSeconds: 15,
-				commandTimeSeconds: 1
-			}
-		};
+		const allEstimates = getAllEfficiencyEstimates();
+		const result: Record<string, EfficiencyEstimate> = {};
+		
+		// Convert EfficiencyConfig to EfficiencyEstimate (remove description and category)
+		Object.entries(allEstimates).forEach(([key, config]) => {
+			result[key] = {
+				commandId: config.commandId,
+				manualTimeSeconds: config.manualTimeSeconds,
+				commandTimeSeconds: config.commandTimeSeconds
+			};
+		});
+		
+		return result;
 	}
 
 	/**

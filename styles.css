@@ -1766,3 +1766,440 @@ available in the app when your plugin is enabled.
 	color: var(--text-faint);
 	text-align: center;
 }
+
+
+/* ============================================
+   Smart Copy Modals - Google Material Design
+   ============================================ */
+
+/* Common Modal Styles */
+.lemon-smart-copy-modal,
+.lemon-code-block-selector-modal,
+.lemon-table-row-selector-modal,
+.lemon-code-line-selector-modal {
+	padding: 0;
+}
+
+.lemon-smart-copy-modal .modal-content,
+.lemon-code-block-selector-modal .modal-content,
+.lemon-table-row-selector-modal .modal-content,
+.lemon-code-line-selector-modal .modal-content {
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	max-height: 80vh;
+}
+
+/* Header */
+.lemon-modal-header {
+	padding: 24px 24px 16px 24px;
+	border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.lemon-modal-header h2 {
+	margin: 0;
+	font-size: 20px;
+	font-weight: 500;
+	color: var(--text-normal);
+	line-height: 1.4;
+}
+
+.lemon-modal-desc {
+	padding: 12px 24px;
+	color: var(--text-muted);
+	font-size: 14px;
+	line-height: 1.5;
+	background-color: var(--background-secondary);
+}
+
+/* Lists Container */
+.lemon-smart-copy-list,
+.lemon-code-blocks-list,
+.lemon-table-rows-list,
+.lemon-code-lines-list {
+	flex: 1;
+	overflow-y: auto;
+	padding: 16px 24px;
+	min-height: 200px;
+	max-height: 400px;
+}
+
+/* Empty State */
+.lemon-empty-state {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 200px;
+	color: var(--text-muted);
+	font-size: 14px;
+	text-align: center;
+	padding: 32px;
+}
+
+/* List Items */
+.lemon-copy-block-item,
+.lemon-code-block-item,
+.lemon-table-row-item,
+.lemon-code-line-item {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	padding: 12px;
+	margin-bottom: 8px;
+	border-radius: 8px;
+	border: 1px solid var(--background-modifier-border);
+	background-color: var(--background-primary);
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.lemon-copy-block-item:hover,
+.lemon-code-block-item:hover,
+.lemon-table-row-item:hover,
+.lemon-code-line-item:hover {
+	background-color: var(--background-secondary);
+	border-color: var(--interactive-accent);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.lemon-block-selected,
+.lemon-code-block-selected,
+.lemon-row-selected,
+.lemon-line-selected {
+	background-color: var(--background-modifier-hover);
+	border-color: var(--interactive-accent);
+}
+
+/* Checkboxes */
+.lemon-block-checkbox,
+.lemon-code-block-checkbox,
+.lemon-row-checkbox,
+.lemon-line-checkbox {
+	margin-top: 2px;
+	cursor: pointer;
+	width: 18px;
+	height: 18px;
+	flex-shrink: 0;
+}
+
+/* Content Areas */
+.lemon-block-content,
+.lemon-code-block-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	min-width: 0;
+}
+
+.lemon-block-header,
+.lemon-code-block-header {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	flex-wrap: wrap;
+}
+
+/* Type Badges */
+.lemon-block-type-badge,
+.lemon-language-badge {
+	display: inline-flex;
+	align-items: center;
+	padding: 4px 10px;
+	border-radius: 12px;
+	font-size: 12px;
+	font-weight: 500;
+	background-color: var(--background-modifier-border);
+	color: var(--text-normal);
+	white-space: nowrap;
+}
+
+.lemon-type-heading {
+	background-color: rgba(59, 130, 246, 0.15);
+	color: rgb(59, 130, 246);
+}
+
+.lemon-type-code {
+	background-color: rgba(139, 92, 246, 0.15);
+	color: rgb(139, 92, 246);
+}
+
+.lemon-type-table {
+	background-color: rgba(16, 185, 129, 0.15);
+	color: rgb(16, 185, 129);
+}
+
+.lemon-type-list {
+	background-color: rgba(245, 158, 11, 0.15);
+	color: rgb(245, 158, 11);
+}
+
+.lemon-type-paragraph {
+	background-color: rgba(107, 114, 128, 0.15);
+	color: rgb(107, 114, 128);
+}
+
+/* Block Title */
+.lemon-block-title {
+	font-weight: 500;
+	color: var(--text-normal);
+	flex: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Meta Info */
+.lemon-block-meta,
+.lemon-code-block-line-info {
+	font-size: 12px;
+	color: var(--text-muted);
+}
+
+/* Preview */
+.lemon-block-preview,
+.lemon-code-block-preview {
+	font-size: 13px;
+	color: var(--text-muted);
+	line-height: 1.5;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+
+.lemon-code-block-preview pre {
+	margin: 0;
+	padding: 8px 12px;
+	background-color: var(--background-secondary);
+	border-radius: 4px;
+	overflow-x: auto;
+	font-size: 12px;
+	line-height: 1.5;
+}
+
+.lemon-code-block-preview code {
+	font-family: var(--font-monospace);
+	color: var(--text-normal);
+}
+
+/* Table Row Specific */
+.lemon-row-number {
+	font-size: 12px;
+	font-weight: 500;
+	color: var(--text-muted);
+	min-width: 80px;
+}
+
+.lemon-row-content {
+	flex: 1;
+	font-family: var(--font-monospace);
+	font-size: 13px;
+	color: var(--text-normal);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+/* Code Line Specific */
+.lemon-line-number {
+	font-family: var(--font-monospace);
+	font-size: 12px;
+	font-weight: 500;
+	color: var(--text-muted);
+	min-width: 40px;
+	text-align: right;
+	user-select: none;
+}
+
+.lemon-line-content {
+	flex: 1;
+	font-family: var(--font-monospace);
+	font-size: 13px;
+	color: var(--text-normal);
+	white-space: pre;
+	overflow-x: auto;
+	padding: 2px 0;
+}
+
+/* Summary */
+.lemon-copy-summary,
+.lemon-code-block-summary,
+.lemon-row-summary,
+.lemon-line-summary {
+	margin-top: 16px;
+	padding: 12px 16px;
+	background-color: var(--background-secondary);
+	border-radius: 8px;
+	text-align: center;
+	font-size: 14px;
+	color: var(--text-muted);
+}
+
+.lemon-stat-highlight {
+	font-weight: 600;
+	color: var(--interactive-accent);
+}
+
+/* Footer */
+.lemon-modal-footer {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 16px 24px;
+	border-top: 1px solid var(--background-modifier-border);
+	background-color: var(--background-secondary);
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.lemon-footer-left,
+.lemon-footer-right {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.lemon-footer-left {
+	flex: 1;
+}
+
+.lemon-footer-right {
+	flex-shrink: 0;
+}
+
+/* Buttons */
+.lemon-modal-footer button {
+	padding: 8px 16px;
+	border-radius: 6px;
+	font-size: 14px;
+	font-weight: 500;
+	cursor: pointer;
+	border: 1px solid var(--background-modifier-border);
+	background-color: var(--background-primary);
+	color: var(--text-normal);
+	transition: all 0.2s ease;
+	white-space: nowrap;
+}
+
+.lemon-modal-footer button:hover {
+	background-color: var(--background-modifier-hover);
+	border-color: var(--interactive-accent);
+	transform: translateY(-1px);
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.lemon-modal-footer button:active {
+	transform: translateY(0);
+	box-shadow: none;
+}
+
+/* Primary Button (CTA) */
+.lemon-modal-footer button.mod-cta {
+	background-color: var(--interactive-accent);
+	color: var(--text-on-accent);
+	border-color: var(--interactive-accent);
+	font-weight: 600;
+}
+
+.lemon-modal-footer button.mod-cta:hover {
+	background-color: var(--interactive-accent-hover);
+	border-color: var(--interactive-accent-hover);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Type Filter Buttons */
+.lemon-type-filter-btn {
+	font-size: 13px !important;
+	padding: 6px 12px !important;
+	background-color: var(--background-modifier-border) !important;
+	border-color: var(--background-modifier-border) !important;
+}
+
+.lemon-type-filter-btn:hover {
+	background-color: var(--interactive-accent) !important;
+	color: var(--text-on-accent) !important;
+	border-color: var(--interactive-accent) !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+	.lemon-modal-footer {
+		flex-direction: column;
+		align-items: stretch;
+	}
+	
+	.lemon-footer-left,
+	.lemon-footer-right {
+		width: 100%;
+		justify-content: stretch;
+	}
+	
+	.lemon-footer-left {
+		order: 2;
+	}
+	
+	.lemon-footer-right {
+		order: 1;
+	}
+	
+	.lemon-modal-footer button {
+		flex: 1;
+	}
+	
+	.lemon-type-filter-btn {
+		flex: 0 1 auto;
+	}
+}
+
+/* Scrollbar Styling */
+.lemon-smart-copy-list::-webkit-scrollbar,
+.lemon-code-blocks-list::-webkit-scrollbar,
+.lemon-table-rows-list::-webkit-scrollbar,
+.lemon-code-lines-list::-webkit-scrollbar {
+	width: 8px;
+}
+
+.lemon-smart-copy-list::-webkit-scrollbar-track,
+.lemon-code-blocks-list::-webkit-scrollbar-track,
+.lemon-table-rows-list::-webkit-scrollbar-track,
+.lemon-code-lines-list::-webkit-scrollbar-track {
+	background: var(--background-secondary);
+	border-radius: 4px;
+}
+
+.lemon-smart-copy-list::-webkit-scrollbar-thumb,
+.lemon-code-blocks-list::-webkit-scrollbar-thumb,
+.lemon-table-rows-list::-webkit-scrollbar-thumb,
+.lemon-code-lines-list::-webkit-scrollbar-thumb {
+	background: var(--background-modifier-border);
+	border-radius: 4px;
+}
+
+.lemon-smart-copy-list::-webkit-scrollbar-thumb:hover,
+.lemon-code-blocks-list::-webkit-scrollbar-thumb:hover,
+.lemon-table-rows-list::-webkit-scrollbar-thumb:hover,
+.lemon-code-lines-list::-webkit-scrollbar-thumb:hover {
+	background: var(--text-muted);
+}
+
+/* Animation */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.lemon-copy-block-item,
+.lemon-code-block-item,
+.lemon-table-row-item,
+.lemon-code-line-item {
+	animation: fadeIn 0.2s ease;
+}

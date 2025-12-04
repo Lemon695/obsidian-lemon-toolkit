@@ -25,6 +25,15 @@ import {
 } from "./linkConverter";
 import { smartPaste } from "./smartPaste";
 import { insertMoment, insertMomentAtCursor } from "./momentLogger";
+import {
+	copyCurrentHeading,
+	copyCurrentCodeBlock,
+	copyCurrentTable,
+	openSmartCopySelector,
+	selectTableRows,
+	selectCodeLines,
+	selectCodeBlocks,
+} from "./smartCopy";
 import LemonToolkitPlugin from "../main";
 
 /**
@@ -200,5 +209,48 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "insert-moment-at-cursor",
 		name: "Insert moment (at cursor)",
 		editorCallback: (editor) => insertMomentAtCursor(plugin, editor),
+	});
+
+	// Smart copy
+	plugin.addCommand({
+		id: "copy-current-heading",
+		name: "Copy current heading section",
+		editorCallback: (editor) => copyCurrentHeading(plugin, editor),
+	});
+
+	plugin.addCommand({
+		id: "copy-current-code-block",
+		name: "Copy current code block",
+		editorCallback: (editor) => copyCurrentCodeBlock(plugin, editor),
+	});
+
+	plugin.addCommand({
+		id: "copy-current-table",
+		name: "Copy current table",
+		editorCallback: (editor) => copyCurrentTable(plugin, editor),
+	});
+
+	plugin.addCommand({
+		id: "smart-copy-selector",
+		name: "Smart copy selector",
+		editorCallback: (editor) => openSmartCopySelector(plugin, editor),
+	});
+
+	plugin.addCommand({
+		id: "select-table-rows",
+		name: "Select table rows to copy",
+		editorCallback: (editor) => selectTableRows(plugin, editor),
+	});
+
+	plugin.addCommand({
+		id: "select-code-lines",
+		name: "Select code lines to copy",
+		editorCallback: (editor) => selectCodeLines(plugin, editor),
+	});
+
+	plugin.addCommand({
+		id: "select-code-blocks",
+		name: "Select code blocks to copy",
+		editorCallback: (editor) => selectCodeBlocks(plugin, editor),
 	});
 }

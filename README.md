@@ -138,6 +138,67 @@ Quick timestamp logging for daily journals and time tracking:
 2. Subsequent uses: Automatically appends to existing moment block
 3. Need to insert elsewhere? Use "Insert moment (at cursor)" command
 
+### Smart Copy
+
+Intelligent content copying based on document structure:
+
+- **Copy current heading section** - Copy the heading at cursor and all content under it
+- **Copy current code block** - Copy the code block at cursor position
+- **Copy current table** - Copy the table at cursor position
+- **Smart copy selector** - Visual selector to choose and copy multiple blocks
+- **Select code blocks to copy** - Select multiple code blocks from entire document
+- **Select code lines to copy** - Select specific lines from current code block
+- **Select table rows to copy** - Select specific rows from current table
+
+**Features**:
+- **Context-aware**: Automatically detects what content you're in (heading, code, table)
+- **Multi-select**: Select multiple non-contiguous blocks to copy at once
+- **Type filters**: Quickly select all headings, code blocks, or tables
+- **Visual preview**: See content preview before copying
+- **Smart combination**: Multiple selections are combined with proper spacing
+
+**Supported content types**:
+- **Headings**: Copy entire sections including all subsections
+- **Code blocks**: Copy complete code blocks with language tags
+- **Tables**: Copy entire tables with proper formatting
+- **Lists**: Copy list structures (coming soon)
+
+**Use cases**:
+- Extract specific sections from long documents
+- Copy multiple code examples at once
+- Combine non-contiguous content for sharing
+- Quick copy without precise text selection
+
+**Example workflow**:
+1. Place cursor in a heading
+2. Run "Copy current heading section"
+3. Entire section (including subsections) copied to clipboard
+
+Or use the selector:
+1. Run "Smart copy selector"
+2. Check multiple headings and code blocks
+3. Click "Copy Selected"
+4. All selected content combined and copied
+
+**API Documentation Example**:
+```markdown
+## Request
+```json
+{ "user": "john" }
+```
+
+## Response
+```json
+{ "status": "ok" }
+```
+```
+
+Use "Select code blocks to copy":
+1. Opens selector showing all code blocks
+2. Check both JSON blocks
+3. Copy both at once with blank line separator
+4. Perfect for sharing API examples!
+
 ### Frontmatter Editor
 
 - **Edit frontmatter** - Open a modal dialog to edit frontmatter fields without entering edit mode:

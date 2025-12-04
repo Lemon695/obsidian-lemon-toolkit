@@ -79,6 +79,17 @@ Manage file deletion with two options:
   - Supports macOS, Windows, Linux
   - Add unlimited number of applications
 
+### Heading Numbering
+
+- **Add/update heading numbering** - Automatically add or update hierarchical numbering for all headings:
+  - Supports multi-level numbering (1、1.1、1.2、1.2.1, etc.)
+  - Preview changes before applying
+  - Highlights modified headings
+  - Preserves heading text
+  - Smart detection of existing numbers
+  
+- **Remove heading numbering** - Remove all numbering from headings in the document
+
 ## Usage
 
 1. Open any file in your vault
@@ -106,6 +117,8 @@ Manage file deletion with two options:
 | `Lemon Toolkit: Open file info` | Open the file information sidebar |
 | `Lemon Toolkit: Edit frontmatter` | Edit frontmatter fields in a modal dialog |
 | `Lemon Toolkit: Text selection actions` | Quick actions for selected text |
+| `Lemon Toolkit: Add/update heading numbering` | Add or update hierarchical numbering for headings |
+| `Lemon Toolkit: Remove heading numbering` | Remove all numbering from headings |
 
 ## Installation
 
@@ -233,7 +246,7 @@ src/
 
 ## Support
 
-If you encounter any issues or have feature requests, please [open an issue](https://github.com/yourusername/lemon-toolkit/issues) on GitHub.
+If you encounter any issues or have feature requests, please [open an issue](https://github.com/Lemon695/obsidian-lemon-toolkit/issues) on GitHub.
 
 ## License
 

@@ -79,6 +79,17 @@
   - 支持 macOS、Windows、Linux
   - 可添加任意数量的应用程序
 
+### 标题序号管理
+
+- **添加/更新标题序号** - 自动为所有标题添加或更新层级序号：
+  - 支持多级序号（1、1.1、1.2、1.2.1 等）
+  - 应用前预览更改
+  - 高亮显示修改的标题
+  - 保留标题文本内容
+  - 智能识别已有序号
+  
+- **移除标题序号** - 移除文档中所有标题的序号
+
 ## 使用方法
 
 1. 在仓库中打开任意文件
@@ -106,6 +117,8 @@
 | `Lemon Toolkit: Open file info` | 打开文件信息侧边栏 |
 | `Lemon Toolkit: Edit frontmatter` | 在模态对话框中编辑 frontmatter 字段 |
 | `Lemon Toolkit: Text selection actions` | 选中文本的快捷操作 |
+| `Lemon Toolkit: Add/update heading numbering` | 添加或更新标题的层级序号 |
+| `Lemon Toolkit: Remove heading numbering` | 移除所有标题序号 |
 
 ## 安装方法
 
@@ -233,7 +246,7 @@ src/
 
 ## 支持
 
-如果遇到任何问题或有功能建议，请在 GitHub 上[提交 issue](https://github.com/yourusername/lemon-toolkit/issues)。
+如果遇到任何问题或有功能建议，请在 GitHub 上[提交 issue](https://github.com/Lemon695/obsidian-lemon-toolkit/issues)。
 
 ## 许可证
 

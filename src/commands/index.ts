@@ -15,6 +15,7 @@ import { openCommandPalette } from "./commandPalette";
 import { openSettings } from "./openSettings";
 import { editFrontmatter } from "./editFrontmatter";
 import { openTextSelectionActions } from "./textSelection";
+import { addHeadingNumbering, removeHeadingNumbering } from "./headingNumbering";
 import LemonToolkitPlugin from "../main";
 
 /**
@@ -124,5 +125,18 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "text-selection-actions",
 		name: "Text selection actions",
 		editorCallback: (editor) => openTextSelectionActions(plugin, editor),
+	});
+
+	// Heading numbering
+	plugin.addCommand({
+		id: "add-heading-numbering",
+		name: "Add/update heading numbering",
+		editorCallback: (editor) => addHeadingNumbering(plugin, editor),
+	});
+
+	plugin.addCommand({
+		id: "remove-heading-numbering",
+		name: "Remove heading numbering",
+		editorCallback: (editor) => removeHeadingNumbering(plugin, editor),
 	});
 }

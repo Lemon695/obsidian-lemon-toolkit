@@ -16,6 +16,7 @@ import { openSettings } from "./openSettings";
 import { editFrontmatter } from "./editFrontmatter";
 import { openTextSelectionActions } from "./textSelection";
 import { addHeadingNumbering, removeHeadingNumbering } from "./headingNumbering";
+import { openRecentFilesView } from "./recentFiles";
 import LemonToolkitPlugin from "../main";
 
 /**
@@ -138,5 +139,12 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "remove-heading-numbering",
 		name: "Remove heading numbering",
 		editorCallback: (editor) => removeHeadingNumbering(plugin, editor),
+	});
+
+	// Recent files
+	plugin.addCommand({
+		id: "open-recent-files",
+		name: "Open recent files",
+		callback: () => openRecentFilesView(plugin),
 	});
 }

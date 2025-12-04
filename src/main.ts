@@ -3,6 +3,7 @@ import { registerCommands } from "./commands";
 import { LemonToolkitSettings, DEFAULT_SETTINGS } from "./settings";
 import { LemonToolkitSettingTab } from "./ui/SettingTab";
 import { FileInfoView, FILE_INFO_VIEW_TYPE } from "./views/FileInfoView";
+import { RecentFilesView, RECENT_FILES_VIEW_TYPE } from "./views/RecentFilesView";
 import { ExternalAppManager } from "./features/external-apps/ExternalAppManager";
 
 export default class LemonToolkitPlugin extends Plugin {
@@ -16,10 +17,15 @@ export default class LemonToolkitPlugin extends Plugin {
 		// Initialize external app manager
 		this.externalAppManager = new ExternalAppManager(this);
 		
-		// Register file info view
+		// Register views
 		this.registerView(
 			FILE_INFO_VIEW_TYPE,
 			(leaf) => new FileInfoView(leaf, this)
+		);
+		
+		this.registerView(
+			RECENT_FILES_VIEW_TYPE,
+			(leaf) => new RecentFilesView(leaf, this)
 		);
 
 		// Add ribbon icon
@@ -156,8 +162,9 @@ export default class LemonToolkitPlugin extends Plugin {
 	}
 
 	onunload() {
-		// Detach file info view
+		// Detach views
 		this.app.workspace.detachLeavesOfType(FILE_INFO_VIEW_TYPE);
+		this.app.workspace.detachLeavesOfType(RECENT_FILES_VIEW_TYPE);
 	}
 
 	async activateFileInfoView() {

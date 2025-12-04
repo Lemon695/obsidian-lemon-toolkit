@@ -48,6 +48,16 @@ Manage file deletion with two options:
   - Auto-updates when switching files or modifying content
   - Click on file name/path to copy
 
+### Recent Files View
+
+- **Open recent files** - Open a smart sidebar view to manage your recent files:
+  - **Three tabs**: Recently Edited, Recently Viewed, Recently Created
+  - **Pin files** - Pin frequently used files to the top for quick access
+  - **Time display** - See when each file was last accessed (e.g., "2h ago", "3d ago")
+  - **Right-click menu** - Quick actions: pin/unpin, open in new tab, reveal in navigation, move, or delete
+  - **Auto-tracking** - Automatically tracks file edits, views, and creations
+  - **Clean interface** - Modern, organized UI with clear visual hierarchy
+
 ### Frontmatter Editor
 
 - **Edit frontmatter** - Open a modal dialog to edit frontmatter fields without entering edit mode:

@@ -1,6 +1,7 @@
 import { Modal, App } from 'obsidian';
 import { StatisticsManager } from './StatisticsManager';
 import { StatisticsTab } from './types';
+import { t } from '../../i18n/locale';
 
 /**
  * Modal window for displaying command usage statistics
@@ -33,7 +34,7 @@ export class StatisticsModal extends Modal {
 		}
 
 		// Set modal title
-		this.titleEl.setText('Statistics');
+		this.titleEl.setText(t('statistics'));
 
 		// Create tab navigation
 		this.createTabNavigation();
@@ -57,10 +58,10 @@ export class StatisticsModal extends Modal {
 		const tabNav = this.contentEl.createDiv('statistics-tab-nav');
 
 		const tabs: Array<{ id: StatisticsTab; label: string }> = [
-			{ id: 'overview', label: 'Overview' },
-			{ id: 'commands', label: 'Commands' },
-			{ id: 'efficiency', label: 'Efficiency' },
-			{ id: 'trends', label: 'Trends' }
+			{ id: 'overview', label: t('overview') },
+			{ id: 'commands', label: t('commands') },
+			{ id: 'efficiency', label: t('efficiency') },
+			{ id: 'trends', label: t('trends') }
 		];
 
 		tabs.forEach(tab => {
@@ -181,38 +182,41 @@ export class StatisticsModal extends Modal {
 
 		this.renderMetricCard(
 			metricsSection,
-			'Total Commands',
+			t('totalCommands'),
 			todayStats.totalCommands.toString(),
 			todayStats.comparisonData?.percentageChange
 		);
 
 		this.renderMetricCard(
 			metricsSection,
-			'Most Used',
+			t('mostUsed'),
 			mostUsedCommand ? mostUsedCommand.commandName : 'N/A',
 			undefined
 		);
 
 		this.renderMetricCard(
 			metricsSection,
-			'Time Saved (Total)',
+			t('timeSavedTotal'),
 			this.formatTime(cumulativeTimeSaved),
 			undefined
 		);
 
 		// Today's activity
 		const activitySection = container.createDiv('activity-section');
-		activitySection.createEl('h3', { text: "Today's Activity" });
+		activitySection.createEl('h3', { text: t('todaysActivity') });
 
 		const activitySummary = activitySection.createDiv('activity-summary');
 		activitySummary.createEl('p', {
-			text: `You've executed ${todayStats.totalCommands} commands today using ${todayStats.uniqueCommands} different features.`
+			text: t('todayActivitySummary', {
+				count: todayStats.totalCommands.toString(),
+				unique: todayStats.uniqueCommands.toString()
+			})
 		});
 
 		// Top commands
 		if (todayStats.topCommands.length > 0) {
 			const topSection = container.createDiv('top-commands-section');
-			topSection.createEl('h3', { text: 'Top Commands Today' });
+			topSection.createEl('h3', { text: t('topCommandsToday') });
 
 			const topList = topSection.createDiv('top-commands-list');
 			todayStats.topCommands.forEach(cmd => {
@@ -238,9 +242,9 @@ export class StatisticsModal extends Modal {
 	 */
 	private renderEmptyState(container: HTMLElement): void {
 		const emptyState = container.createDiv('empty-state');
-		emptyState.createEl('h3', { text: 'No Data Yet' });
+		emptyState.createEl('h3', { text: t('noDataYet') });
 		emptyState.createEl('p', {
-			text: 'Start using commands to see your statistics here. Your usage data will be tracked automatically.'
+			text: t('noDataMessage')
 		});
 	}
 
@@ -307,18 +311,18 @@ export class StatisticsModal extends Modal {
 		
 		const searchInput = controlsSection.createEl('input', {
 			type: 'text',
-			placeholder: 'Search commands...',
+			placeholder: t('searchCommands'),
 			cls: 'commands-search'
 		});
 
 		// Sort controls
 		const sortSection = controlsSection.createDiv('sort-controls');
-		sortSection.createEl('span', { text: 'Sort by: ' });
+		sortSection.createEl('span', { text: t('sortBy') });
 
 		const sortSelect = sortSection.createEl('select', { cls: 'sort-select' });
-		sortSelect.createEl('option', { text: 'Most Used', value: 'uses' });
-		sortSelect.createEl('option', { text: 'Name', value: 'name' });
-		sortSelect.createEl('option', { text: 'Last Used', value: 'lastUsed' });
+		sortSelect.createEl('option', { text: t('mostUsedSort'), value: 'uses' });
+		sortSelect.createEl('option', { text: t('nameSort'), value: 'name' });
+		sortSelect.createEl('option', { text: t('lastUsedSort'), value: 'lastUsed' });
 
 		// Commands table
 		const tableContainer = container.createDiv('commands-table-container');
@@ -344,10 +348,10 @@ export class StatisticsModal extends Modal {
 			// Header
 			const thead = table.createEl('thead');
 			const headerRow = thead.createEl('tr');
-			headerRow.createEl('th', { text: 'Command' });
-			headerRow.createEl('th', { text: 'Total Uses' });
-			headerRow.createEl('th', { text: 'Last Used' });
-			headerRow.createEl('th', { text: 'Avg/Day' });
+			headerRow.createEl('th', { text: t('commandName') });
+			headerRow.createEl('th', { text: t('totalUses') });
+			headerRow.createEl('th', { text: t('lastUsed') });
+			headerRow.createEl('th', { text: t('avgPerDay') });
 
 			// Body
 			const tbody = table.createEl('tbody');
@@ -421,11 +425,11 @@ Last Used: ${this.formatDate(stat.lastUsed)}
 		const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
 		if (diffDays === 0) {
-			return 'Today';
+			return t('today');
 		} else if (diffDays === 1) {
-			return 'Yesterday';
+			return t('yesterday');
 		} else if (diffDays < 7) {
-			return `${diffDays} days ago`;
+			return t('daysAgo', { days: diffDays.toString() });
 		} else {
 			return date.toLocaleDateString();
 		}
@@ -443,13 +447,13 @@ Last Used: ${this.formatDate(stat.lastUsed)}
 
 		// Period selector
 		const controlsSection = container.createDiv('efficiency-controls');
-		controlsSection.createEl('span', { text: 'Time Period: ' });
+		controlsSection.createEl('span', { text: t('timePeriod') });
 
 		const periodSelect = controlsSection.createEl('select', { cls: 'period-select' });
-		periodSelect.createEl('option', { text: 'Today', value: 'day' });
-		periodSelect.createEl('option', { text: 'This Week', value: 'week' });
-		periodSelect.createEl('option', { text: 'This Month', value: 'month' });
-		periodSelect.createEl('option', { text: 'This Year', value: 'year' });
+		periodSelect.createEl('option', { text: t('timePeriodToday'), value: 'day' });
+		periodSelect.createEl('option', { text: t('timePeriodWeek'), value: 'week' });
+		periodSelect.createEl('option', { text: t('timePeriodMonth'), value: 'month' });
+		periodSelect.createEl('option', { text: t('timePeriodYear'), value: 'year' });
 		periodSelect.value = selectedPeriod;
 
 		// Content container
@@ -463,34 +467,34 @@ Last Used: ${this.formatDate(stat.lastUsed)}
 
 			// Large time saved display
 			const mainMetric = contentContainer.createDiv('efficiency-main-metric');
-			mainMetric.createEl('h2', { text: 'Time Saved' });
+			mainMetric.createEl('h2', { text: t('timeSaved') });
 			const timeValue = mainMetric.createDiv('efficiency-time-value');
 			timeValue.setText(this.formatTime(efficiencyData.totalTimeSaved));
 
 			const periodLabel = {
-				day: 'today',
-				week: 'this week',
-				month: 'this month',
-				year: 'this year'
+				day: t('today_period'),
+				week: t('thisWeek_period'),
+				month: t('thisMonth_period'),
+				year: t('thisYear_period')
 			}[period];
-			mainMetric.createEl('p', { text: `You've saved ${periodLabel}` });
+			mainMetric.createEl('p', { text: t('youveSaved', { period: periodLabel }) });
 
 			// Cumulative savings
 			const cumulativeSection = contentContainer.createDiv('efficiency-cumulative');
-			cumulativeSection.createEl('h3', { text: 'Total Time Saved Since First Use' });
+			cumulativeSection.createEl('h3', { text: t('totalTimeSavedSinceFirstUse') });
 			const cumulativeValue = cumulativeSection.createDiv('cumulative-value');
 			cumulativeValue.setText(this.formatTime(cumulativeTimeSaved));
 
 			// Average per day
 			const avgSection = contentContainer.createDiv('efficiency-average');
-			avgSection.createEl('h3', { text: 'Average Per Day' });
+			avgSection.createEl('h3', { text: t('averagePerDay') });
 			const avgValue = avgSection.createDiv('average-value');
 			avgValue.setText(this.formatTime(efficiencyData.averagePerDay));
 
 			// Breakdown by command
 			if (efficiencyData.commandBreakdown.length > 0) {
 				const breakdownSection = contentContainer.createDiv('efficiency-breakdown');
-				breakdownSection.createEl('h3', { text: 'Time Saved by Command' });
+				breakdownSection.createEl('h3', { text: t('timeSavedByCommand') });
 
 				const breakdownList = breakdownSection.createDiv('breakdown-list');
 				efficiencyData.commandBreakdown.forEach(item => {
@@ -500,7 +504,7 @@ Last Used: ${this.formatDate(stat.lastUsed)}
 					nameEl.setText(item.commandName);
 
 					const statsEl = row.createDiv('breakdown-stats');
-					statsEl.setText(`${this.formatTime(item.timeSaved)} (${item.executionCount} uses)`);
+					statsEl.setText(`${this.formatTime(item.timeSaved)} (${item.executionCount} ${t('uses')})`);
 
 					// Visual bar
 					const maxTime = efficiencyData.commandBreakdown[0].timeSaved;
@@ -510,7 +514,7 @@ Last Used: ${this.formatDate(stat.lastUsed)}
 				});
 			} else {
 				contentContainer.createEl('p', {
-					text: 'No efficiency data available for this period. Use commands with efficiency estimates to see time savings.'
+					text: t('noEfficiencyData')
 				});
 			}
 		};
@@ -541,11 +545,11 @@ Last Used: ${this.formatDate(stat.lastUsed)}
 
 		// Chart type selector
 		const controlsSection = container.createDiv('trends-controls');
-		controlsSection.createEl('span', { text: 'View: ' });
+		controlsSection.createEl('span', { text: t('view') });
 
 		const chartTypeSelect = controlsSection.createEl('select', { cls: 'chart-type-select' });
-		chartTypeSelect.createEl('option', { text: 'Usage Over Time', value: 'line' });
-		chartTypeSelect.createEl('option', { text: 'Weekly Heatmap', value: 'heatmap' });
+		chartTypeSelect.createEl('option', { text: t('usageOverTime'), value: 'line' });
+		chartTypeSelect.createEl('option', { text: t('weeklyHeatmap'), value: 'heatmap' });
 
 		// Chart container
 		const chartContainer = container.createDiv('chart-container');
@@ -573,7 +577,7 @@ Last Used: ${this.formatDate(stat.lastUsed)}
 	 * Render a simple line chart showing usage over time
 	 */
 	private renderLineChart(container: HTMLElement, events: any[]): void {
-		container.createEl('h3', { text: 'Command Usage Over Last 30 Days' });
+		container.createEl('h3', { text: t('commandUsageOverLast30Days') });
 
 		// Group events by day
 		const dayGroups = new Map<string, number>();
@@ -592,7 +596,7 @@ Last Used: ${this.formatDate(stat.lastUsed)}
 		const chartEl = container.createDiv('simple-chart');
 		
 		if (dayGroups.size === 0) {
-			chartEl.createEl('p', { text: 'No data in the last 30 days' });
+			chartEl.createEl('p', { text: t('noDataInLast30Days') });
 			return;
 		}
 
@@ -612,7 +616,7 @@ Last Used: ${this.formatDate(stat.lastUsed)}
 			const bar = barWrapper.createDiv('chart-bar');
 			const percentage = (count / maxCount) * 100;
 			bar.style.height = `${percentage}%`;
-			bar.setAttribute('title', `${count} commands`);
+			bar.setAttribute('title', `${count} ${t('commands_count')}`);
 
 			const countLabel = barContainer.createDiv('chart-count');
 			countLabel.setText(count.toString());
@@ -623,7 +627,7 @@ Last Used: ${this.formatDate(stat.lastUsed)}
 	 * Render a heatmap showing usage by day of week and hour
 	 */
 	private renderHeatmap(container: HTMLElement, events: any[]): void {
-		container.createEl('h3', { text: 'Usage Heatmap (Day & Hour)' });
+		container.createEl('h3', { text: t('usageHeatmapDayHour') });
 
 		// Group events by day of week and hour
 		const heatmapData: number[][] = Array(7).fill(0).map(() => Array(24).fill(0));
@@ -639,14 +643,14 @@ Last Used: ${this.formatDate(stat.lastUsed)}
 		const maxCount = Math.max(...heatmapData.flat());
 
 		if (maxCount === 0) {
-			container.createEl('p', { text: 'No data available' });
+			container.createEl('p', { text: t('noDataAvailable') });
 			return;
 		}
 
 		// Create heatmap
 		const heatmapEl = container.createDiv('heatmap');
 
-		const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+		const days = [t('sun'), t('mon'), t('tue'), t('wed'), t('thu'), t('fri'), t('sat')];
 
 		days.forEach((dayName, dayIndex) => {
 			const row = heatmapEl.createDiv('heatmap-row');
@@ -666,7 +670,7 @@ Last Used: ${this.formatDate(stat.lastUsed)}
 				cell.style.opacity = opacity.toString();
 				
 				if (count > 0) {
-					cell.setAttribute('title', `${dayName} ${hour}:00 - ${count} commands`);
+					cell.setAttribute('title', `${dayName} ${hour}:00 - ${count} ${t('commands_count')}`);
 				}
 			}
 		});

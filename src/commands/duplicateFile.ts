@@ -2,6 +2,7 @@ import { Notice } from "obsidian";
 import { DuplicateFileModal } from "../ui/DuplicateFileModal";
 import { generateSuffix } from "../utils/suffix";
 import LemonToolkitPlugin from "../main";
+import { t } from "../i18n/locale";
 
 /**
  * Duplicate the active file with a modal to rename
@@ -9,7 +10,7 @@ import LemonToolkitPlugin from "../main";
 export async function duplicateFile(plugin: LemonToolkitPlugin): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	if (!file) {
-		new Notice("No active file");
+		new Notice(t('noActiveFile'));
 		return;
 	}
 
@@ -32,12 +33,12 @@ export async function duplicateFile(plugin: LemonToolkitPlugin): Promise<void> {
 			// Create the new file
 			const newFile = await plugin.app.vault.create(newPath, content);
 			
-			new Notice(`File duplicated: ${newName}`);
+			new Notice(t('fileDuplicatedAs', { name: newName }));
 			
 			// Open the new file
 			await plugin.app.workspace.getLeaf().openFile(newFile);
 		} catch (error) {
-			new Notice(`Failed to duplicate file: ${error.message}`);
+			new Notice(t('failedToDuplicateFile', { error: error.message }));
 			console.error("Duplicate file error:", error);
 		}
 	}).open();

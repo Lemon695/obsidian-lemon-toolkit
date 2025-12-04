@@ -6,6 +6,7 @@ import { FileInfoView, FILE_INFO_VIEW_TYPE } from "./views/FileInfoView";
 import { RecentFilesView, RECENT_FILES_VIEW_TYPE } from "./views/RecentFilesView";
 import { ExternalAppManager } from "./features/external-apps/ExternalAppManager";
 import { StatisticsManager } from "./features/statistics/StatisticsManager";
+import {t} from "./i18n/locale";
 
 export default class LemonToolkitPlugin extends Plugin {
 	settings: LemonToolkitSettings;
@@ -14,6 +15,11 @@ export default class LemonToolkitPlugin extends Plugin {
 	statisticsManager: StatisticsManager;
 
 	async onload() {
+		console.log(t('loadingPlugin') + this.manifest.version);
+
+		// 调试语言设置
+		//debugLocale();
+
 		await this.loadSettings();
 		
 		// Initialize external app manager
@@ -49,7 +55,7 @@ export default class LemonToolkitPlugin extends Plugin {
 		// Register statistics command
 		this.addCommand({
 			id: 'show-statistics',
-			name: 'Show Statistics',
+			name: t('showStatistics'),
 			callback: () => {
 				this.statisticsManager.openModal();
 			}

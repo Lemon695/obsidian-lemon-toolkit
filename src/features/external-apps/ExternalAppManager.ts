@@ -2,6 +2,7 @@ import { Notice, Platform } from "obsidian";
 import { exec } from "child_process";
 import { promisify } from "util";
 import LemonToolkitPlugin from "../../main";
+import { t } from "../../i18n/locale";
 
 const execAsync = promisify(exec);
 
@@ -19,25 +20,25 @@ export class ExternalAppManager {
 		const app = this.plugin.settings.externalApps.find((a) => a.id === appId);
 		
 		if (!app) {
-			new Notice(`External app not found: ${appId}`);
+			new Notice(t('externalAppNotFound', { id: appId }));
 			return;
 		}
 
 		if (isFolder && !app.openFolder) {
-			new Notice(`${app.name} is not configured to open folders`);
+			new Notice(t('appNotConfiguredForFolders', { name: app.name }));
 			return;
 		}
 
 		if (!isFolder && !app.openFile) {
-			new Notice(`${app.name} is not configured to open files`);
+			new Notice(t('appNotConfiguredForFiles', { name: app.name }));
 			return;
 		}
 
 		try {
 			await this.executeOpen(app.path, path);
-			new Notice(`Opened with ${app.name}`);
+			new Notice(t('openedWith', { name: app.name }));
 		} catch (error) {
-			new Notice(`Failed to open with ${app.name}: ${error.message}`);
+			new Notice(t('failedToOpenWith', { name: app.name, error: error.message }));
 			console.error("External app error:", error);
 		}
 	}
@@ -71,11 +72,11 @@ export class ExternalAppManager {
 			if (app.openFile) {
 				this.plugin.addCommand({
 					id: `open-with-${app.id}-file`,
-					name: `Open file with ${app.name}`,
+					name: t('openFileWith', { name: app.name }),
 					callback: async () => {
 						const file = this.plugin.app.workspace.getActiveFile();
 						if (!file) {
-							new Notice("No active file");
+							new Notice(t('noActiveFile'));
 							return;
 						}
 
@@ -91,11 +92,11 @@ export class ExternalAppManager {
 			if (app.openFolder) {
 				this.plugin.addCommand({
 					id: `open-with-${app.id}-folder`,
-					name: `Open folder with ${app.name}`,
+					name: t('openFolderWith', { name: app.name }),
 					callback: async () => {
 						const file = this.plugin.app.workspace.getActiveFile();
 						if (!file) {
-							new Notice("No active file");
+							new Notice(t('noActiveFile'));
 							return;
 						}
 

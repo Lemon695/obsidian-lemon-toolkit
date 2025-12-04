@@ -1,5 +1,6 @@
 import { App, FuzzySuggestModal, Notice, TFile, TFolder } from "obsidian";
 import LemonToolkitPlugin from "../main";
+import { t } from "../i18n/locale";
 
 interface FolderItem {
 	path: string;
@@ -19,7 +20,7 @@ export class MoveFileModal extends FuzzySuggestModal<FolderItem> {
 		this.file = file;
 		this.allFolders = [];
 		
-		this.setPlaceholder("Type to filter folders...");
+		this.setPlaceholder(t('placeholderFilterFolders'));
 		this.setInstructions([
 			{ command: "↑↓", purpose: "to navigate" },
 			{ command: "↵", purpose: "to move file" },
@@ -113,7 +114,7 @@ export class MoveFileModal extends FuzzySuggestModal<FolderItem> {
 			// Check if file already exists
 			const existingFile = this.app.vault.getAbstractFileByPath(newPath);
 			if (existingFile) {
-				new Notice(`File already exists in ${item.displayName}`);
+				new Notice(t('fileAlreadyExistsIn', { folder: item.displayName }));
 				return;
 			}
 
@@ -123,9 +124,9 @@ export class MoveFileModal extends FuzzySuggestModal<FolderItem> {
 			// Update history (will be recorded by the event listener, but we update it here too for immediate feedback)
 			await this.plugin.recordFolderMove(item.path);
 			
-			new Notice(`Moved to: ${item.displayName}`);
+			new Notice(t('movedToFolder', { folder: item.displayName }));
 		} catch (error) {
-			new Notice(`Failed to move file: ${error.message}`);
+			new Notice(t('failedToMoveFile', { error: error.message }));
 			console.error("Move file error:", error);
 		}
 	}

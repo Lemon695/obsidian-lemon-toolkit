@@ -1,5 +1,6 @@
 import { App, Editor, Modal } from "obsidian";
 import LemonToolkitPlugin from "../main";
+import { t } from "../i18n/locale";
 
 interface TagItem {
 	tag: string;
@@ -66,7 +67,7 @@ export class InsertTagsModal extends Modal {
 				noResults.style.padding = "16px";
 				noResults.style.textAlign = "center";
 				noResults.style.color = "var(--text-muted)";
-				noResults.textContent = "No tags found";
+				noResults.textContent = t('noTagsFoundInSearch');
 				return;
 			}
 

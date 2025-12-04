@@ -1,4 +1,5 @@
 import { App, Modal, Notice } from "obsidian";
+import { t } from "../../i18n/locale";
 
 export class TableRowSelectorModal extends Modal {
 	private tableContent: string;
@@ -19,10 +20,10 @@ export class TableRowSelectorModal extends Modal {
 
 		// Header
 		const header = contentEl.createDiv({ cls: "lemon-modal-header" });
-		header.createEl("h2", { text: "Select Table Rows to Copy" });
+		header.createEl("h2", { text: t('selectTableRowsToCopy') });
 
 		const desc = contentEl.createDiv({ cls: "lemon-modal-desc" });
-		desc.textContent = "Select specific rows from the table. Selected rows will be combined into a new table.";
+		desc.textContent = t('selectTableRowsDesc');
 
 		// Rows list
 		this.listContainer = contentEl.createDiv({ cls: "lemon-table-rows-list" });
@@ -34,13 +35,13 @@ export class TableRowSelectorModal extends Modal {
 		// Left side
 		const leftActions = footer.createDiv({ cls: "lemon-footer-left" });
 
-		const selectAllBtn = leftActions.createEl("button", { text: "Select All" });
+		const selectAllBtn = leftActions.createEl("button", { text: t('selectAll') });
 		selectAllBtn.addEventListener("click", () => {
 			this.rows.forEach((_, index) => this.selectedRows.add(index));
 			this.renderRowsList();
 		});
 
-		const selectNoneBtn = leftActions.createEl("button", { text: "Deselect All" });
+		const selectNoneBtn = leftActions.createEl("button", { text: t('deselectAll') });
 		selectNoneBtn.addEventListener("click", () => {
 			this.selectedRows.clear();
 			this.renderRowsList();
@@ -49,10 +50,10 @@ export class TableRowSelectorModal extends Modal {
 		// Right side
 		const rightActions = footer.createDiv({ cls: "lemon-footer-right" });
 
-		const cancelBtn = rightActions.createEl("button", { text: "Cancel" });
+		const cancelBtn = rightActions.createEl("button", { text: t('cancel') });
 		cancelBtn.addEventListener("click", () => this.close());
 
-		const copyBtn = rightActions.createEl("button", { text: "Copy Selected", cls: "mod-cta" });
+		const copyBtn = rightActions.createEl("button", { text: t('copySelected'), cls: "mod-cta" });
 		copyBtn.addEventListener("click", async () => {
 			await this.copySelected();
 		});
@@ -119,7 +120,7 @@ export class TableRowSelectorModal extends Modal {
 
 	private async copySelected(): Promise<void> {
 		if (this.selectedRows.size === 0) {
-			new Notice("No rows selected");
+			new Notice(t('noRowsSelected'));
 			return;
 		}
 
@@ -133,7 +134,10 @@ export class TableRowSelectorModal extends Modal {
 		// Copy to clipboard
 		await navigator.clipboard.writeText(combined);
 
-		new Notice(`Copied ${this.selectedRows.size} row${this.selectedRows.size > 1 ? "s" : ""} to clipboard`);
+		new Notice(t('copiedRowsToClipboard', { 
+			count: this.selectedRows.size.toString(), 
+			s: this.selectedRows.size > 1 ? "s" : "" 
+		}));
 		this.close();
 	}
 

@@ -1,6 +1,7 @@
 import { Editor, Notice } from "obsidian";
 import { LinkConverterPreviewModal } from "./LinkConverterPreviewModal";
 import LemonToolkitPlugin from "../../main";
+import { t } from "../../i18n/locale";
 
 export type ConversionType = "wiki-to-markdown" | "markdown-to-wiki";
 export type LinkType = "image" | "video" | "document";
@@ -30,7 +31,7 @@ export class LinkConverterManager {
 		// Get current file for relative path calculation
 		const currentFile = this.plugin.app.workspace.getActiveFile();
 		if (!currentFile) {
-			new Notice("No active file");
+			new Notice(t('noActiveFile'));
 			return;
 		}
 		
@@ -38,7 +39,7 @@ export class LinkConverterManager {
 
 		if (matches.length === 0) {
 			const linkType = type === "wiki-to-markdown" ? "wiki links" : "markdown links";
-			new Notice(`No ${linkType} found in file`);
+			new Notice(t('noLinksFoundInFile', { type: linkType }));
 			return;
 		}
 
@@ -52,14 +53,14 @@ export class LinkConverterManager {
 		const selection = editor.getSelection();
 		
 		if (!selection) {
-			new Notice("No text selected");
+			new Notice(t('noTextSelected'));
 			return;
 		}
 
 		// Get current file for relative path calculation
 		const currentFile = this.plugin.app.workspace.getActiveFile();
 		if (!currentFile) {
-			new Notice("No active file");
+			new Notice(t('noActiveFile'));
 			return;
 		}
 
@@ -67,7 +68,7 @@ export class LinkConverterManager {
 
 		if (matches.length === 0) {
 			const linkType = type === "wiki-to-markdown" ? "wiki links" : "markdown links";
-			new Notice(`No ${linkType} found in selection`);
+			new Notice(t('noLinksFoundInSelection', { type: linkType }));
 			return;
 		}
 
@@ -386,6 +387,6 @@ export class LinkConverterManager {
 			editor.setValue(lines.join("\n"));
 		}
 
-		new Notice(`Converted ${matches.length} link${matches.length > 1 ? "s" : ""}`);
+		new Notice(t('convertedLinks', { count: matches.length.toString(), s: matches.length > 1 ? "s" : "" }));
 	}
 }

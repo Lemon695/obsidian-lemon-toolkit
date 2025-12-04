@@ -1,6 +1,7 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 import LemonToolkitPlugin from "../main";
 import { PinnedCommandsModal } from "./PinnedCommandsModal";
+import { t } from "../i18n/locale";
 
 export class LemonToolkitSettingTab extends PluginSettingTab {
 	plugin: LemonToolkitPlugin;
@@ -14,18 +15,18 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 		const { containerEl } = this;
 		containerEl.empty();
 
-		containerEl.createEl("h2", { text: "Lemon Toolkit Settings" });
+		containerEl.createEl("h2", { text: t('lemonToolkitSettings') });
 
 		// Duplicate file settings
-		containerEl.createEl("h3", { text: "Duplicate File" });
+		containerEl.createEl("h3", { text: t('duplicateFileSettings') });
 
 		new Setting(containerEl)
-			.setName("Duplicate file suffix type")
-			.setDesc("Choose the suffix format for duplicated file names")
+			.setName(t('duplicateFileSuffixType'))
+			.setDesc(t('duplicateFileSuffixTypeDesc'))
 			.addDropdown((dropdown) =>
 				dropdown
-					.addOption("timestamp", "Timestamp (e.g., filename-1733234567890.md)")
-					.addOption("uuid", "UUID (e.g., filename-a1b2c3d4.md)")
+					.addOption("timestamp", t('suffixTimestamp'))
+					.addOption("uuid", t('suffixUUID'))
 					.setValue(this.plugin.settings.duplicateFileSuffixType)
 					.onChange(async (value: "timestamp" | "uuid") => {
 						this.plugin.settings.duplicateFileSuffixType = value;
@@ -34,17 +35,17 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 			);
 
 		// Move file settings
-		containerEl.createEl("h3", { text: "Move File" });
+		containerEl.createEl("h3", { text: t('moveFileSettings') });
 
 		new Setting(containerEl)
-			.setName("Folder list sort order")
-			.setDesc("Choose how to sort the folder list when moving files")
+			.setName(t('folderListSortOrder'))
+			.setDesc(t('folderListSortOrderDesc'))
 			.addDropdown((dropdown) =>
 				dropdown
-					.addOption("recent", "Most recently used")
-					.addOption("day", "Most used in last 24 hours")
-					.addOption("week", "Most used in last 7 days")
-					.addOption("month", "Most used in last 30 days")
+					.addOption("recent", t('sortMostRecentlyUsed'))
+					.addOption("day", t('sortMostUsedLast24Hours'))
+					.addOption("week", t('sortMostUsedLast7Days'))
+					.addOption("month", t('sortMostUsedLast30Days'))
 					.setValue(this.plugin.settings.folderSortType)
 					.onChange(async (value: "recent" | "day" | "week" | "month") => {
 						this.plugin.settings.folderSortType = value;
@@ -53,18 +54,18 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 			);
 
 		// Tag settings
-		containerEl.createEl("h3", { text: "Tags" });
+		containerEl.createEl("h3", { text: t('tagsSettings') });
 
 		new Setting(containerEl)
-			.setName("Tag list sort order")
-			.setDesc("Choose how to sort the tag list when inserting tags")
+			.setName(t('tagListSortOrder'))
+			.setDesc(t('tagListSortOrderDesc'))
 			.addDropdown((dropdown) =>
 				dropdown
-					.addOption("recent", "Most recently used")
-					.addOption("day", "Most used in last 24 hours")
-					.addOption("week", "Most used in last 7 days")
-					.addOption("month", "Most used in last 30 days")
-					.addOption("alphabetical", "Alphabetical order")
+					.addOption("recent", t('sortMostRecentlyUsed'))
+					.addOption("day", t('sortMostUsedLast24Hours'))
+					.addOption("week", t('sortMostUsedLast7Days'))
+					.addOption("month", t('sortMostUsedLast30Days'))
+					.addOption("alphabetical", t('sortAlphabetical'))
 					.setValue(this.plugin.settings.tagSortType)
 					.onChange(async (value: "recent" | "day" | "week" | "month" | "alphabetical") => {
 						this.plugin.settings.tagSortType = value;
@@ -73,23 +74,23 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 			);
 
 		// Command palette settings
-		containerEl.createEl("h3", { text: "Command Palette" });
+		containerEl.createEl("h3", { text: t('commandPaletteSettings') });
 
 		new Setting(containerEl)
-			.setName("Pinned commands")
-			.setDesc("Select commands to pin at the top of the command palette")
+			.setName(t('pinnedCommandsSetting'))
+			.setDesc(t('pinnedCommandsSettingDesc'))
 			.addButton((button) =>
-				button.setButtonText("Manage pinned commands").onClick(() => {
+				button.setButtonText(t('manage')).onClick(() => {
 					this.showPinnedCommandsModal();
 				})
 			);
 
 		// File info view settings
-		containerEl.createEl("h3", { text: "File Info View" });
+		containerEl.createEl("h3", { text: t('fileInfoViewSettings') });
 
 		new Setting(containerEl)
-			.setName("Show reading time")
-			.setDesc("Display estimated reading time in file info")
+			.setName(t('showReadingTime'))
+			.setDesc(t('showReadingTimeDesc'))
 			.addToggle((toggle) =>
 				toggle.setValue(this.plugin.settings.showReadingTime).onChange(async (value) => {
 					this.plugin.settings.showReadingTime = value;
@@ -98,11 +99,11 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 			);
 
 		new Setting(containerEl)
-			.setName("Date time format")
-			.setDesc("Format for displaying dates and times (e.g., YYYY-MM-DD HH:mm)")
+			.setName(t('dateTimeFormat'))
+			.setDesc(t('dateTimeFormatDesc'))
 			.addText((text) =>
 				text
-					.setPlaceholder("YYYY-MM-DD HH:mm")
+					.setPlaceholder(t('placeholderDateTime'))
 					.setValue(this.plugin.settings.dateTimeFormat)
 					.onChange(async (value) => {
 						this.plugin.settings.dateTimeFormat = value || "YYYY-MM-DD HH:mm";
@@ -111,11 +112,11 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 			);
 
 		// Frontmatter editor settings
-		containerEl.createEl("h3", { text: "Frontmatter Editor" });
+		containerEl.createEl("h3", { text: t('frontmatterEditorSettings') });
 
 		new Setting(containerEl)
-			.setName("Show type icons")
-			.setDesc("Display type icons next to field names")
+			.setName(t('showTypeIcons'))
+			.setDesc(t('showTypeIconsDesc'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.frontmatterEditor.showTypeIcons)
@@ -126,8 +127,8 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 			);
 
 		new Setting(containerEl)
-			.setName("Close after save")
-			.setDesc("Automatically close the editor after saving")
+			.setName(t('closeAfterSave'))
+			.setDesc(t('closeAfterSaveDesc'))
 			.addToggle((toggle) =>
 				toggle
 					.setValue(this.plugin.settings.frontmatterEditor.closeAfterSave)
@@ -138,11 +139,11 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 			);
 
 		new Setting(containerEl)
-			.setName("Date format")
-			.setDesc("Format for date fields (e.g., YYYY-MM-DD)")
+			.setName(t('dateFormat'))
+			.setDesc(t('dateFormatDesc'))
 			.addText((text) =>
 				text
-					.setPlaceholder("YYYY-MM-DD")
+					.setPlaceholder(t('placeholderDate'))
 					.setValue(this.plugin.settings.frontmatterEditor.dateFormat)
 					.onChange(async (value) => {
 						this.plugin.settings.frontmatterEditor.dateFormat = value || "YYYY-MM-DD";
@@ -151,25 +152,25 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 			);
 
 		// External apps settings
-		containerEl.createEl("h3", { text: "External Applications" });
+		containerEl.createEl("h3", { text: t('externalApplicationsSettings') });
 
 		new Setting(containerEl)
-			.setName("Manage external applications")
-			.setDesc("Configure external applications to open files and folders")
+			.setName(t('manageExternalApps'))
+			.setDesc(t('manageExternalAppsDesc'))
 			.addButton((button) =>
-				button.setButtonText("Manage applications").onClick(() => {
+				button.setButtonText(t('manage')).onClick(() => {
 					this.showExternalAppsModal();
 				})
 			);
 
 		// Smart paste settings
-		containerEl.createEl("h3", { text: "Smart Paste" });
+		containerEl.createEl("h3", { text: t('smartPasteSettings') });
 
 		new Setting(containerEl)
-			.setName("Clipboard rules")
-			.setDesc("Configure rules to automatically transform clipboard content when pasting")
+			.setName(t('manageClipboardRules'))
+			.setDesc(t('manageClipboardRulesDesc'))
 			.addButton((button) =>
-				button.setButtonText("Manage rules").onClick(() => {
+				button.setButtonText(t('manage')).onClick(() => {
 					this.showClipboardRulesModal();
 				})
 			);
@@ -178,17 +179,17 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 		const rulesInfo = containerEl.createDiv({ cls: "setting-item-description" });
 		rulesInfo.style.marginTop = "-10px";
 		rulesInfo.style.paddingLeft = "0";
-		rulesInfo.textContent = `${rulesCount} active rule${rulesCount !== 1 ? "s" : ""}`;
+		rulesInfo.textContent = t('activeRules', { count: rulesCount.toString(), s: rulesCount !== 1 ? "s" : "" });
 
 		// Moment logger settings
-		containerEl.createEl("h3", { text: "Moment Logger" });
+		containerEl.createEl("h3", { text: t('momentLoggerSettings') });
 
 		new Setting(containerEl)
-			.setName("Timestamp format")
-			.setDesc("Format for moment timestamps (e.g., YYYY-MM-DD HH:mm:ss)")
+			.setName(t('momentFormat'))
+			.setDesc(t('momentFormatDesc'))
 			.addText((text) =>
 				text
-					.setPlaceholder("YYYY-MM-DD HH:mm:ss")
+					.setPlaceholder(t('placeholderMomentFormat'))
 					.setValue(this.plugin.settings.momentLoggerFormat)
 					.onChange(async (value) => {
 						this.plugin.settings.momentLoggerFormat = value || "YYYY-MM-DD HH:mm:ss";

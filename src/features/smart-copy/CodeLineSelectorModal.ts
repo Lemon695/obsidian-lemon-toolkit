@@ -1,4 +1,5 @@
 import { App, Modal, Notice } from "obsidian";
+import { t } from "../../i18n/locale";
 
 export class CodeLineSelectorModal extends Modal {
 	private codeContent: string;
@@ -25,13 +26,10 @@ export class CodeLineSelectorModal extends Modal {
 
 		// Header
 		const header = contentEl.createDiv({ cls: "lemon-modal-header" });
-		const title = this.language 
-			? `Select Lines from ${this.language} Code Block`
-			: "Select Lines from Code Block";
-		header.createEl("h2", { text: title });
+		header.createEl("h2", { text: t('selectCodeLinesToCopy') });
 
 		const desc = contentEl.createDiv({ cls: "lemon-modal-desc" });
-		desc.textContent = "Select specific lines from the code block. Selected lines will be combined.";
+		desc.textContent = t('selectCodeLinesDesc');
 
 		// Lines list
 		this.listContainer = contentEl.createDiv({ cls: "lemon-code-lines-list" });
@@ -43,13 +41,13 @@ export class CodeLineSelectorModal extends Modal {
 		// Left side
 		const leftActions = footer.createDiv({ cls: "lemon-footer-left" });
 
-		const selectAllBtn = leftActions.createEl("button", { text: "Select All" });
+		const selectAllBtn = leftActions.createEl("button", { text: t('selectAll') });
 		selectAllBtn.addEventListener("click", () => {
 			this.lines.forEach((_, index) => this.selectedLines.add(index));
 			this.renderLinesList();
 		});
 
-		const selectNoneBtn = leftActions.createEl("button", { text: "Deselect All" });
+		const selectNoneBtn = leftActions.createEl("button", { text: t('deselectAll') });
 		selectNoneBtn.addEventListener("click", () => {
 			this.selectedLines.clear();
 			this.renderLinesList();
@@ -58,10 +56,10 @@ export class CodeLineSelectorModal extends Modal {
 		// Right side
 		const rightActions = footer.createDiv({ cls: "lemon-footer-right" });
 
-		const cancelBtn = rightActions.createEl("button", { text: "Cancel" });
+		const cancelBtn = rightActions.createEl("button", { text: t('cancel') });
 		cancelBtn.addEventListener("click", () => this.close());
 
-		const copyBtn = rightActions.createEl("button", { text: "Copy Selected", cls: "mod-cta" });
+		const copyBtn = rightActions.createEl("button", { text: t('copySelected'), cls: "mod-cta" });
 		copyBtn.addEventListener("click", async () => {
 			await this.copySelected();
 		});
@@ -121,7 +119,7 @@ export class CodeLineSelectorModal extends Modal {
 
 	private async copySelected(): Promise<void> {
 		if (this.selectedLines.size === 0) {
-			new Notice("No lines selected");
+			new Notice(t('noLinesSelected'));
 			return;
 		}
 
@@ -140,7 +138,10 @@ export class CodeLineSelectorModal extends Modal {
 		// Copy to clipboard
 		await navigator.clipboard.writeText(combined);
 
-		new Notice(`Copied ${this.selectedLines.size} line${this.selectedLines.size > 1 ? "s" : ""} to clipboard`);
+		new Notice(t('copiedLinesToClipboard', { 
+			count: this.selectedLines.size.toString(), 
+			s: this.selectedLines.size > 1 ? "s" : "" 
+		}));
 		this.close();
 	}
 

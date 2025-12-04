@@ -1,6 +1,7 @@
 import { Notice } from "obsidian";
 import { FrontmatterEditorModal } from "../features/frontmatter-editor/FrontmatterEditorModal";
 import LemonToolkitPlugin from "../main";
+import { t } from "../i18n/locale";
 
 /**
  * Open the frontmatter editor for the active file
@@ -8,7 +9,7 @@ import LemonToolkitPlugin from "../main";
 export function editFrontmatter(plugin: LemonToolkitPlugin): void {
 	const file = plugin.app.workspace.getActiveFile();
 	if (!file) {
-		new Notice("No active file");
+		new Notice(t('noActiveFile'));
 		return;
 	}
 

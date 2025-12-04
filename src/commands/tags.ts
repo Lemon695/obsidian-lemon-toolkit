@@ -2,6 +2,7 @@ import { Editor, Notice } from "obsidian";
 import { ViewCurrentTagsModal } from "../ui/ViewCurrentTagsModal";
 import { InsertTagsModal } from "../ui/InsertTagsModal";
 import LemonToolkitPlugin from "../main";
+import { t } from "../i18n/locale";
 
 /**
  * View all tags in the current file
@@ -9,7 +10,7 @@ import LemonToolkitPlugin from "../main";
 export function viewCurrentTags(plugin: LemonToolkitPlugin): void {
 	const file = plugin.app.workspace.getActiveFile();
 	if (!file) {
-		new Notice("No active file");
+		new Notice(t('noActiveFile'));
 		return;
 	}
 
@@ -35,7 +36,7 @@ export function viewCurrentTags(plugin: LemonToolkitPlugin): void {
 	const uniqueTags = [...new Set(tags)];
 
 	if (uniqueTags.length === 0) {
-		new Notice("No tags found in current file");
+		new Notice(t('noTagsFound'));
 		return;
 	}
 

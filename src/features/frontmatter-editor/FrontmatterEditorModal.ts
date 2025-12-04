@@ -4,6 +4,7 @@ import { FieldData, FieldType } from "./types";
 import { inferFieldType, convertValueToType } from "./utils/typeInference";
 import { replaceVariables } from "./utils/variableReplacer";
 import { getTypeIconSVG, icons } from "./utils/icons";
+import { t } from "../../i18n/locale";
 
 export class FrontmatterEditorModal extends Modal {
 	private plugin: LemonToolkitPlugin;
@@ -77,7 +78,7 @@ export class FrontmatterEditorModal extends Modal {
 		header.style.padding = "16px 16px 16px 24px";
 		header.style.borderBottom = "1px solid var(--background-modifier-border)";
 
-		const title = header.createEl("h2", { text: "Frontmatter Editor" });
+		const title = header.createEl("h2", { text: t('frontmatterEditor') });
 		title.style.margin = "0";
 		title.style.fontSize = "1.2em";
 	}
@@ -106,7 +107,7 @@ export class FrontmatterEditorModal extends Modal {
 
 		const searchInput = searchWrapper.createEl("input", {
 			type: "text",
-			placeholder: "Search fields...",
+			placeholder: t('searchFields'),
 		});
 		searchInput.style.width = "100%";
 		searchInput.style.padding = "8px 12px 8px 36px";
@@ -150,8 +151,8 @@ export class FrontmatterEditorModal extends Modal {
 			emptyMsg.style.textAlign = "center";
 			emptyMsg.style.color = "var(--text-muted)";
 			emptyMsg.textContent = this.fields.size === 0
-				? "No frontmatter fields. Click 'Add Field' to create one."
-				: "No matching fields found.";
+				? t('noFrontmatterFields')
+				: t('noMatchingFields');
 			return;
 		}
 
@@ -265,7 +266,7 @@ export class FrontmatterEditorModal extends Modal {
 
 				const items = Array.isArray(field.value) ? field.value : [];
 				if (items.length === 0) {
-					const emptyText = tagsContainer.createSpan({ text: "empty array" });
+					const emptyText = tagsContainer.createSpan({ text: t('emptyArray') });
 					emptyText.style.color = "var(--text-muted)";
 					emptyText.style.fontStyle = "italic";
 				} else {
@@ -324,13 +325,13 @@ export class FrontmatterEditorModal extends Modal {
 		const save = () => {
 			const newKey = input.value.trim();
 			if (!newKey) {
-				new Notice("Field name cannot be empty");
+				new Notice(t('fieldNameEmpty'));
 				keyEl.textContent = originalText;
 				return;
 			}
 
 			if (newKey !== field.key && this.fields.has(newKey)) {
-				new Notice(`Field '${newKey}' already exists`);
+				new Notice(t('fieldAlreadyExists', { name: newKey }));
 				keyEl.textContent = originalText;
 				return;
 			}
@@ -507,13 +508,13 @@ export class FrontmatterEditorModal extends Modal {
 		switch (type) {
 			case "number":
 				if (isNaN(value)) {
-					new Notice("Invalid number");
+					new Notice(t('invalidNumber'));
 					return false;
 				}
 				return true;
 			case "date":
 				if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-					new Notice("Invalid date format. Use YYYY-MM-DD");
+					new Notice(t('invalidDateFormat'));
 					return false;
 				}
 				return true;
@@ -535,7 +536,7 @@ export class FrontmatterEditorModal extends Modal {
 		btnContainer.style.padding = "8px 16px";
 		btnContainer.style.borderTop = "1px solid var(--background-modifier-border)";
 
-		const addBtn = btnContainer.createEl("button", { text: "+ Add Field" });
+		const addBtn = btnContainer.createEl("button", { text: t('addField') });
 		addBtn.style.width = "100%";
 		addBtn.style.padding = "8px";
 		addBtn.style.cursor = "pointer";
@@ -545,7 +546,7 @@ export class FrontmatterEditorModal extends Modal {
 	private addNewField(): void {
 		const modal = new AddFieldModal(this.app, (key, value, type) => {
 			if (this.fields.has(key)) {
-				new Notice(`Field '${key}' already exists`);
+				new Notice(t('fieldAlreadyExists', { name: key }));
 				return;
 			}
 
@@ -572,7 +573,7 @@ export class FrontmatterEditorModal extends Modal {
 		container.style.padding = "8px 16px";
 		container.style.borderTop = "1px solid var(--background-modifier-border)";
 
-		const title = container.createEl("div", { text: "Quick Actions" });
+		const title = container.createEl("div", { text: t('quickActions') });
 		title.style.fontSize = "0.9em";
 		title.style.color = "var(--text-muted)";
 		title.style.marginBottom = "8px";
@@ -644,10 +645,10 @@ export class FrontmatterEditorModal extends Modal {
 		footer.style.padding = "16px";
 		footer.style.borderTop = "1px solid var(--background-modifier-border)";
 
-		const cancelBtn = footer.createEl("button", { text: "Cancel" });
+		const cancelBtn = footer.createEl("button", { text: t('cancel') });
 		cancelBtn.addEventListener("click", () => this.tryClose());
 
-		const saveBtn = footer.createEl("button", { text: "Save", cls: "mod-cta" });
+		const saveBtn = footer.createEl("button", { text: t('save'), cls: "mod-cta" });
 		saveBtn.addEventListener("click", () => this.save());
 	}
 
@@ -669,13 +670,13 @@ export class FrontmatterEditorModal extends Modal {
 				});
 			});
 
-			new Notice("Frontmatter saved successfully");
+			new Notice(t('frontmatterSaved'));
 			this.hasUnsavedChanges = false;
 
 			// Always close after save (as requested)
 			this.close();
 		} catch (error) {
-			new Notice(`Failed to save frontmatter: ${error.message}`);
+			new Notice(t('failedToSaveFrontmatter', { error: error.message }));
 			console.error("Save frontmatter error:", error);
 		}
 	}
@@ -711,9 +712,9 @@ class EditFieldModal extends Modal {
 		const { contentEl } = this;
 		contentEl.empty();
 
-		contentEl.createEl("h3", { text: `Edit: ${this.field.key}` });
+		contentEl.createEl("h3", { text: t('editField', { key: this.field.key }) });
 
-		const setting = new Setting(contentEl).setName("Value");
+		const setting = new Setting(contentEl).setName(t('fieldValue'));
 
 		switch (this.field.type) {
 			case "boolean":
@@ -729,7 +730,7 @@ class EditFieldModal extends Modal {
 				setting.addText((text) =>
 					text
 						.setValue(String(this.field.value))
-						.setPlaceholder("Enter number")
+						.setPlaceholder(t('placeholderEnterNumber'))
 						.onChange((value) => {
 							const num = parseFloat(value);
 							if (!isNaN(num)) {
@@ -746,7 +747,7 @@ class EditFieldModal extends Modal {
 						: String(this.field.value);
 					text
 						.setValue(arrayValue)
-						.setPlaceholder("Enter values separated by commas")
+						.setPlaceholder(t('placeholderEnterValuesCommaSeparated'))
 						.onChange((value) => {
 							const array = value.split(",").map((v) => v.trim()).filter((v) => v);
 							this.onSave(array);
@@ -758,7 +759,7 @@ class EditFieldModal extends Modal {
 				setting.addText((text) =>
 					text
 						.setValue(String(this.field.value))
-						.setPlaceholder("Enter value")
+						.setPlaceholder(t('placeholderEnterValue'))
 						.onChange((value) => {
 							this.onSave(value);
 						})
@@ -771,7 +772,7 @@ class EditFieldModal extends Modal {
 		footer.style.display = "flex";
 		footer.style.justifyContent = "flex-end";
 
-		const closeBtn = footer.createEl("button", { text: "Close", cls: "mod-cta" });
+		const closeBtn = footer.createEl("button", { text: t('close'), cls: "mod-cta" });
 		closeBtn.addEventListener("click", () => this.close());
 	}
 
@@ -794,29 +795,29 @@ class AddFieldModal extends Modal {
 		const { contentEl } = this;
 		contentEl.empty();
 
-		contentEl.createEl("h3", { text: "Add New Field" });
+		contentEl.createEl("h3", { text: t('addNewField') });
 
 		let fieldKey = "";
 		let fieldValue: any = "";
 		let fieldType: FieldType = "string";
 
 		new Setting(contentEl)
-			.setName("Field name")
+			.setName(t('fieldName'))
 			.addText((text) =>
-				text.setPlaceholder("Enter field name").onChange((value) => {
+				text.setPlaceholder(t('placeholderEnterFieldName')).onChange((value) => {
 					fieldKey = value;
 				})
 			);
 
 		new Setting(contentEl)
-			.setName("Field type")
+			.setName(t('fieldType'))
 			.addDropdown((dropdown) =>
 				dropdown
-					.addOption("string", "String")
-					.addOption("number", "Number")
-					.addOption("boolean", "Boolean")
-					.addOption("date", "Date")
-					.addOption("array", "Array")
+					.addOption("string", t('fieldTypeString'))
+					.addOption("number", t('fieldTypeNumber'))
+					.addOption("boolean", t('fieldTypeBoolean'))
+					.addOption("date", t('fieldTypeDate'))
+					.addOption("array", t('fieldTypeArray'))
 					.setValue("string")
 					.onChange((value) => {
 						fieldType = value as FieldType;
@@ -824,9 +825,9 @@ class AddFieldModal extends Modal {
 			);
 
 		new Setting(contentEl)
-			.setName("Field value")
+			.setName(t('fieldValue'))
 			.addText((text) =>
-				text.setPlaceholder("Enter value").onChange((value) => {
+				text.setPlaceholder(t('placeholderEnterValue')).onChange((value) => {
 					fieldValue = convertValueToType(value, fieldType);
 				})
 			);
@@ -837,13 +838,13 @@ class AddFieldModal extends Modal {
 		footer.style.justifyContent = "flex-end";
 		footer.style.gap = "8px";
 
-		const cancelBtn = footer.createEl("button", { text: "Cancel" });
+		const cancelBtn = footer.createEl("button", { text: t('cancel') });
 		cancelBtn.addEventListener("click", () => this.close());
 
-		const addBtn = footer.createEl("button", { text: "Add", cls: "mod-cta" });
+		const addBtn = footer.createEl("button", { text: t('add'), cls: "mod-cta" });
 		addBtn.addEventListener("click", () => {
 			if (!fieldKey) {
-				new Notice("Field name is required");
+				new Notice(t('fieldNameRequired'));
 				return;
 			}
 			this.onAdd(fieldKey, fieldValue, fieldType);

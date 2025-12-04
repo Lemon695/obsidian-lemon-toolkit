@@ -1,5 +1,6 @@
 import { Notice, Plugin, TFile } from "obsidian";
 import { copyToClipboard } from "../utils/clipboard";
+import { t } from "../i18n/locale";
 
 /**
  * Copy the relative path of the active file
@@ -7,7 +8,7 @@ import { copyToClipboard } from "../utils/clipboard";
 export async function copyRelativePath(plugin: Plugin): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	if (!file) {
-		new Notice("No active file");
+		new Notice(t('noActiveFile'));
 		return;
 	}
 	await copyToClipboard(file.path);
@@ -19,7 +20,7 @@ export async function copyRelativePath(plugin: Plugin): Promise<void> {
 export async function copyAbsolutePath(plugin: Plugin): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	if (!file) {
-		new Notice("No active file");
+		new Notice(t('noActiveFile'));
 		return;
 	}
 
@@ -32,7 +33,7 @@ export async function copyAbsolutePath(plugin: Plugin): Promise<void> {
 		await copyToClipboard(absolutePath);
 	} else {
 		// Mobile fallback - just copy relative path
-		new Notice("Absolute path not available on mobile");
+		new Notice(t('absolutePathNotAvailable'));
 		await copyToClipboard(file.path);
 	}
 }
@@ -43,7 +44,7 @@ export async function copyAbsolutePath(plugin: Plugin): Promise<void> {
 export async function copyFileName(plugin: Plugin): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	if (!file) {
-		new Notice("No active file");
+		new Notice(t('noActiveFile'));
 		return;
 	}
 	await copyToClipboard(file.name);
@@ -55,7 +56,7 @@ export async function copyFileName(plugin: Plugin): Promise<void> {
 export async function copyFileNameWithoutExtension(plugin: Plugin): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	if (!file) {
-		new Notice("No active file");
+		new Notice(t('noActiveFile'));
 		return;
 	}
 	

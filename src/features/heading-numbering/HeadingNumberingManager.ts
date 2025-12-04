@@ -1,6 +1,7 @@
 import { Editor, Notice } from "obsidian";
 import { HeadingNumberingPreviewModal } from "./HeadingNumberingPreviewModal";
 import LemonToolkitPlugin from "../../main";
+import { t } from "../../i18n/locale";
 
 interface HeadingInfo {
 	line: number;
@@ -30,7 +31,7 @@ export class HeadingNumberingManager {
 		const headings = this.extractHeadings(lines);
 
 		if (headings.length === 0) {
-			new Notice("No headings found in document");
+			new Notice(t('noHeadingsFound'));
 			return;
 		}
 
@@ -160,7 +161,7 @@ export class HeadingNumberingManager {
 		editor.setValue(lines.join("\n"));
 
 		const includedCount = headings.filter(h => h.included).length;
-		new Notice(`Updated ${includedCount} headings`);
+		new Notice(t('updatedHeadingsCount', { count: includedCount.toString() }));
 	}
 
 	/**
@@ -189,11 +190,11 @@ export class HeadingNumberingManager {
 		});
 
 		if (count === 0) {
-			new Notice("No numbered headings found");
+			new Notice(t('noNumberedHeadingsFound'));
 			return;
 		}
 
 		editor.setValue(lines.join("\n"));
-		new Notice(`Removed numbering from ${count} headings`);
+		new Notice(t('removedNumberingFromHeadings', { count: count.toString() }));
 	}
 }

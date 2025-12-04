@@ -1,5 +1,6 @@
 import { App, Editor, FuzzySuggestModal, Notice, TFile } from "obsidian";
 import LemonToolkitPlugin from "../../main";
+import { t } from "../../i18n/locale";
 
 interface TextAction {
 	id: string;
@@ -19,7 +20,7 @@ export class TextSelectionModal extends FuzzySuggestModal<TextAction> {
 		this.editor = editor;
 		this.selectedText = selectedText;
 
-		this.setPlaceholder("Choose an action for selected text...");
+		this.setPlaceholder(t('placeholderChooseActionForText'));
 		this.setInstructions([
 			{ command: "↑↓", purpose: "to navigate" },
 			{ command: "↵", purpose: "to select" },
@@ -132,10 +133,10 @@ export class TextSelectionModal extends FuzzySuggestModal<TextAction> {
 				// Open the new note
 				await this.app.workspace.getLeaf("tab").openFile(file);
 
-				new Notice(`Created note: ${filename}`);
+				new Notice(t('createdNoteWithName', { name: filename }));
 			}
 		} catch (error) {
-			new Notice(`Failed to create note: ${error.message}`);
+			new Notice(t('failedToCreateNote', { error: error.message }));
 			console.error("Create note error:", error);
 		}
 	}
@@ -155,11 +156,11 @@ export class TextSelectionModal extends FuzzySuggestModal<TextAction> {
 			// Remove link syntax
 			const unwrapped = selection.slice(2, -2);
 			editor.replaceSelection(unwrapped);
-			new Notice("Removed link syntax");
+			new Notice(t('removedLinkSyntax'));
 		} else {
 			// Add link syntax
 			editor.replaceSelection(`[[${text}]]`);
-			new Notice("Wrapped as link");
+			new Notice(t('wrappedAsLink'));
 		}
 	}
 
@@ -184,7 +185,7 @@ export class TextSelectionModal extends FuzzySuggestModal<TextAction> {
 			].join("\n");
 
 			editor.replaceSelection(calloutText);
-			new Notice(`Wrapped as ${calloutType} callout`);
+			new Notice(t('wrappedAsCallout', { type: calloutType }));
 		});
 
 		modal.open();
@@ -206,7 +207,7 @@ export class TextSelectionModal extends FuzzySuggestModal<TextAction> {
 		}
 
 		editor.replaceSelection(tag);
-		new Notice("Added as tag");
+		new Notice(t('addedAsTag'));
 	}
 
 	private copyAsQuote(text: string): void {
@@ -214,7 +215,7 @@ export class TextSelectionModal extends FuzzySuggestModal<TextAction> {
 		const quotedText = lines.map((line) => `> ${line}`).join("\n");
 
 		navigator.clipboard.writeText(quotedText);
-		new Notice("Copied as quote");
+		new Notice(t('copiedAsQuote'));
 	}
 
 	private async sendToFile(text: string): Promise<void> {
@@ -223,9 +224,9 @@ export class TextSelectionModal extends FuzzySuggestModal<TextAction> {
 				const content = await this.app.vault.read(file);
 				const newContent = content + "\n\n" + text;
 				await this.app.vault.modify(file, newContent);
-				new Notice(`Sent to: ${file.basename}`);
+				new Notice(t('sentToFile', { name: file.basename }));
 			} catch (error) {
-				new Notice(`Failed to send to file: ${error.message}`);
+				new Notice(t('failedToSendToFile', { error: error.message }));
 				console.error("Send to file error:", error);
 			}
 		});
@@ -256,7 +257,7 @@ class CalloutTypeModal extends FuzzySuggestModal<{ type: string; name: string; i
 		super(app);
 		this.calloutTypes = calloutTypes;
 		this.onSelect = onSelect;
-		this.setPlaceholder("Choose callout type...");
+		this.setPlaceholder(t('placeholderChooseCalloutType'));
 	}
 
 	getItems() {
@@ -292,7 +293,7 @@ class FilePickerModal extends FuzzySuggestModal<TFile> {
 	constructor(app: App, onSelect: (file: TFile) => void) {
 		super(app);
 		this.onSelect = onSelect;
-		this.setPlaceholder("Choose a file to send text to...");
+		this.setPlaceholder(t('placeholderChooseFileToSend'));
 	}
 
 	getItems(): TFile[] {

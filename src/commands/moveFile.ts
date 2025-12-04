@@ -1,6 +1,7 @@
 import { Notice } from "obsidian";
 import { MoveFileModal } from "../ui/MoveFileModal";
 import LemonToolkitPlugin from "../main";
+import { t } from "../i18n/locale";
 
 /**
  * Move the active file to a folder with history
@@ -8,7 +9,7 @@ import LemonToolkitPlugin from "../main";
 export async function moveFileToFolder(plugin: LemonToolkitPlugin): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	if (!file) {
-		new Notice("No active file");
+		new Notice(t('noActiveFile'));
 		return;
 	}
 

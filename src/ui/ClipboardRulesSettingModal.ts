@@ -2,6 +2,7 @@ import { App, Modal, Setting, Notice } from "obsidian";
 import { ClipboardRule } from "../settings";
 import { SmartPasteManager } from "../features/smart-paste/SmartPasteManager";
 import LemonToolkitPlugin from "../main";
+import { t } from "../i18n/locale";
 
 export class ClipboardRulesSettingModal extends Modal {
 	private plugin: LemonToolkitPlugin;
@@ -22,10 +23,10 @@ export class ClipboardRulesSettingModal extends Modal {
 
 		// Header
 		const header = contentEl.createDiv({ cls: "lemon-modal-header" });
-		header.createEl("h2", { text: "Clipboard Rules" });
+		header.createEl("h2", { text: t('clipboardRules') });
 
 		const desc = contentEl.createDiv({ cls: "lemon-modal-desc" });
-		desc.textContent = "Configure rules to automatically transform clipboard content when pasting. Rules are applied in order.";
+		desc.textContent = t('clipboardRulesModalDesc');
 
 		// Rules list
 		const rulesContainer = contentEl.createDiv({ cls: "lemon-rules-container" });
@@ -33,7 +34,7 @@ export class ClipboardRulesSettingModal extends Modal {
 
 		// Add rule button
 		const addButtonContainer = contentEl.createDiv({ cls: "lemon-add-rule-container" });
-		const addButton = addButtonContainer.createEl("button", { text: "+ Add Rule" });
+		const addButton = addButtonContainer.createEl("button", { text: t('addRule') });
 		addButton.addEventListener("click", () => {
 			this.addNewRule();
 			this.renderRules(rulesContainer);
@@ -42,13 +43,13 @@ export class ClipboardRulesSettingModal extends Modal {
 		// Footer
 		const footer = contentEl.createDiv({ cls: "lemon-modal-footer" });
 
-		const cancelBtn = footer.createEl("button", { text: "Cancel" });
+		const cancelBtn = footer.createEl("button", { text: t('cancel') });
 		cancelBtn.addEventListener("click", () => this.close());
 
-		const saveBtn = footer.createEl("button", { text: "Save", cls: "mod-cta" });
+		const saveBtn = footer.createEl("button", { text: t('save'), cls: "mod-cta" });
 		saveBtn.addEventListener("click", () => {
 			this.onSave(this.rules);
-			new Notice("Clipboard rules saved");
+			new Notice(t('clipboardRulesSaved'));
 			this.close();
 		});
 	}
@@ -56,7 +57,7 @@ export class ClipboardRulesSettingModal extends Modal {
 	private addNewRule() {
 		const newRule: ClipboardRule = {
 			id: `rule-${Date.now()}`,
-			name: "New Rule",
+			name: t('newRule'),
 			enabled: true,
 			pattern: "",
 			replacement: "",
@@ -70,7 +71,7 @@ export class ClipboardRulesSettingModal extends Modal {
 
 		if (this.rules.length === 0) {
 			const empty = container.createDiv({ cls: "lemon-rules-empty" });
-			empty.textContent = "No rules configured. Click 'Add Rule' to create one.";
+			empty.textContent = t('noRulesConfigured');
 			return;
 		}
 
@@ -101,7 +102,7 @@ export class ClipboardRulesSettingModal extends Modal {
 			const moveButtons = ruleHeader.createDiv({ cls: "lemon-rule-move-buttons" });
 			
 			if (index > 0) {
-				const upBtn = moveButtons.createEl("button", { text: "↑", cls: "lemon-move-btn" });
+				const upBtn = moveButtons.createEl("button", { text: t('moveUp'), cls: "lemon-move-btn" });
 				upBtn.addEventListener("click", () => {
 					[this.rules[index - 1], this.rules[index]] = [this.rules[index], this.rules[index - 1]];
 					this.renderRules(container);
@@ -109,7 +110,7 @@ export class ClipboardRulesSettingModal extends Modal {
 			}
 
 			if (index < this.rules.length - 1) {
-				const downBtn = moveButtons.createEl("button", { text: "↓", cls: "lemon-move-btn" });
+				const downBtn = moveButtons.createEl("button", { text: t('moveDown'), cls: "lemon-move-btn" });
 				downBtn.addEventListener("click", () => {
 					[this.rules[index], this.rules[index + 1]] = [this.rules[index + 1], this.rules[index]];
 					this.renderRules(container);
@@ -117,7 +118,7 @@ export class ClipboardRulesSettingModal extends Modal {
 			}
 
 			// Delete button
-			const deleteBtn = ruleHeader.createEl("button", { text: "×", cls: "lemon-delete-btn" });
+			const deleteBtn = ruleHeader.createEl("button", { text: t('deleteRule'), cls: "lemon-delete-btn" });
 			deleteBtn.addEventListener("click", () => {
 				this.rules.splice(index, 1);
 				this.renderRules(container);
@@ -128,9 +129,9 @@ export class ClipboardRulesSettingModal extends Modal {
 
 			// Description
 			new Setting(ruleBody)
-				.setName("Description")
+				.setName(t('ruleDescription'))
 				.addText(text => text
-					.setPlaceholder("What does this rule do?")
+					.setPlaceholder(t('ruleDescriptionPlaceholder'))
 					.setValue(rule.description || "")
 					.onChange(value => {
 						rule.description = value;
@@ -138,10 +139,10 @@ export class ClipboardRulesSettingModal extends Modal {
 
 			// Pattern
 			new Setting(ruleBody)
-				.setName("Pattern (Regex)")
-				.setDesc("Regular expression to match content")
+				.setName(t('rulePattern'))
+				.setDesc(t('rulePatternDesc'))
 				.addText(text => text
-					.setPlaceholder("e.g., !\\[\\]\\(https://example\\.com/[^)]+\\)")
+					.setPlaceholder(t('rulePatternPlaceholder'))
 					.setValue(rule.pattern)
 					.onChange(value => {
 						rule.pattern = value;
@@ -149,10 +150,10 @@ export class ClipboardRulesSettingModal extends Modal {
 
 			// Replacement
 			new Setting(ruleBody)
-				.setName("Replacement")
-				.setDesc("Text to replace matches with (use $1, $2 for capture groups)")
+				.setName(t('ruleReplacement'))
+				.setDesc(t('ruleReplacementDesc'))
 				.addText(text => text
-					.setPlaceholder("e.g., empty string to remove")
+					.setPlaceholder(t('ruleReplacementPlaceholder'))
 					.setValue(rule.replacement)
 					.onChange(value => {
 						rule.replacement = value;
@@ -160,14 +161,14 @@ export class ClipboardRulesSettingModal extends Modal {
 
 			// Test section
 			const testSection = ruleBody.createDiv({ cls: "lemon-rule-test" });
-			testSection.createEl("h4", { text: "Test Rule" });
+			testSection.createEl("h4", { text: t('testRule') });
 
 			const testInput = testSection.createEl("textarea", { 
 				placeholder: "Paste sample text here to test...",
 				cls: "lemon-test-input"
 			});
 
-			const testBtn = testSection.createEl("button", { text: "Test", cls: "lemon-test-btn" });
+			const testBtn = testSection.createEl("button", { text: t('test'), cls: "lemon-test-btn" });
 			const testResult = testSection.createDiv({ cls: "lemon-test-result" });
 
 			testBtn.addEventListener("click", () => {
@@ -176,10 +177,10 @@ export class ClipboardRulesSettingModal extends Modal {
 				
 				testResult.empty();
 				if (result.success) {
-					testResult.createEl("strong", { text: "Result:" });
+					testResult.createEl("strong", { text: t('result') });
 					testResult.createEl("pre", { text: result.result || "(empty)" });
 				} else {
-					testResult.createEl("strong", { text: "Error:", cls: "lemon-error" });
+					testResult.createEl("strong", { text: t('error'), cls: "lemon-error" });
 					testResult.createEl("div", { text: result.error, cls: "lemon-error" });
 				}
 			});

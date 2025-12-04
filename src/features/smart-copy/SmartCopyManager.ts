@@ -1,5 +1,6 @@
 import { Editor, Notice } from "obsidian";
 import LemonToolkitPlugin from "../../main";
+import { t } from "../../i18n/locale";
 
 export interface ContentBlock {
 	type: "heading" | "code" | "table" | "list" | "paragraph";
@@ -29,12 +30,15 @@ export class SmartCopyManager {
 		const headingBlock = this.findCurrentHeadingBlock(lines, cursor.line);
 
 		if (!headingBlock) {
-			new Notice("No heading found at cursor position");
+			new Notice(t('noHeadingFoundAtCursor'));
 			return;
 		}
 
 		await this.copyToClipboard(headingBlock.content);
-		new Notice(`Copied: ${headingBlock.title} (${headingBlock.endLine - headingBlock.startLine + 1} lines)`);
+		new Notice(t('copiedHeadingWithLines', { 
+			title: headingBlock.title || '', 
+			count: (headingBlock.endLine - headingBlock.startLine + 1).toString() 
+		}));
 	}
 
 	/**
@@ -48,13 +52,16 @@ export class SmartCopyManager {
 		const codeBlock = this.findCurrentCodeBlock(lines, cursor.line);
 
 		if (!codeBlock) {
-			new Notice("No code block found at cursor position");
+			new Notice(t('noCodeBlockFoundAtCursor'));
 			return;
 		}
 
 		await this.copyToClipboard(codeBlock.content);
 		const lang = codeBlock.language || "code";
-		new Notice(`Copied ${lang} block (${codeBlock.endLine - codeBlock.startLine + 1} lines)`);
+		new Notice(t('copiedCodeBlockWithLines', { 
+			lang: lang, 
+			count: (codeBlock.endLine - codeBlock.startLine + 1).toString() 
+		}));
 	}
 
 	/**
@@ -68,12 +75,14 @@ export class SmartCopyManager {
 		const tableBlock = this.findCurrentTable(lines, cursor.line);
 
 		if (!tableBlock) {
-			new Notice("No table found at cursor position");
+			new Notice(t('noTableFoundAtCursor'));
 			return;
 		}
 
 		await this.copyToClipboard(tableBlock.content);
-		new Notice(`Copied table (${tableBlock.endLine - tableBlock.startLine + 1} rows)`);
+		new Notice(t('copiedTableWithRows', { 
+			count: (tableBlock.endLine - tableBlock.startLine + 1).toString() 
+		}));
 	}
 
 	/**
@@ -87,7 +96,7 @@ export class SmartCopyManager {
 		const tableBlock = this.findCurrentTable(lines, cursor.line);
 
 		if (!tableBlock) {
-			new Notice("No table found at cursor position");
+			new Notice(t('noTableFoundAtCursor'));
 			return;
 		}
 
@@ -107,7 +116,7 @@ export class SmartCopyManager {
 		const codeBlock = this.findCurrentCodeBlock(lines, cursor.line);
 
 		if (!codeBlock) {
-			new Notice("No code block found at cursor position");
+			new Notice(t('noCodeBlockFoundAtCursor'));
 			return;
 		}
 
@@ -130,7 +139,7 @@ export class SmartCopyManager {
 		const codeBlocks = this.findAllCodeBlocks(lines);
 
 		if (codeBlocks.length === 0) {
-			new Notice("No code blocks found in document");
+			new Notice(t('noCodeBlocksFoundInDocument'));
 			return;
 		}
 

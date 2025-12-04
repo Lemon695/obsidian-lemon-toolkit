@@ -1,5 +1,6 @@
 import { App, FuzzySuggestModal, FuzzyMatch, MarkdownView } from "obsidian";
 import LemonToolkitPlugin from "../main";
+import { t } from "../i18n/locale";
 
 interface CommandItem {
 	id: string;
@@ -19,7 +20,7 @@ export class CommandPaletteModal extends FuzzySuggestModal<CommandItem> {
 		this.plugin = plugin;
 		this.commands = [];
 
-		this.setPlaceholder("Type to filter Lemon Toolkit commands...");
+		this.setPlaceholder(t('placeholderFilterCommands'));
 		this.setInstructions([
 			{ command: "↑↓", purpose: "to navigate" },
 			{ command: "↵", purpose: "to execute" },

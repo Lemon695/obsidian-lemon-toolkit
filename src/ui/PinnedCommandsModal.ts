@@ -1,5 +1,6 @@
 import { App, Modal } from "obsidian";
 import LemonToolkitPlugin from "../main";
+import { t } from "../i18n/locale";
 
 interface CommandInfo {
 	id: string;
@@ -24,13 +25,13 @@ export class PinnedCommandsModal extends Modal {
 		const { contentEl } = this;
 		contentEl.empty();
 
-		contentEl.createEl("h2", { text: "Manage pinned commands" });
+		contentEl.createEl("h2", { text: t('managePinnedCommands') });
 
 		const description = contentEl.createDiv({ cls: "lemon-pinned-desc" });
 		description.style.marginTop = "8px";
 		description.style.marginBottom = "16px";
 		description.style.color = "var(--text-muted)";
-		description.innerHTML = "Pinned commands will always appear at the top of the command palette.<br>Drag to reorder pinned commands.";
+		description.innerHTML = t('pinnedCommandsModalDesc');
 
 		// Get all Lemon Toolkit commands
 		this.loadCommands();
@@ -45,7 +46,7 @@ export class PinnedCommandsModal extends Modal {
 		const pinnedSection = sectionsContainer.createDiv({ cls: "lemon-pinned-section" });
 		pinnedSection.style.flex = "1";
 
-		const pinnedTitle = pinnedSection.createEl("h3", { text: "Pinned commands" });
+		const pinnedTitle = pinnedSection.createEl("h3", { text: t('pinnedCommands') });
 		pinnedTitle.style.fontSize = "1em";
 		pinnedTitle.style.marginBottom = "8px";
 
@@ -61,7 +62,7 @@ export class PinnedCommandsModal extends Modal {
 		const availableSection = sectionsContainer.createDiv({ cls: "lemon-available-section" });
 		availableSection.style.flex = "1";
 
-		const availableTitle = availableSection.createEl("h3", { text: "Available commands" });
+		const availableTitle = availableSection.createEl("h3", { text: t('availableCommands') });
 		availableTitle.style.fontSize = "1em";
 		availableTitle.style.marginBottom = "8px";
 
@@ -84,11 +85,11 @@ export class PinnedCommandsModal extends Modal {
 		buttonContainer.style.justifyContent = "flex-end";
 		buttonContainer.style.gap = "8px";
 
-		const cancelButton = buttonContainer.createEl("button", { text: "Cancel" });
+		const cancelButton = buttonContainer.createEl("button", { text: t('cancel') });
 		cancelButton.addEventListener("click", () => this.close());
 
 		const saveButton = buttonContainer.createEl("button", {
-			text: "Save",
+			text: t('save'),
 			cls: "mod-cta",
 		});
 		saveButton.addEventListener("click", () => this.savePinnedCommands());
@@ -120,7 +121,7 @@ export class PinnedCommandsModal extends Modal {
 			emptyMsg.style.padding = "16px";
 			emptyMsg.style.textAlign = "center";
 			emptyMsg.style.color = "var(--text-muted)";
-			emptyMsg.textContent = "No pinned commands. Click on available commands to pin them.";
+			emptyMsg.textContent = t('noPinnedCommands');
 			return;
 		}
 
@@ -141,7 +142,7 @@ export class PinnedCommandsModal extends Modal {
 
 			// Drag handle
 			const dragHandle = item.createSpan({ cls: "lemon-drag-handle" });
-			dragHandle.textContent = "⋮⋮";
+			dragHandle.textContent = t('dragHandle');
 			dragHandle.style.color = "var(--text-muted)";
 			dragHandle.style.cursor = "move";
 
@@ -151,7 +152,7 @@ export class PinnedCommandsModal extends Modal {
 			nameSpan.style.flex = "1";
 
 			// Remove button
-			const removeBtn = item.createEl("button", { text: "×" });
+			const removeBtn = item.createEl("button", { text: t('removeCommand') });
 			removeBtn.style.background = "none";
 			removeBtn.style.border = "none";
 			removeBtn.style.color = "var(--text-muted)";
@@ -203,7 +204,7 @@ export class PinnedCommandsModal extends Modal {
 			emptyMsg.style.padding = "16px";
 			emptyMsg.style.textAlign = "center";
 			emptyMsg.style.color = "var(--text-muted)";
-			emptyMsg.textContent = "All commands are pinned.";
+			emptyMsg.textContent = t('allCommandsPinned');
 			return;
 		}
 
@@ -222,7 +223,7 @@ export class PinnedCommandsModal extends Modal {
 			nameSpan.textContent = command.name;
 			nameSpan.style.flex = "1";
 
-			const addBtn = item.createEl("button", { text: "+" });
+			const addBtn = item.createEl("button", { text: t('addCommand') });
 			addBtn.style.background = "none";
 			addBtn.style.border = "none";
 			addBtn.style.color = "var(--text-muted)";

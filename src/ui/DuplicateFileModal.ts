@@ -1,4 +1,5 @@
 import { App, Modal, Notice, TFile } from "obsidian";
+import { t } from "../i18n/locale";
 
 export class DuplicateFileModal extends Modal {
 	private file: TFile;
@@ -76,7 +77,7 @@ export class DuplicateFileModal extends Modal {
 		const trimmedName = newName.trim();
 		
 		if (!trimmedName) {
-			new Notice("File name cannot be empty");
+			new Notice(t('fileNameCannotBeEmpty'));
 			return;
 		}
 
@@ -86,7 +87,7 @@ export class DuplicateFileModal extends Modal {
 		const existingFile = this.app.vault.getAbstractFileByPath(newPath);
 		
 		if (existingFile) {
-			new Notice("A file with this name already exists");
+			new Notice(t('fileAlreadyExists'));
 			return;
 		}
 

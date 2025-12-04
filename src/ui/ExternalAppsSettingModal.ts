@@ -1,6 +1,7 @@
 import { App, Modal, Notice, Setting } from "obsidian";
 import LemonToolkitPlugin from "../main";
 import { ExternalApp } from "../settings";
+import { t } from "../i18n/locale";
 
 export class ExternalAppsSettingModal extends Modal {
 	private plugin: LemonToolkitPlugin;
@@ -23,14 +24,14 @@ export class ExternalAppsSettingModal extends Modal {
 		header.style.padding = "16px 24px";
 		header.style.borderBottom = "1px solid var(--background-modifier-border)";
 
-		const title = header.createEl("h2", { text: "Manage External Applications" });
+		const title = header.createEl("h2", { text: t('manageExternalApplications') });
 		title.style.margin = "0";
 
 		// Description
 		const desc = contentEl.createDiv({ cls: "lemon-modal-desc" });
 		desc.style.padding = "12px 24px";
 		desc.style.color = "var(--text-muted)";
-		desc.textContent = "Configure external applications to open files and folders.";
+		desc.textContent = t('externalAppsModalDesc');
 
 		// Apps list
 		this.contentContainer = contentEl.createDiv({ cls: "lemon-apps-list" });
@@ -45,7 +46,7 @@ export class ExternalAppsSettingModal extends Modal {
 		addContainer.style.padding = "8px 24px";
 		addContainer.style.borderTop = "1px solid var(--background-modifier-border)";
 
-		const addBtn = addContainer.createEl("button", { text: "+ Add Application" });
+		const addBtn = addContainer.createEl("button", { text: t('addApplication') });
 		addBtn.style.width = "100%";
 		addBtn.style.padding = "8px";
 		addBtn.style.cursor = "pointer";
@@ -59,10 +60,10 @@ export class ExternalAppsSettingModal extends Modal {
 		footer.style.padding = "16px 24px";
 		footer.style.borderTop = "1px solid var(--background-modifier-border)";
 
-		const cancelBtn = footer.createEl("button", { text: "Cancel" });
+		const cancelBtn = footer.createEl("button", { text: t('cancel') });
 		cancelBtn.addEventListener("click", () => this.close());
 
-		const saveBtn = footer.createEl("button", { text: "Save", cls: "mod-cta" });
+		const saveBtn = footer.createEl("button", { text: t('save'), cls: "mod-cta" });
 		saveBtn.addEventListener("click", () => this.save());
 	}
 
@@ -74,7 +75,7 @@ export class ExternalAppsSettingModal extends Modal {
 			emptyMsg.style.padding = "32px";
 			emptyMsg.style.textAlign = "center";
 			emptyMsg.style.color = "var(--text-muted)";
-			emptyMsg.textContent = "No external applications configured. Click 'Add Application' to add one.";
+			emptyMsg.textContent = t('noExternalAppsConfigured');
 			return;
 		}
 
@@ -92,10 +93,10 @@ export class ExternalAppsSettingModal extends Modal {
 
 		// App name
 		new Setting(item)
-			.setName("Application name")
+			.setName(t('applicationName'))
 			.addText((text) =>
 				text
-					.setPlaceholder("e.g., VS Code")
+					.setPlaceholder(t('applicationNamePlaceholder'))
 					.setValue(app.name)
 					.onChange((value) => {
 						app.name = value;
@@ -104,11 +105,11 @@ export class ExternalAppsSettingModal extends Modal {
 
 		// App path
 		new Setting(item)
-			.setName("Application path")
-			.setDesc("Full path to the application executable")
+			.setName(t('applicationPath'))
+			.setDesc(t('applicationPathDesc'))
 			.addText((text) => {
 				text
-					.setPlaceholder("e.g., /Applications/Visual Studio Code.app")
+					.setPlaceholder(t('applicationPathPlaceholder'))
 					.setValue(app.path)
 					.onChange((value) => {
 						app.path = value;
@@ -118,7 +119,7 @@ export class ExternalAppsSettingModal extends Modal {
 
 		// Options
 		new Setting(item)
-			.setName("Can open files")
+			.setName(t('canOpenFiles'))
 			.addToggle((toggle) =>
 				toggle.setValue(app.openFile).onChange((value) => {
 					app.openFile = value;
@@ -126,7 +127,7 @@ export class ExternalAppsSettingModal extends Modal {
 			);
 
 		new Setting(item)
-			.setName("Can open folders")
+			.setName(t('canOpenFolders'))
 			.addToggle((toggle) =>
 				toggle.setValue(app.openFolder).onChange((value) => {
 					app.openFolder = value;
@@ -138,7 +139,7 @@ export class ExternalAppsSettingModal extends Modal {
 		deleteContainer.style.marginTop = "8px";
 		deleteContainer.style.textAlign = "right";
 
-		const deleteBtn = deleteContainer.createEl("button", { text: "Delete" });
+		const deleteBtn = deleteContainer.createEl("button", { text: t('delete') });
 		deleteBtn.style.color = "var(--text-error)";
 		deleteBtn.style.cursor = "pointer";
 		deleteBtn.addEventListener("click", () => {
@@ -164,7 +165,7 @@ export class ExternalAppsSettingModal extends Modal {
 		// Validate apps
 		for (const app of this.apps) {
 			if (!app.name || !app.path) {
-				new Notice("Please fill in all application names and paths");
+				new Notice(t('fillAllAppFields'));
 				return;
 			}
 		}
@@ -176,7 +177,7 @@ export class ExternalAppsSettingModal extends Modal {
 		// Re-register commands
 		this.plugin.reloadExternalAppCommands();
 
-		new Notice("External applications saved");
+		new Notice(t('externalAppsSaved'));
 		this.close();
 	}
 

@@ -1,4 +1,5 @@
 import { Notice, Plugin } from "obsidian";
+import { t } from "../i18n/locale";
 
 /**
  * Delete the active file permanently
@@ -6,7 +7,7 @@ import { Notice, Plugin } from "obsidian";
 export async function deleteFilePermanently(plugin: Plugin): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	if (!file) {
-		new Notice("No active file");
+		new Notice(t('noActiveFile'));
 		return;
 	}
 
@@ -14,9 +15,9 @@ export async function deleteFilePermanently(plugin: Plugin): Promise<void> {
 	
 	try {
 		await plugin.app.vault.delete(file);
-		new Notice(`Deleted: ${fileName}`);
+		new Notice(t('deleted', { name: fileName }));
 	} catch (error) {
-		new Notice(`Failed to delete file: ${error.message}`);
+		new Notice(t('failedToDeleteFile', { error: error.message }));
 		console.error("Delete file error:", error);
 	}
 }
@@ -27,7 +28,7 @@ export async function deleteFilePermanently(plugin: Plugin): Promise<void> {
 export async function deleteFileToTrash(plugin: Plugin): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();
 	if (!file) {
-		new Notice("No active file");
+		new Notice(t('noActiveFile'));
 		return;
 	}
 
@@ -35,9 +36,9 @@ export async function deleteFileToTrash(plugin: Plugin): Promise<void> {
 	
 	try {
 		await plugin.app.vault.trash(file, true);
-		new Notice(`Moved to trash: ${fileName}`);
+		new Notice(t('movedToTrash', { name: fileName }));
 	} catch (error) {
-		new Notice(`Failed to move file to trash: ${error.message}`);
+		new Notice(t('failedToMoveToTrash', { error: error.message }));
 		console.error("Move to trash error:", error);
 	}
 }

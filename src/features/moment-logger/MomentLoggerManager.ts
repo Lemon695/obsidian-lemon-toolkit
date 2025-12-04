@@ -1,5 +1,6 @@
 import { Editor, Notice, moment } from "obsidian";
 import LemonToolkitPlugin from "../../main";
+import { t } from "../../i18n/locale";
 
 interface MomentBlock {
 	startLine: number;
@@ -101,7 +102,7 @@ export class MomentLoggerManager {
 		const newLineLength = newEntry.length;
 		editor.setCursor({ line: newLineNumber, ch: newLineLength });
 
-		new Notice("Moment added to timeline");
+		new Notice(t('momentAddedToTimeline'));
 	}
 
 	/**
@@ -128,7 +129,7 @@ export class MomentLoggerManager {
 			editor.setCursor({ line: cursor.line + 1, ch: newEntry.length - 1 });
 		}
 
-		new Notice("Moment inserted at cursor");
+		new Notice(t('momentInsertedAtCursor'));
 	}
 
 	/**
@@ -163,6 +164,6 @@ export class MomentLoggerManager {
 			}
 		}
 
-		new Notice(`Logged: ${text}`);
+		new Notice(t('loggedText', { text }));
 	}
 }

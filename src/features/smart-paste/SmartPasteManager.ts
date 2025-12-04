@@ -1,5 +1,6 @@
 import { Editor, Notice } from "obsidian";
 import LemonToolkitPlugin from "../../main";
+import { t } from "../../i18n/locale";
 
 export class SmartPasteManager {
 	private plugin: LemonToolkitPlugin;
@@ -17,7 +18,7 @@ export class SmartPasteManager {
 			let content = await this.readClipboardContent();
 
 			if (!content) {
-				new Notice("Clipboard is empty");
+				new Notice(t('clipboardIsEmpty'));
 				return;
 			}
 
@@ -30,11 +31,11 @@ export class SmartPasteManager {
 			// Show notification if content was modified
 			if (transformedText !== content) {
 				const enabledRules = this.plugin.settings.clipboardRules.filter(r => r.enabled);
-				new Notice(`Pasted with ${enabledRules.length} rule${enabledRules.length > 1 ? "s" : ""} applied`);
+				new Notice(t('pastedWithRulesApplied', { count: enabledRules.length.toString(), s: enabledRules.length > 1 ? "s" : "" }));
 			}
 		} catch (error) {
 			console.error("Smart paste error:", error);
-			new Notice("Failed to read clipboard");
+			new Notice(t('failedToReadClipboard'));
 		}
 	}
 

@@ -1,6 +1,7 @@
 import { Editor, Notice } from "obsidian";
 import { TextSelectionModal } from "../features/text-selection/TextSelectionModal";
 import LemonToolkitPlugin from "../main";
+import { t } from "../i18n/locale";
 
 /**
  * Open text selection actions menu
@@ -9,7 +10,7 @@ export function openTextSelectionActions(plugin: LemonToolkitPlugin, editor: Edi
 	const selectedText = editor.getSelection();
 
 	if (!selectedText || selectedText.trim() === "") {
-		new Notice("Please select some text first");
+		new Notice(t('pleaseSelectText'));
 		return;
 	}
 

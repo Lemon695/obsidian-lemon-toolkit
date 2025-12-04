@@ -1,5 +1,6 @@
 import { ItemView, WorkspaceLeaf, TFile, Notice } from "obsidian";
 import LemonToolkitPlugin from "../main";
+import { t } from "../i18n/locale";
 
 export const FILE_INFO_VIEW_TYPE = "lemon-toolkit-file-info";
 
@@ -19,7 +20,7 @@ export class FileInfoView extends ItemView {
 	}
 
 	getDisplayText(): string {
-		return "File Info";
+		return t('fileInfo');
 	}
 
 	getIcon(): string {
@@ -93,7 +94,7 @@ export class FileInfoView extends ItemView {
 		emptyState.style.padding = "32px 16px";
 		emptyState.style.textAlign = "center";
 		emptyState.style.color = "var(--text-muted)";
-		emptyState.textContent = "No active file";
+		emptyState.textContent = t('noActiveFile');
 	}
 
 	private renderHeader(): void {
@@ -104,53 +105,53 @@ export class FileInfoView extends ItemView {
 		header.style.padding = "8px 16px";
 		header.style.borderBottom = "1px solid var(--background-modifier-border)";
 
-		const title = header.createEl("h4", { text: "File Information" });
+		const title = header.createEl("h4", { text: t('fileInformation') });
 		title.style.margin = "0";
 
 		const refreshBtn = header.createEl("button", { cls: "clickable-icon" });
 		refreshBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>`;
-		refreshBtn.setAttribute("aria-label", "Refresh");
+		refreshBtn.setAttribute("aria-label", t('refresh'));
 		refreshBtn.addEventListener("click", () => this.updateView());
 	}
 
 	private async renderBasicInfo(file: TFile): Promise<void> {
-		const section = this.createSection("Basic Information", "basic-info");
+		const section = this.createSection(t('basicInformation'), "basic-info");
 		const content = section.content;
 
 		const stat = file.stat;
 		const fileContent = await this.app.vault.read(file);
 
 		// File name
-		this.createInfoRow(content, "File name", file.name, true);
+		this.createInfoRow(content, t('fileName'), file.name, true);
 
 		// File path
-		this.createInfoRow(content, "Path", file.path, true);
+		this.createInfoRow(content, t('path'), file.path, true);
 
 		// Created time
 		const createdTime = this.formatDate(stat.ctime);
-		this.createInfoRow(content, "Created", createdTime);
+		this.createInfoRow(content, t('created'), createdTime);
 
 		// Modified time
 		const modifiedTime = this.formatDate(stat.mtime);
-		this.createInfoRow(content, "Modified", modifiedTime);
+		this.createInfoRow(content, t('modified'), modifiedTime);
 
 		// File size
 		const fileSize = this.formatFileSize(stat.size);
-		this.createInfoRow(content, "Size", fileSize);
+		this.createInfoRow(content, t('size'), fileSize);
 
 		// Statistics
 		const stats = this.calculateStats(fileContent);
-		this.createInfoRow(content, "Characters", stats.characters.toString());
-		this.createInfoRow(content, "Words", stats.words.toString());
-		this.createInfoRow(content, "Paragraphs", stats.paragraphs.toString());
+		this.createInfoRow(content, t('characters'), stats.characters.toString());
+		this.createInfoRow(content, t('words'), stats.words.toString());
+		this.createInfoRow(content, t('paragraphs'), stats.paragraphs.toString());
 
 		if (this.plugin.settings.showReadingTime) {
-			this.createInfoRow(content, "Reading time", stats.readingTime);
+			this.createInfoRow(content, t('readingTime'), stats.readingTime);
 		}
 	}
 
 	private async renderFrontmatter(file: TFile): Promise<void> {
-		const section = this.createSection("Frontmatter", "frontmatter");
+		const section = this.createSection(t('frontmatter'), "frontmatter");
 		const content = section.content;
 
 		const cache = this.app.metadataCache.getFileCache(file);
@@ -161,7 +162,7 @@ export class FileInfoView extends ItemView {
 			emptyMsg.style.padding = "8px";
 			emptyMsg.style.color = "var(--text-muted)";
 			emptyMsg.style.fontStyle = "italic";
-			emptyMsg.textContent = "No frontmatter";
+			emptyMsg.textContent = t('noFrontmatterInFile');
 			return;
 		}
 
@@ -210,7 +211,7 @@ export class FileInfoView extends ItemView {
 	}
 
 	private async renderTags(file: TFile): Promise<void> {
-		const section = this.createSection("Tags", "tags");
+		const section = this.createSection(t('tags'), "tags");
 		const content = section.content;
 
 		const cache = this.app.metadataCache.getFileCache(file);
@@ -238,7 +239,7 @@ export class FileInfoView extends ItemView {
 			emptyMsg.style.padding = "8px";
 			emptyMsg.style.color = "var(--text-muted)";
 			emptyMsg.style.fontStyle = "italic";
-			emptyMsg.textContent = "No tags";
+			emptyMsg.textContent = t('noTagsInFile');
 			return;
 		}
 
@@ -267,7 +268,7 @@ export class FileInfoView extends ItemView {
 	}
 
 	private async renderLinks(file: TFile): Promise<void> {
-		const section = this.createSection("Links", "links");
+		const section = this.createSection(t('links'), "links");
 		const content = section.content;
 
 		const cache = this.app.metadataCache.getFileCache(file);
@@ -285,7 +286,7 @@ export class FileInfoView extends ItemView {
 		outgoingHeader.style.fontWeight = "500";
 
 		const outgoingTitle = outgoingHeader.createSpan();
-		outgoingTitle.textContent = `Outgoing links (${outgoingLinks.length})`;
+		outgoingTitle.textContent = t('outgoingLinks', { count: outgoingLinks.length.toString() });
 
 		const outgoingList = outgoingSection.createDiv({ cls: "lemon-links-list" });
 		outgoingList.style.paddingLeft = "8px";
@@ -322,7 +323,7 @@ export class FileInfoView extends ItemView {
 		incomingHeader.style.fontWeight = "500";
 
 		const incomingTitle = incomingHeader.createSpan();
-		incomingTitle.textContent = `Incoming links (${incomingLinks.length})`;
+		incomingTitle.textContent = t('incomingLinks', { count: incomingLinks.length.toString() });
 
 		const incomingList = incomingSection.createDiv({ cls: "lemon-links-list" });
 		incomingList.style.paddingLeft = "8px";
@@ -374,7 +375,7 @@ export class FileInfoView extends ItemView {
 	}
 
 	private renderLocation(file: TFile): void {
-		const section = this.createSection("Location", "location");
+		const section = this.createSection(t('location'), "location");
 		const content = section.content;
 
 		const pathParts = file.path.split("/");
@@ -383,7 +384,7 @@ export class FileInfoView extends ItemView {
 		if (pathParts.length === 0 || (pathParts.length === 1 && pathParts[0] === "")) {
 			const rootMsg = content.createDiv();
 			rootMsg.style.padding = "8px";
-			rootMsg.textContent = "📁 Root";
+			rootMsg.textContent = "📁 " + t('root');
 			return;
 		}
 
@@ -455,11 +456,11 @@ export class FileInfoView extends ItemView {
 		if (copyable) {
 			valueEl.style.cursor = "pointer";
 			valueEl.style.color = "var(--link-color)";
-			valueEl.setAttribute("aria-label", "Click to copy");
+			valueEl.setAttribute("aria-label", t('clickToCopy'));
 
 			valueEl.addEventListener("click", async () => {
 				await navigator.clipboard.writeText(value);
-				new Notice(`Copied: ${value}`);
+				new Notice(t('copied', { text: value }));
 			});
 
 			valueEl.addEventListener("mouseenter", () => {
@@ -509,7 +510,7 @@ export class FileInfoView extends ItemView {
 		
 		// Estimate reading time (average 200 words per minute)
 		const minutes = Math.ceil(words / 200);
-		const readingTime = minutes === 1 ? "1 minute" : `${minutes} minutes`;
+		const readingTime = t('minutesCount', { count: minutes.toString(), s: minutes === 1 ? '' : 's' });
 
 		return { characters, words, paragraphs, readingTime };
 	}

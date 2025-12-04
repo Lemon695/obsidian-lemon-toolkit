@@ -1,5 +1,6 @@
 import { ItemView, WorkspaceLeaf, TFile, Menu, Notice } from "obsidian";
 import LemonToolkitPlugin from "../main";
+import { t } from "../i18n/locale";
 
 export const RECENT_FILES_VIEW_TYPE = "lemon-recent-files-view";
 
@@ -150,7 +151,7 @@ export class RecentFilesView extends ItemView {
 
 		// Header
 		const header = container.createDiv({ cls: "lemon-recent-header" });
-		header.createEl("h4", { text: "Recent Files" });
+		header.createEl("h4", { text: t('recentFilesTitle') });
 
 		// Tabs
 		const tabsContainer = container.createDiv({ cls: "lemon-recent-tabs" });
@@ -163,9 +164,9 @@ export class RecentFilesView extends ItemView {
 
 	private renderTabs(container: HTMLElement): void {
 		const tabs: { type: TabType; label: string; icon: string }[] = [
-			{ type: "edited", label: "Recently Edited", icon: "pencil" },
-			{ type: "viewed", label: "Recently Viewed", icon: "eye" },
-			{ type: "created", label: "Recently Created", icon: "file-plus" },
+			{ type: "edited", label: t('recentlyEdited'), icon: "pencil" },
+			{ type: "viewed", label: t('recentlyViewed'), icon: "eye" },
+			{ type: "created", label: t('recentlyCreated'), icon: "file-plus" },
 		];
 
 		tabs.forEach((tab) => {
@@ -198,7 +199,7 @@ export class RecentFilesView extends ItemView {
 		// Render pinned section
 		if (pinnedRecords.length > 0) {
 			const pinnedSection = this.contentContainer.createDiv({ cls: "lemon-recent-section" });
-			pinnedSection.createDiv({ text: "Pinned", cls: "lemon-section-title" });
+			pinnedSection.createDiv({ text: t('pinnedSection'), cls: "lemon-section-title" });
 			pinnedRecords.forEach((record) => this.renderFileItem(pinnedSection, record, true));
 		}
 
@@ -206,7 +207,7 @@ export class RecentFilesView extends ItemView {
 		if (unpinnedRecords.length > 0) {
 			const recentSection = this.contentContainer.createDiv({ cls: "lemon-recent-section" });
 			if (pinnedRecords.length > 0) {
-				recentSection.createDiv({ text: "Recent", cls: "lemon-section-title" });
+				recentSection.createDiv({ text: t('recentSection'), cls: "lemon-section-title" });
 			}
 			unpinnedRecords.forEach((record) => this.renderFileItem(recentSection, record, false));
 		}
@@ -214,9 +215,9 @@ export class RecentFilesView extends ItemView {
 		// Empty state
 		if (records.length === 0) {
 			const empty = this.contentContainer.createDiv({ cls: "lemon-recent-empty" });
-			empty.createDiv({ text: "No recent files", cls: "lemon-empty-title" });
+			empty.createDiv({ text: t('noRecentFiles'), cls: "lemon-empty-title" });
 			empty.createDiv({ 
-				text: "Files you work with will appear here", 
+				text: t('filesWillAppearHere'), 
 				cls: "lemon-empty-desc" 
 			});
 		}
@@ -245,7 +246,7 @@ export class RecentFilesView extends ItemView {
 		meta.createSpan({ text: timeStr, cls: "lemon-file-time" });
 		
 		if (file.parent && file.parent.path !== "/") {
-			meta.createSpan({ text: " • ", cls: "lemon-separator" });
+			meta.createSpan({ text: t('separator'), cls: "lemon-separator" });
 			meta.createSpan({ text: file.parent.path, cls: "lemon-file-path" });
 		}
 
@@ -279,7 +280,7 @@ export class RecentFilesView extends ItemView {
 		// Open in new tab
 		menu.addItem((item) => {
 			item
-				.setTitle("Open in new tab")
+				.setTitle(t('openInNewTab'))
 				.setIcon("file-plus")
 				.onClick(() => {
 					this.app.workspace.getLeaf("tab").openFile(file);
@@ -320,7 +321,7 @@ export class RecentFilesView extends ItemView {
 						await this.app.vault.delete(file);
 						this.removeFileFromRecords(file.path);
 						this.renderFileList();
-						new Notice(`Deleted ${file.basename}`);
+						new Notice(t('deletedFile', { name: file.basename }));
 					}
 				});
 		});

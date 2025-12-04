@@ -1,5 +1,6 @@
 import { App, Modal, Notice } from "obsidian";
 import { ContentBlock } from "./SmartCopyManager";
+import { t } from "../../i18n/locale";
 
 export class SmartCopyModal extends Modal {
 	private blocks: ContentBlock[];
@@ -18,10 +19,10 @@ export class SmartCopyModal extends Modal {
 
 		// Header
 		const header = contentEl.createDiv({ cls: "lemon-modal-header" });
-		header.createEl("h2", { text: "Smart Copy - Select Content" });
+		header.createEl("h2", { text: t('smartCopySelectContent') });
 
 		const desc = contentEl.createDiv({ cls: "lemon-modal-desc" });
-		desc.textContent = "Select one or more blocks to copy. Multiple selections will be combined.";
+		desc.textContent = t('smartCopyModalDesc');
 
 		// Blocks list
 		this.listContainer = contentEl.createDiv({ cls: "lemon-smart-copy-list" });
@@ -33,13 +34,13 @@ export class SmartCopyModal extends Modal {
 		// Left side - Select all/none
 		const leftActions = footer.createDiv({ cls: "lemon-footer-left" });
 
-		const selectAllBtn = leftActions.createEl("button", { text: "Select All" });
+		const selectAllBtn = leftActions.createEl("button", { text: t('selectAll') });
 		selectAllBtn.addEventListener("click", () => {
 			this.blocks.forEach((_, index) => this.selectedBlocks.add(index));
 			this.renderBlocksList();
 		});
 
-		const selectNoneBtn = leftActions.createEl("button", { text: "Deselect All" });
+		const selectNoneBtn = leftActions.createEl("button", { text: t('deselectAll') });
 		selectNoneBtn.addEventListener("click", () => {
 			this.selectedBlocks.clear();
 			this.renderBlocksList();
@@ -50,7 +51,7 @@ export class SmartCopyModal extends Modal {
 		
 		if (types.has("heading")) {
 			const headingsBtn = leftActions.createEl("button", { 
-				text: `Headings (${this.blocks.filter(b => b.type === "heading").length})`,
+				text: t('headingsCount', { count: this.blocks.filter(b => b.type === "heading").length.toString() }),
 				cls: "lemon-type-filter-btn"
 			});
 			headingsBtn.addEventListener("click", () => this.toggleType("heading"));
@@ -58,7 +59,7 @@ export class SmartCopyModal extends Modal {
 
 		if (types.has("code")) {
 			const codeBtn = leftActions.createEl("button", { 
-				text: `Code (${this.blocks.filter(b => b.type === "code").length})`,
+				text: t('codeCount', { count: this.blocks.filter(b => b.type === "code").length.toString() }),
 				cls: "lemon-type-filter-btn"
 			});
 			codeBtn.addEventListener("click", () => this.toggleType("code"));
@@ -66,7 +67,7 @@ export class SmartCopyModal extends Modal {
 
 		if (types.has("table")) {
 			const tableBtn = leftActions.createEl("button", { 
-				text: `Tables (${this.blocks.filter(b => b.type === "table").length})`,
+				text: t('tablesCount', { count: this.blocks.filter(b => b.type === "table").length.toString() }),
 				cls: "lemon-type-filter-btn"
 			});
 			tableBtn.addEventListener("click", () => this.toggleType("table"));
@@ -75,10 +76,10 @@ export class SmartCopyModal extends Modal {
 		// Right side - Cancel and Copy
 		const rightActions = footer.createDiv({ cls: "lemon-footer-right" });
 
-		const cancelBtn = rightActions.createEl("button", { text: "Cancel" });
+		const cancelBtn = rightActions.createEl("button", { text: t('cancel') });
 		cancelBtn.addEventListener("click", () => this.close());
 
-		const copyBtn = rightActions.createEl("button", { text: "Copy Selected", cls: "mod-cta" });
+		const copyBtn = rightActions.createEl("button", { text: t('copySelected'), cls: "mod-cta" });
 		copyBtn.addEventListener("click", async () => {
 			await this.copySelected();
 		});
@@ -107,7 +108,7 @@ export class SmartCopyModal extends Modal {
 
 		if (this.blocks.length === 0) {
 			const empty = this.listContainer.createDiv({ cls: "lemon-empty-state" });
-			empty.textContent = "No content blocks found in document";
+			empty.textContent = t('noContentBlocksFound');
 			return;
 		}
 
@@ -150,7 +151,11 @@ export class SmartCopyModal extends Modal {
 			// Meta info
 			const meta = content.createDiv({ cls: "lemon-block-meta" });
 			const lineCount = block.endLine - block.startLine + 1;
-			meta.textContent = `Lines ${block.startLine + 1}-${block.endLine + 1} (${lineCount} lines)`;
+			meta.textContent = t('linesRange', { 
+				start: (block.startLine + 1).toString(), 
+				end: (block.endLine + 1).toString(), 
+				count: lineCount.toString() 
+			});
 
 			// Preview
 			const preview = content.createDiv({ cls: "lemon-block-preview" });
@@ -173,7 +178,11 @@ export class SmartCopyModal extends Modal {
 
 		// Summary
 		const summary = this.listContainer.createDiv({ cls: "lemon-copy-summary" });
-		summary.innerHTML = `<span class="lemon-stat-highlight">${this.selectedBlocks.size}</span> of <span class="lemon-stat-highlight">${this.blocks.length}</span> blocks selected`;
+		const summaryText = t('blocksSelected', { 
+			selected: this.selectedBlocks.size.toString(), 
+			total: this.blocks.length.toString() 
+		});
+		summary.innerHTML = summaryText.replace(/(\d+)/g, '<span class="lemon-stat-highlight">$1</span>');
 	}
 
 	private getTypeIcon(type: string): string {
@@ -189,11 +198,11 @@ export class SmartCopyModal extends Modal {
 
 	private getTypeName(type: string): string {
 		const names: Record<string, string> = {
-			heading: "Heading",
-			code: "Code",
-			table: "Table",
-			list: "List",
-			paragraph: "Paragraph",
+			heading: t('typeHeading'),
+			code: t('typeCode'),
+			table: t('typeTable'),
+			list: t('typeList'),
+			paragraph: t('typeParagraph'),
 		};
 		return names[type] || type;
 	}
@@ -203,10 +212,10 @@ export class SmartCopyModal extends Modal {
 			return `${"#".repeat(block.level || 1)} ${block.title}`;
 		}
 		if (block.type === "code" && block.language) {
-			return `Code (${block.language})`;
+			return t('codeLanguage', { language: block.language });
 		}
 		if (block.type === "table") {
-			return "Table";
+			return t('typeTable');
 		}
 		return "Content";
 	}
@@ -223,7 +232,7 @@ export class SmartCopyModal extends Modal {
 
 	private async copySelected(): Promise<void> {
 		if (this.selectedBlocks.size === 0) {
-			new Notice("No blocks selected");
+			new Notice(t('noBlocksSelected'));
 			return;
 		}
 
@@ -237,7 +246,10 @@ export class SmartCopyModal extends Modal {
 		// Copy to clipboard
 		await navigator.clipboard.writeText(combined);
 
-		new Notice(`Copied ${this.selectedBlocks.size} block${this.selectedBlocks.size > 1 ? "s" : ""} to clipboard`);
+		new Notice(t('copiedBlocksToClipboard', { 
+			count: this.selectedBlocks.size.toString(), 
+			s: this.selectedBlocks.size > 1 ? "s" : "" 
+		}));
 		this.close();
 	}
 

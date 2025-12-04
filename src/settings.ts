@@ -54,6 +54,7 @@ export interface LemonToolkitSettings {
 	};
 	externalApps: ExternalApp[];
 	clipboardRules: ClipboardRule[];
+	momentLoggerFormat: string;
 }
 
 export const DEFAULT_SETTINGS: LemonToolkitSettings = {
@@ -91,4 +92,5 @@ export const DEFAULT_SETTINGS: LemonToolkitSettings = {
 			description: "Remove Weibo timeline card small images",
 		},
 	],
+	momentLoggerFormat: "YYYY-MM-DD HH:mm:ss",
 };

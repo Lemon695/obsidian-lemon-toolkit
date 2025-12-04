@@ -179,6 +179,37 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 		rulesInfo.style.marginTop = "-10px";
 		rulesInfo.style.paddingLeft = "0";
 		rulesInfo.textContent = `${rulesCount} active rule${rulesCount !== 1 ? "s" : ""}`;
+
+		// Moment logger settings
+		containerEl.createEl("h3", { text: "Moment Logger" });
+
+		new Setting(containerEl)
+			.setName("Timestamp format")
+			.setDesc("Format for moment timestamps (e.g., YYYY-MM-DD HH:mm:ss)")
+			.addText((text) =>
+				text
+					.setPlaceholder("YYYY-MM-DD HH:mm:ss")
+					.setValue(this.plugin.settings.momentLoggerFormat)
+					.onChange(async (value) => {
+						this.plugin.settings.momentLoggerFormat = value || "YYYY-MM-DD HH:mm:ss";
+						await this.plugin.saveSettings();
+					})
+			);
+
+		const formatDesc = containerEl.createDiv({ cls: "setting-item-description" });
+		formatDesc.style.marginTop = "-10px";
+		formatDesc.style.paddingLeft = "0";
+		formatDesc.innerHTML = `
+			<strong>Format tokens:</strong><br>
+			YYYY (year), MM (month), DD (day)<br>
+			HH (hour 24h), mm (minute), ss (second)<br>
+			<strong>Example:</strong> ${this.getMomentExample()}
+		`;
+	}
+
+	private getMomentExample(): string {
+		const { moment } = require("obsidian");
+		return moment().format(this.plugin.settings.momentLoggerFormat);
 	}
 
 	private showExternalAppsModal(): void {

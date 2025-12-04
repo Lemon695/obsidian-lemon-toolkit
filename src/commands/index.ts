@@ -24,6 +24,7 @@ import {
 	convertMarkdownToWikiInSelection,
 } from "./linkConverter";
 import { smartPaste } from "./smartPaste";
+import { insertMoment, insertMomentAtCursor } from "./momentLogger";
 import LemonToolkitPlugin from "../main";
 
 /**
@@ -186,5 +187,18 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "smart-paste",
 		name: "Smart paste with rules",
 		editorCallback: (editor) => smartPaste(plugin, editor),
+	});
+
+	// Moment logger
+	plugin.addCommand({
+		id: "insert-moment",
+		name: "Insert moment (auto)",
+		editorCallback: (editor) => insertMoment(plugin, editor),
+	});
+
+	plugin.addCommand({
+		id: "insert-moment-at-cursor",
+		name: "Insert moment (at cursor)",
+		editorCallback: (editor) => insertMomentAtCursor(plugin, editor),
 	});
 }

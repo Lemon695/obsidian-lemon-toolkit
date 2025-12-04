@@ -110,6 +110,34 @@ Paste clipboard content with automatic transformations based on configurable rul
 - Strip tracking parameters
 - Normalize whitespace or line breaks
 
+### Moment Logger
+
+Quick timestamp logging for daily journals and time tracking:
+
+- **Insert moment (auto)** - Smart insertion: appends to existing moment block or inserts at cursor
+- **Insert moment (at cursor)** - Always insert at cursor position (manual mode)
+
+**Features**:
+- **Smart detection**: Automatically finds existing moment blocks in your document
+- **Auto-append**: New moments are added to the end of existing timeline
+- **Manual override**: Use "at cursor" command to insert anywhere in the document
+- **Customizable format**: Configure timestamp format in settings (default: `YYYY-MM-DD HH:mm:ss`)
+- **Ready to type**: Cursor positioned after timestamp for immediate description entry
+
+**Example usage**:
+```markdown
+- 2024-12-04 09:01:12 Started work
+- 2024-12-04 10:30:45 Team meeting
+- 2024-12-04 12:00:00 Lunch break
+- 2024-12-04 14:15:30 Code review
+- 2024-12-04 18:00:00 End of day
+```
+
+**How it works**:
+1. First use: Creates new moment entry at cursor
+2. Subsequent uses: Automatically appends to existing moment block
+3. Need to insert elsewhere? Use "Insert moment (at cursor)" command
+
 ### Frontmatter Editor
 
 - **Edit frontmatter** - Open a modal dialog to edit frontmatter fields without entering edit mode:

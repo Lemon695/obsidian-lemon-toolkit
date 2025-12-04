@@ -23,6 +23,7 @@ import {
 	convertWikiToMarkdownInSelection,
 	convertMarkdownToWikiInSelection,
 } from "./linkConverter";
+import { smartPaste } from "./smartPaste";
 import LemonToolkitPlugin from "../main";
 
 /**
@@ -178,5 +179,12 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "convert-markdown-to-wiki-selection",
 		name: "Convert markdown links to wiki (selection)",
 		editorCallback: (editor) => convertMarkdownToWikiInSelection(plugin, editor),
+	});
+
+	// Smart paste
+	plugin.addCommand({
+		id: "smart-paste",
+		name: "Smart paste with rules",
+		editorCallback: (editor) => smartPaste(plugin, editor),
 	});
 }

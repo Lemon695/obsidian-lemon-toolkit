@@ -71,9 +71,44 @@ Convert between Wiki links and Markdown links with preview and selection:
 - Preview before converting with checkbox selection
 - Preserves aliases: `[[link|alias]]` → `[alias](./link.md)`
 - Smart image handling: Images keep original extensions (`.png`, `.jpg`, etc.)
-- Typora-compatible paths: Uses relative paths like `./folder/file.md` or `./_resources/image.png`
+- Typora-compatible paths: Uses relative paths like `./folder/file.md` or `../_resources/image.png`
+- Automatic path resolution: Finds files in vault and calculates correct relative paths
+- Type filters: Quickly select/deselect all images, videos, or documents
 - Skips external links (http/https) when converting to wiki links
 - Shows line numbers and before/after comparison
+
+### Smart Paste
+
+Paste clipboard content with automatic transformations based on configurable rules:
+
+- **Smart paste with rules** - Paste clipboard content at cursor with rules applied
+
+**Features**:
+- **Smart format detection**: Automatically reads HTML format from clipboard (if available), preserving links and formatting
+- **HTML to Markdown conversion**: Automatically converts rich text to Markdown format
+- Configure multiple transformation rules with regex patterns
+- Enable/disable rules individually
+- Test rules with sample text before applying
+- Reorder rules to control application sequence
+- Built-in rule for removing Weibo timeline images
+- Supports capture groups for advanced replacements
+
+**Supported HTML elements**:
+- Links (`<a>`) → `[text](url)`
+- Images (`<img>`) → `![alt](src)`
+- Bold/Italic (`<strong>`, `<em>`) → `**text**`, `*text*`
+- Headings (`<h1>`-`<h6>`) → `# text`
+- Lists (`<ul>`, `<ol>`) → `- item`, `1. item`
+- Code (`<code>`, `<pre>`) → `` `code` ``, ` ```code``` `
+- Blockquotes (`<blockquote>`) → `> text`
+
+**Example use cases**:
+- Copy content with links from web/apps, automatically convert to Markdown
+- Remove unwanted images from copied web content
+- Clean up formatting from external sources
+- Transform URLs or links automatically
+- Strip tracking parameters
+- Normalize whitespace or line breaks
 
 ### Frontmatter Editor
 

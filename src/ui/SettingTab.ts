@@ -161,6 +161,24 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 					this.showExternalAppsModal();
 				})
 			);
+
+		// Smart paste settings
+		containerEl.createEl("h3", { text: "Smart Paste" });
+
+		new Setting(containerEl)
+			.setName("Clipboard rules")
+			.setDesc("Configure rules to automatically transform clipboard content when pasting")
+			.addButton((button) =>
+				button.setButtonText("Manage rules").onClick(() => {
+					this.showClipboardRulesModal();
+				})
+			);
+
+		const rulesCount = this.plugin.settings.clipboardRules.filter(r => r.enabled).length;
+		const rulesInfo = containerEl.createDiv({ cls: "setting-item-description" });
+		rulesInfo.style.marginTop = "-10px";
+		rulesInfo.style.paddingLeft = "0";
+		rulesInfo.textContent = `${rulesCount} active rule${rulesCount !== 1 ? "s" : ""}`;
 	}
 
 	private showExternalAppsModal(): void {
@@ -171,6 +189,21 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 
 	private showPinnedCommandsModal(): void {
 		const modal = new PinnedCommandsModal(this.app, this.plugin);
+		modal.open();
+	}
+
+	private showClipboardRulesModal(): void {
+		const { ClipboardRulesSettingModal } = require("./ClipboardRulesSettingModal");
+		const modal = new ClipboardRulesSettingModal(
+			this.app,
+			this.plugin,
+			this.plugin.settings.clipboardRules,
+			async (rules: any) => {
+				this.plugin.settings.clipboardRules = rules;
+				await this.plugin.saveSettings();
+				this.display(); // Refresh to update rules count
+			}
+		);
 		modal.open();
 	}
 }

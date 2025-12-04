@@ -3,13 +3,18 @@ import { registerCommands } from "./commands";
 import { LemonToolkitSettings, DEFAULT_SETTINGS } from "./settings";
 import { LemonToolkitSettingTab } from "./ui/SettingTab";
 import { FileInfoView, FILE_INFO_VIEW_TYPE } from "./views/FileInfoView";
+import { ExternalAppManager } from "./features/external-apps/ExternalAppManager";
 
 export default class LemonToolkitPlugin extends Plugin {
 	settings: LemonToolkitSettings;
 	private fileTagsCache: Map<string, Set<string>> = new Map();
+	private externalAppManager: ExternalAppManager;
 
 	async onload() {
 		await this.loadSettings();
+		
+		// Initialize external app manager
+		this.externalAppManager = new ExternalAppManager(this);
 		
 		// Register file info view
 		this.registerView(
@@ -23,8 +28,16 @@ export default class LemonToolkitPlugin extends Plugin {
 		});
 
 		registerCommands(this);
+		this.externalAppManager.registerCommands();
 		this.addSettingTab(new LemonToolkitSettingTab(this.app, this));
 		this.registerEventListeners();
+	}
+
+	reloadExternalAppCommands(): void {
+		// Note: Obsidian doesn't provide a way to unregister commands
+		// So we need to reload the plugin for changes to take effect
+		// Or we can just inform the user to reload
+		this.externalAppManager.registerCommands();
 	}
 
 	private registerEventListeners(): void {

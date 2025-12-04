@@ -70,6 +70,15 @@ Manage file deletion with two options:
   - Copy as quote format
   - Send/append to another file
 
+### External Applications
+
+- **External app management** - Configure external applications to open files and folders:
+  - Add custom applications in settings (name, path)
+  - Configure whether app can open files/folders
+  - Auto-generate commands for each app
+  - Supports macOS, Windows, Linux
+  - Add unlimited number of applications
+
 ## Usage
 
 1. Open any file in your vault
@@ -159,6 +168,14 @@ Note: The plugin automatically tracks tag usage when you manually type tags in y
 - **Show type icons** - Display type icons next to field names (default: enabled)
 - **Close after save** - Automatically close the editor after saving (default: disabled)
 - **Date format** - Format for date fields (default: YYYY-MM-DD)
+
+### External Applications
+
+- **Manage external applications** - Configure external application list
+  - Add application name and full path
+  - Choose if app can open files
+  - Choose if app can open folders
+  - Auto-generate commands after saving
 
 ## Compatibility
 

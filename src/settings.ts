@@ -14,6 +14,14 @@ export interface CommandHistory {
 	useCount: number;
 }
 
+export interface ExternalApp {
+	id: string;
+	name: string;
+	path: string;
+	openFile: boolean;
+	openFolder: boolean;
+}
+
 export interface LemonToolkitSettings {
 	duplicateFileSuffixType: "timestamp" | "uuid";
 	folderSortType: "recent" | "day" | "week" | "month";
@@ -35,6 +43,7 @@ export interface LemonToolkitSettings {
 		closeAfterSave: boolean;
 		showTypeIcons: boolean;
 	};
+	externalApps: ExternalApp[];
 }
 
 export const DEFAULT_SETTINGS: LemonToolkitSettings = {
@@ -61,4 +70,5 @@ export const DEFAULT_SETTINGS: LemonToolkitSettings = {
 		closeAfterSave: false,
 		showTypeIcons: true,
 	},
+	externalApps: [],
 };

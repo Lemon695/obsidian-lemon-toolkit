@@ -149,6 +149,24 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 						await this.plugin.saveSettings();
 					})
 			);
+
+		// External apps settings
+		containerEl.createEl("h3", { text: "External Applications" });
+
+		new Setting(containerEl)
+			.setName("Manage external applications")
+			.setDesc("Configure external applications to open files and folders")
+			.addButton((button) =>
+				button.setButtonText("Manage applications").onClick(() => {
+					this.showExternalAppsModal();
+				})
+			);
+	}
+
+	private showExternalAppsModal(): void {
+		const { ExternalAppsSettingModal } = require("./ExternalAppsSettingModal");
+		const modal = new ExternalAppsSettingModal(this.app, this.plugin);
+		modal.open();
 	}
 
 	private showPinnedCommandsModal(): void {

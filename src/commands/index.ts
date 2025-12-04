@@ -14,6 +14,7 @@ import { viewCurrentTags, insertTags } from "./tags";
 import { openCommandPalette } from "./commandPalette";
 import { openSettings } from "./openSettings";
 import { editFrontmatter } from "./editFrontmatter";
+import { openTextSelectionActions } from "./textSelection";
 import LemonToolkitPlugin from "../main";
 
 /**
@@ -116,5 +117,12 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "edit-frontmatter",
 		name: "Edit frontmatter",
 		callback: () => editFrontmatter(plugin),
+	});
+
+	// Text selection actions
+	plugin.addCommand({
+		id: "text-selection-actions",
+		name: "Text selection actions",
+		editorCallback: (editor) => openTextSelectionActions(plugin, editor),
 	});
 }

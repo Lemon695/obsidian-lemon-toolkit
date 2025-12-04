@@ -59,6 +59,17 @@
   - 类型感知编辑（字符串、数字、布尔值、日期、数组）
   - 自动保存并验证
 
+### 选中文本快捷操作
+
+- **文本选择操作** - 选中文本后的快捷操作（选中文本后运行命令）：
+  - 用选中文本创建新笔记（替换为链接）
+  - 全局搜索选中文本
+  - 包裹为 [[wiki-link]]
+  - 包裹为 callout（多种类型）
+  - 添加为标签
+  - 复制为引用格式
+  - 发送/追加到其他文件
+
 ## 使用方法
 
 1. 在仓库中打开任意文件
@@ -85,6 +96,7 @@
 | `Lemon Toolkit: Open settings` | 打开插件设置页面 |
 | `Lemon Toolkit: Open file info` | 打开文件信息侧边栏 |
 | `Lemon Toolkit: Edit frontmatter` | 在模态对话框中编辑 frontmatter 字段 |
+| `Lemon Toolkit: Text selection actions` | 选中文本的快捷操作 |
 
 ## 安装方法
 

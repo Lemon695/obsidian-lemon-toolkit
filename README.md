@@ -59,6 +59,17 @@ Manage file deletion with two options:
   - Type-aware editing (string, number, boolean, date, array)
   - Auto-save with validation
 
+### Text Selection Actions
+
+- **Text selection actions** - Quick actions for selected text (select text and run command):
+  - Create new note from selection (replaces with link)
+  - Search globally for selected text
+  - Wrap as [[wiki-link]]
+  - Wrap as callout (multiple types)
+  - Add as tag
+  - Copy as quote format
+  - Send/append to another file
+
 ## Usage
 
 1. Open any file in your vault
@@ -85,6 +96,7 @@ Manage file deletion with two options:
 | `Lemon Toolkit: Open settings` | Open the plugin settings page |
 | `Lemon Toolkit: Open file info` | Open the file information sidebar |
 | `Lemon Toolkit: Edit frontmatter` | Edit frontmatter fields in a modal dialog |
+| `Lemon Toolkit: Text selection actions` | Quick actions for selected text |
 
 ## Installation
 

@@ -34,6 +34,7 @@ import {
 	selectCodeLines,
 	selectCodeBlocks,
 } from "./smartCopy";
+import { openTableEditor, createTable } from "./tableEditor";
 import LemonToolkitPlugin from "../main";
 import { t } from "../i18n/locale";
 
@@ -273,5 +274,19 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "select-code-blocks",
 		name: t('selectCodeBlocks'),
 		editorCallback: trackEditorCommand(plugin, "select-code-blocks", t('selectCodeBlocks'), (editor) => selectCodeBlocks(plugin, editor)),
+	});
+
+	// Table editor
+	plugin.addCommand({
+		id: "edit-table",
+		name: t('editTable'),
+		editorCallback: trackEditorCommand(plugin, "edit-table", t('editTable'), (editor) => openTableEditor(plugin, editor)),
+	});
+
+	// Create table
+	plugin.addCommand({
+		id: "create-table",
+		name: t('createTable'),
+		editorCallback: trackEditorCommand(plugin, "create-table", t('createTable'), (editor) => createTable(plugin, editor)),
 	});
 }

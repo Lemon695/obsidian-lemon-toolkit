@@ -238,8 +238,26 @@ Use "Select code blocks to copy":
   - Highlights modified headings
   - Preserves heading text
   - Smart detection of existing numbers
+  - Skips code blocks automatically
   
 - **Remove heading numbering** - Remove all numbering from headings in the document
+
+### Table Editor
+
+- **Edit table** - Open a visual table editor with Excel-like experience:
+  - **Visual editing**: Edit cells in a spreadsheet-like interface
+  - **Keyboard navigation**: Tab/Enter to move between cells
+  - **Drag & drop**: Reorder rows and columns by dragging
+  - **Column resize**: Drag column edges to adjust width
+  - **CSV import/export**: Import from or export to CSV files
+  - **Find & replace**: Search and replace text across the table
+  - **Batch fill**: Fill entire columns with a value
+  - **Clear column**: Quickly clear all data in a column
+  - **Insert/delete**: Add or remove rows and columns
+  - **Alignment**: Set left/center/right alignment
+  - **Sort**: Sort by column (ascending/descending)
+  - **Smart detection**: Only activates when cursor is inside a table
+  - **Position preservation**: Cursor stays in place after saving
 
 ### Command Statistics & Analytics
 
@@ -320,6 +338,8 @@ Use "Select code blocks to copy":
 | `Lemon Toolkit: Text selection actions` | Quick actions for selected text |
 | `Lemon Toolkit: Add/update heading numbering` | Add or update hierarchical numbering for headings |
 | `Lemon Toolkit: Remove heading numbering` | Remove all numbering from headings |
+| `Lemon Toolkit: Edit table` | Open visual table editor with Excel-like features |
+| `Lemon Toolkit: Create table` | Create new table at cursor position |
 | `Lemon Toolkit: Show Statistics` | Open command usage analytics dashboard |
 
 ## Installation

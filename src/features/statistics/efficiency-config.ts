@@ -1,6 +1,6 @@
 /**
  * Efficiency configuration for command time savings
- * 
+ *
  * This module defines how much time each command saves compared to manual operations.
  * Time estimates are based on typical user workflows and can be customized.
  */
@@ -9,7 +9,7 @@ import { EfficiencyEstimate } from './types';
 
 /**
  * Default efficiency estimates for all commands
- * 
+ *
  * Each estimate includes:
  * - commandId: Unique identifier for the command
  * - manualTimeSeconds: Estimated time to perform the task manually
@@ -23,12 +23,12 @@ export interface EfficiencyConfig extends EfficiencyEstimate {
 
 /**
  * Default efficiency configurations
- * 
+ *
  * IMPORTANT: These estimates reflect REAL VALUE, not just speed differences
- * 
+ *
  * Manual time = What you'd do WITHOUT this plugin feature
  * Command time = Using this plugin's feature
- * 
+ *
  * Key principles:
  * 1. If Obsidian has native feature: savings are small (convenience only)
  * 2. If plugin adds NEW capability: savings are significant (vs workaround)
@@ -40,33 +40,29 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 	'duplicate-file': {
 		commandId: 'duplicate-file',
 		manualTimeSeconds: 3,
-		// Manual: Obsidian has Cmd+P → "duplicate" → auto-names with " 1" suffix
-		// This plugin adds custom naming (timestamp/UUID)
-		// Real value: Avoiding manual rename after duplicate
-		// Savings: 2-3 seconds of thinking + typing custom name
 		commandTimeSeconds: 1,
 		description: 'Duplicate with custom naming format',
 		category: 'File Operations'
 	},
-	'move-file': {
-		commandId: 'move-file',
-		manualTimeSeconds: 2,
-		// Manual: Obsidian has native move file command
-		// This plugin adds: recent folders, smart sorting
-		// Real value: Faster folder selection (no scrolling through full list)
-		// Savings: 1-2 seconds finding folder in sorted list
-		commandTimeSeconds: 1,
+	'move-file-to-folder': {
+		commandId: 'move-file-to-folder',
+		manualTimeSeconds: 5,
+		commandTimeSeconds: 1.5,
 		description: 'Move file with smart folder suggestions',
 		category: 'File Operations'
 	},
-	'delete-file': {
-		commandId: 'delete-file',
-		manualTimeSeconds: 1.5,
-		// Manual: Obsidian has native delete
-		// This plugin: Same speed, just alternative access
-		// Minimal savings: 0.5s (convenience of having in custom palette)
-		commandTimeSeconds: 1,
-		description: 'Quick delete file',
+	'delete-file-permanently': {
+		commandId: 'delete-file-permanently',
+		manualTimeSeconds: 2,
+		commandTimeSeconds: 0.5,
+		description: 'Delete file permanently',
+		category: 'File Operations'
+	},
+	'delete-file-to-trash': {
+		commandId: 'delete-file-to-trash',
+		manualTimeSeconds: 2,
+		commandTimeSeconds: 0.5,
+		description: 'Move file to trash',
 		category: 'File Operations'
 	},
 
@@ -74,9 +70,9 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 	'copy-relative-path': {
 		commandId: 'copy-relative-path',
 		manualTimeSeconds: 8,
-		// Manual: Obsidian doesn't have this feature natively
-		// Workaround: Look at breadcrumb (1s) → Manually type path (5s) → Verify (2s) = 8s
-		// Or: Check file explorer tree position and construct path mentally
+		// 手动操作：Obsidian 原生没有此功能
+		// 替代方案：查看面包屑 (1秒) → 手动输入路径 (5秒) → 验证 (2秒) = 8秒
+		// 或者：查看文件树位置，心算构建路径
 		commandTimeSeconds: 0.5,
 		description: 'Copy relative path to clipboard',
 		category: 'Path Operations'
@@ -84,9 +80,9 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 	'copy-absolute-path': {
 		commandId: 'copy-absolute-path',
 		manualTimeSeconds: 10,
-		// Manual: Obsidian doesn't have this
-		// Workaround: Right-click → Show in system explorer (2s) → Right-click in Finder (1s)
-		// → Get Info (2s) → Find path (2s) → Select and copy (2s) → Back to Obsidian (1s) = 10s
+		// 手动操作：Obsidian 原生没有此功能
+		// 替代方案：右键 → 在系统资源管理器中显示 (2秒) → 在 Finder 中右键 (1秒)
+		// → 获取简介 (2秒) → 找到路径 (2秒) → 选择并复制 (2秒) → 返回 Obsidian (1秒) = 10秒
 		commandTimeSeconds: 0.5,
 		description: 'Copy absolute path to clipboard',
 		category: 'Path Operations'
@@ -96,11 +92,11 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 	'heading-numbering': {
 		commandId: 'heading-numbering',
 		manualTimeSeconds: 60,
-		// Manual: Obsidian has NO automatic heading numbering
-		// For 10 headings: Type "1. " before each (2s each) = 20s
-		// + Updating all numbers when inserting/removing headings (30s)
-		// + Checking hierarchy consistency (10s) = 60s
-		// This is THE killer feature - huge time saver
+		// 手动操作：Obsidian 没有自动标题编号功能
+		// 对于 10 个标题：在每个标题前输入 "1. " (每个 2秒) = 20秒
+		// + 插入/删除标题时更新所有编号 (30秒)
+		// + 检查层级一致性 (10秒) = 60秒
+		// 这是核心功能 - 巨大的时间节省
 		commandTimeSeconds: 1,
 		description: 'Auto-number headings (Obsidian has no native feature)',
 		category: 'Content Operations'
@@ -108,11 +104,11 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 	'smart-copy': {
 		commandId: 'smart-copy',
 		manualTimeSeconds: 6,
-		// Manual: Obsidian has Cmd+C
-		// This plugin adds: automatic formatting cleanup based on rules
-		// Real value: When copying from web/other apps with unwanted formatting
-		// Without plugin: Paste → notice issues → undo → paste as plain text → reformat = 6s
-		// With plugin: Copy with rules applied = 1s
+		// 手动操作：Obsidian 有 Cmd+C
+		// 本插件增加：基于规则的自动格式清理
+		// 实际价值：从网页/其他应用复制时清理不需要的格式
+		// 不用插件：粘贴 → 发现问题 → 撤销 → 纯文本粘贴 → 重新格式化 = 6秒
+		// 用插件：复制时自动应用规则 = 1秒
 		commandTimeSeconds: 1,
 		description: 'Copy with auto-cleanup rules',
 		category: 'Content Operations'
@@ -120,10 +116,10 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 	'smart-paste': {
 		commandId: 'smart-paste',
 		manualTimeSeconds: 8,
-		// Manual: Obsidian has Cmd+V
-		// This plugin: Applies regex rules on paste (e.g., remove Weibo image links)
-		// Without plugin: Paste → manually find/replace unwanted patterns (8s)
-		// With plugin: Paste with rules = 1s
+		// 手动操作：Obsidian 有 Cmd+V
+		// 本插件：粘贴时应用正则规则（如移除微博图片链接）
+		// 不用插件：粘贴 → 手动查找替换不需要的内容 (8秒)
+		// 用插件：粘贴时自动应用规则 = 1秒
 		commandTimeSeconds: 1,
 		description: 'Paste with auto-cleanup rules',
 		category: 'Content Operations'
@@ -133,9 +129,9 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 	'link-converter': {
 		commandId: 'link-converter',
 		manualTimeSeconds: 20,
-		// Manual: Obsidian has NO bulk link converter
-		// For 5 links: Manually edit each [[link]] to [link](link.md) = 4s each = 20s
-		// This plugin: Converts all at once
+		// 手动操作：Obsidian 没有批量链接转换功能
+		// 对于 5 个链接：手动编辑每个 [[link]] 为 [link](link.md) = 每个 4秒 = 20秒
+		// 本插件：一次性转换所有链接
 		commandTimeSeconds: 1,
 		description: 'Bulk convert wiki ↔ markdown links',
 		category: 'Link Operations'
@@ -145,9 +141,9 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 	'recent-files': {
 		commandId: 'recent-files',
 		manualTimeSeconds: 2,
-		// Manual: Obsidian has Cmd+O (Quick Switcher)
-		// This plugin: Shows recent files sorted by usage
-		// Savings: 1-2s when you want "that file I just used" vs typing name
+		// 手动操作：Obsidian 有 Cmd+O（快速切换器）
+		// 本插件：按使用情况智能排序显示最近文件
+		// 节省：当你想找"刚用过的那个文件"时，不用输入名称搜索，省 1-2秒
 		commandTimeSeconds: 1,
 		description: 'Recent files with smart sorting',
 		category: 'Navigation'
@@ -155,9 +151,9 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 	'command-palette': {
 		commandId: 'command-palette',
 		manualTimeSeconds: 2,
-		// Manual: Obsidian has Cmd+P
-		// This plugin: Adds pinned commands at top
-		// Savings: 1-2s not having to type/search for frequent commands
+		// 手动操作：Obsidian 有 Cmd+P
+		// 本插件：在顶部添加固定命令
+		// 节省：高频命令不用输入搜索，省 1-2秒
 		commandTimeSeconds: 1,
 		description: 'Command palette with pinned favorites',
 		category: 'Navigation'
@@ -167,9 +163,9 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 	'edit-frontmatter': {
 		commandId: 'edit-frontmatter',
 		manualTimeSeconds: 12,
-		// Manual: Scroll to top (1s) → Edit YAML directly (3s)
-		// → Fix YAML syntax errors (5s) → Scroll back (1s) → Verify (2s) = 12s
-		// This plugin: Visual editor, no syntax errors
+		// 手动操作：滚动到顶部 (1秒) → 直接编辑 YAML (3秒)
+		// → 修复 YAML 语法错误 (5秒) → 滚动回原位 (1秒) → 验证 (2秒) = 12秒
+		// 本插件：可视化编辑器，无语法错误
 		commandTimeSeconds: 3,
 		description: 'Visual frontmatter editor (prevents YAML errors)',
 		category: 'Frontmatter'
@@ -179,8 +175,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 	'add-tag': {
 		commandId: 'add-tag',
 		manualTimeSeconds: 3,
-		// Manual: Type #tag directly (2s) → Check if typo (1s) = 3s
-		// This plugin: Autocomplete from existing tags (prevents typos)
+		// 手动操作：直接输入 #tag (2秒) → 检查是否拼写错误 (1秒) = 3秒
+		// 本插件：从已有标签自动补全（防止拼写错误）
 		commandTimeSeconds: 1.5,
 		description: 'Add tag with autocomplete',
 		category: 'Tags'
@@ -188,8 +184,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 	'remove-tag': {
 		commandId: 'remove-tag',
 		manualTimeSeconds: 2,
-		// Manual: Find tag (1s) → Select and delete (1s) = 2s
-		// This plugin: Select from list (no searching)
+		// 手动操作：找到标签 (1秒) → 选中并删除 (1秒) = 2秒
+		// 本插件：从列表选择（无需搜索）
 		commandTimeSeconds: 1.5,
 		description: 'Remove tag from list',
 		category: 'Tags'
@@ -199,8 +195,9 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 	'moment-logger': {
 		commandId: 'moment-logger',
 		manualTimeSeconds: 6,
-		// Manual: Type timestamp manually "2024-12-05 14:30:00" (6s)
-		// This plugin: Auto-insert formatted timestamp
+		// 手动操作：手动输入时间戳 "2024-12-05 14:30:00"
+		// 步骤：看时间 (1秒) → 输入日期 (2秒) → 输入时间 (2秒) → 格式检查 (1秒) = 6秒
+		// 本插件：自动插入格式化时间戳
 		commandTimeSeconds: 0.5,
 		description: 'Auto-insert formatted timestamp',
 		category: 'Logging'
@@ -210,8 +207,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 	'select-word': {
 		commandId: 'select-word',
 		manualTimeSeconds: 0.8,
-		// Manual: Double-click (0.8s)
-		// This plugin: Hotkey (0.3s) - small savings, convenience
+		// 手动操作：双击 (0.8秒)
+		// 本插件：快捷键 (0.3秒) - 小幅节省，便捷性
 		commandTimeSeconds: 0.3,
 		description: 'Quick word selection',
 		category: 'Text Selection'
@@ -219,8 +216,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 	'select-line': {
 		commandId: 'select-line',
 		manualTimeSeconds: 0.8,
-		// Manual: Cmd+L or triple-click (0.8s)
-		// This plugin: Hotkey (0.3s)
+		// 手动操作：Cmd+L 或三击 (0.8秒)
+		// 本插件：快捷键 (0.3秒)
 		commandTimeSeconds: 0.3,
 		description: 'Quick line selection',
 		category: 'Text Selection'
@@ -228,8 +225,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 	'select-sentence': {
 		commandId: 'select-sentence',
 		manualTimeSeconds: 3,
-		// Manual: Obsidian has NO sentence selection
-		// Must manually click start → Shift+click end (3s)
+		// 手动操作：Obsidian 没有句子选择功能
+		// 必须手动点击开始 → Shift+点击结束 (3秒)
 		commandTimeSeconds: 0.3,
 		description: 'Select sentence (no native feature)',
 		category: 'Text Selection'
@@ -237,8 +234,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 	'select-paragraph': {
 		commandId: 'select-paragraph',
 		manualTimeSeconds: 0.8,
-		// Manual: Triple-click (0.8s)
-		// This plugin: Hotkey (0.3s)
+		// 手动操作：三击 (0.8秒)
+		// 本插件：快捷键 (0.3秒)
 		commandTimeSeconds: 0.3,
 		description: 'Quick paragraph selection',
 		category: 'Text Selection'
@@ -264,7 +261,7 @@ export function getAllEfficiencyEstimates(): Record<string, EfficiencyConfig> {
  */
 export function getEfficiencyEstimatesByCategory(): Record<string, EfficiencyConfig[]> {
 	const grouped: Record<string, EfficiencyConfig[]> = {};
-	
+
 	Object.values(DEFAULT_EFFICIENCY_CONFIG).forEach(config => {
 		const category = config.category || 'Other';
 		if (!grouped[category]) {
@@ -272,7 +269,7 @@ export function getEfficiencyEstimatesByCategory(): Record<string, EfficiencyCon
 		}
 		grouped[category].push(config);
 	});
-	
+
 	return grouped;
 }
 

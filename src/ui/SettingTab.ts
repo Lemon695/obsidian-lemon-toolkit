@@ -3,8 +3,8 @@ import LemonToolkitPlugin from "../main";
 import { PinnedCommandsModal } from "./PinnedCommandsModal";
 import { t } from "../i18n/locale";
 
-// 管理时间估算-是否显示
-const SHOW_EFFICIENCY_ESTIMATES_MANAGER = false;
+// TODO 管理时间估算-是否显示
+const SHOW_EFFICIENCY_ESTIMATES_MANAGER = true;
 
 export class LemonToolkitSettingTab extends PluginSettingTab {
 	plugin: LemonToolkitPlugin;

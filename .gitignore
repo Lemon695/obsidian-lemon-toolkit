@@ -24,3 +24,5 @@ data.json
 /dist/*
 
 
+/docs/
+/src/features/table-editor/TableEditorModal.ts.backup

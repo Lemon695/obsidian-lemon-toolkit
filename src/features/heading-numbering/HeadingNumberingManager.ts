@@ -59,8 +59,20 @@ export class HeadingNumberingManager {
 	private extractHeadings(lines: string[]): HeadingInfo[] {
 		const headings: HeadingInfo[] = [];
 		const headingRegex = /^(#{1,6})\s+(.+)$/;
+		let inCodeBlock = false;
 
 		lines.forEach((line, index) => {
+			// Toggle code block state
+			if (line.trim().startsWith("```")) {
+				inCodeBlock = !inCodeBlock;
+				return;
+			}
+
+			// Skip lines inside code blocks
+			if (inCodeBlock) {
+				return;
+			}
+
 			const match = line.match(headingRegex);
 			if (match) {
 				const level = match[1].length;
@@ -172,8 +184,20 @@ export class HeadingNumberingManager {
 		const lines = content.split("\n");
 		const headingRegex = /^(#{1,6})\s+(.+)$/;
 		let count = 0;
+		let inCodeBlock = false;
 
 		lines.forEach((line, index) => {
+			// Toggle code block state
+			if (line.trim().startsWith("```")) {
+				inCodeBlock = !inCodeBlock;
+				return;
+			}
+
+			// Skip lines inside code blocks
+			if (inCodeBlock) {
+				return;
+			}
+
 			const match = line.match(headingRegex);
 			if (match) {
 				const level = match[1].length;

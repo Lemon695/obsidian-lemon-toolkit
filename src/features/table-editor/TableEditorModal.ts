@@ -920,30 +920,33 @@ export class TableEditorModal extends Modal {
 	private addStyles() {
 		const style = document.createElement('style');
 		style.textContent = `
-			/* Modal - full height flex container */
-			.table-editor-modal .modal {
+			/* Modal container */
+			.table-editor-modal {
 				width: 90vw;
 				max-width: 1200px;
 				height: 80vh;
 			}
+			
+			/* Content area - flex layout for 3 sections */
 			.table-editor-modal .modal-content {
 				display: flex;
 				flex-direction: column;
 				height: 100%;
-				padding: 0;
+				padding: 0 !important;
 			}
 			
 			/* Title */
 			.table-editor-modal h2 {
-				margin: 0 0 16px 0;
-				padding: 16px 16px 0 16px;
+				margin: 0;
+				padding: 16px 16px 12px 16px;
+				flex-shrink: 0;
 			}
 			
-			/* TOP: Sticky toolbar */
+			/* TOP: Fixed toolbar */
 			.table-editor-toolbar-sticky {
 				flex-shrink: 0;
-				background: var(--background-primary);
 				padding: 0 16px 16px 16px;
+				background: var(--background-primary);
 				border-bottom: 2px solid var(--background-modifier-border);
 			}
 			.table-editor-toolbar {
@@ -966,7 +969,7 @@ export class TableEditorModal extends Modal {
 				margin: 0 4px;
 			}
 			
-			/* MIDDLE: Scrollable table container */
+			/* MIDDLE: Scrollable table area */
 			.table-editor-container {
 				flex: 1;
 				overflow: auto;
@@ -974,11 +977,11 @@ export class TableEditorModal extends Modal {
 				background: var(--background-primary);
 			}
 			
-			/* BOTTOM: Sticky buttons */
+			/* BOTTOM: Fixed buttons */
 			.table-editor-buttons-sticky {
 				flex-shrink: 0;
-				background: var(--background-primary);
 				padding: 16px;
+				background: var(--background-primary);
 				border-top: 2px solid var(--background-modifier-border);
 			}
 			.table-editor-buttons {
@@ -987,7 +990,7 @@ export class TableEditorModal extends Modal {
 				gap: 8px;
 			}
 			
-			/* Table base */
+			/* Table */
 			.table-editor-table {
 				border-collapse: collapse;
 				width: 100%;
@@ -1000,7 +1003,7 @@ export class TableEditorModal extends Modal {
 				min-width: 100px;
 			}
 			
-			/* Header row - sticky within scrollable container */
+			/* Sticky header within scrollable container */
 			.table-editor-table thead th {
 				background: linear-gradient(180deg, var(--background-secondary) 0%, var(--background-secondary-alt) 100%);
 				font-weight: 700;
@@ -1043,7 +1046,7 @@ export class TableEditorModal extends Modal {
 				z-index: 5;
 			}
 			
-			/* Column number indicator */
+			/* Column number */
 			.column-number {
 				position: absolute;
 				top: 2px;
@@ -1124,7 +1127,7 @@ export class TableEditorModal extends Modal {
 				cursor: grabbing;
 			}
 			
-			/* Column resize handle */
+			/* Column resize */
 			.column-resize-handle {
 				position: absolute;
 				top: 0;

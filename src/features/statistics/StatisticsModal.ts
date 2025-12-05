@@ -19,6 +19,50 @@ export class StatisticsModal extends Modal {
 		this.currentTab = initialTab || 'overview';
 	}
 
+	/**
+	 * Get translated command name from command ID
+	 */
+	private getTranslatedCommandName(commandId: string): string {
+		const idToKeyMap: Record<string, string> = {
+			'copy-relative-path': 'copyRelativePath',
+			'copy-absolute-path': 'copyAbsolutePath',
+			'copy-file-name': 'copyFileName',
+			'copy-file-name-without-ext': 'copyFileNameNoExt',
+			'delete-file-permanently': 'deleteFilePermanently',
+			'delete-file-to-trash': 'deleteFileToTrash',
+			'duplicate-file': 'duplicateFile',
+			'move-file-to-folder': 'moveFileToFolder',
+			'view-current-tags': 'viewCurrentTags',
+			'insert-tags': 'insertTags',
+			'open-command-palette': 'openCommandPalette',
+			'open-settings': 'openSettings',
+			'open-file-info': 'openFileInfo',
+			'edit-frontmatter': 'editFrontmatter',
+			'text-selection-actions': 'textSelectionActions',
+			'add-heading-numbering': 'addHeadingNumbering',
+			'remove-heading-numbering': 'removeHeadingNumbering',
+			'open-recent-files': 'openRecentFiles',
+			'convert-wiki-to-markdown-file': 'convertWikiToMarkdownFile',
+			'convert-markdown-to-wiki-file': 'convertMarkdownToWikiFile',
+			'convert-wiki-to-markdown-selection': 'convertWikiToMarkdownSelection',
+			'convert-markdown-to-wiki-selection': 'convertMarkdownToWikiSelection',
+			'smart-paste': 'smartPaste',
+			'insert-moment': 'insertMoment',
+			'insert-moment-at-cursor': 'insertMomentAtCursor',
+			'copy-current-heading': 'copyCurrentHeading',
+			'copy-current-code-block': 'copyCurrentCodeBlock',
+			'copy-current-table': 'copyCurrentTable',
+			'smart-copy-selector': 'smartCopySelector',
+			'select-table-rows': 'selectTableRows',
+			'select-code-lines': 'selectCodeLines',
+			'select-code-blocks': 'selectCodeBlocks',
+			'edit-table': 'editTable',
+			'create-table': 'createTable'
+		};
+		const i18nKey = idToKeyMap[commandId];
+		return i18nKey ? t(i18nKey as any) : commandId;
+	}
+
 	onOpen(): void {
 		const { contentEl, modalEl } = this;
 		contentEl.empty();
@@ -190,7 +234,7 @@ export class StatisticsModal extends Modal {
 		this.renderMetricCard(
 			metricsSection,
 			t('mostUsed'),
-			mostUsedCommand ? mostUsedCommand.commandName : 'N/A',
+			mostUsedCommand ? this.getTranslatedCommandName(mostUsedCommand.commandId) : 'N/A',
 			undefined
 		);
 
@@ -223,7 +267,7 @@ export class StatisticsModal extends Modal {
 				const item = topList.createDiv('top-command-item');
 				
 				const nameEl = item.createDiv('command-name');
-				nameEl.setText(cmd.commandName);
+				nameEl.setText(this.getTranslatedCommandName(cmd.commandId));
 
 				const countEl = item.createDiv('command-count');
 				countEl.setText(cmd.count.toString());
@@ -357,7 +401,7 @@ export class StatisticsModal extends Modal {
 			const tbody = table.createEl('tbody');
 			sorted.forEach(stat => {
 				const row = tbody.createEl('tr');
-				row.createEl('td', { text: stat.commandName });
+				row.createEl('td', { text: this.getTranslatedCommandName(stat.commandId) });
 				row.createEl('td', { text: stat.totalUses.toString() });
 				row.createEl('td', { text: this.formatDate(stat.lastUsed) });
 				
@@ -380,7 +424,7 @@ export class StatisticsModal extends Modal {
 		searchInput.addEventListener('input', () => {
 			const query = searchInput.value.toLowerCase();
 			const filtered = allCommandStats.filter(stat =>
-				stat.commandName.toLowerCase().includes(query) ||
+				this.getTranslatedCommandName(stat.commandId).toLowerCase().includes(query) ||
 				stat.commandId.toLowerCase().includes(query)
 			);
 			renderTable(filtered, sortSelect.value);
@@ -391,7 +435,7 @@ export class StatisticsModal extends Modal {
 			const query = searchInput.value.toLowerCase();
 			const filtered = query
 				? allCommandStats.filter(stat =>
-					stat.commandName.toLowerCase().includes(query) ||
+					this.getTranslatedCommandName(stat.commandId).toLowerCase().includes(query) ||
 					stat.commandId.toLowerCase().includes(query)
 				)
 				: allCommandStats;
@@ -406,7 +450,7 @@ export class StatisticsModal extends Modal {
 		// For now, just show an alert
 		// TODO: Implement a detailed view modal or panel
 		const message = `
-Command: ${stat.commandName}
+Command: ${this.getTranslatedCommandName(stat.commandId)}
 Total Uses: ${stat.totalUses}
 First Used: ${this.formatDate(stat.firstUsed)}
 Last Used: ${this.formatDate(stat.lastUsed)}
@@ -501,7 +545,7 @@ Last Used: ${this.formatDate(stat.lastUsed)}
 					const row = breakdownList.createDiv('breakdown-item');
 					
 					const nameEl = row.createDiv('breakdown-name');
-					nameEl.setText(item.commandName);
+					nameEl.setText(this.getTranslatedCommandName(item.commandId));
 
 					const statsEl = row.createDiv('breakdown-stats');
 					statsEl.setText(`${this.formatTime(item.timeSaved)} (${item.executionCount} ${t('uses')})`);

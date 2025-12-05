@@ -22,6 +22,50 @@ export class EfficiencyEstimatesModal extends Modal {
 		this.estimates = getAllEfficiencyEstimates();
 	}
 
+	/**
+	 * Get translated command name from command ID
+	 */
+	private getTranslatedCommandName(commandId: string): string {
+		const idToKeyMap: Record<string, string> = {
+			'copy-relative-path': 'copyRelativePath',
+			'copy-absolute-path': 'copyAbsolutePath',
+			'copy-file-name': 'copyFileName',
+			'copy-file-name-without-ext': 'copyFileNameNoExt',
+			'delete-file-permanently': 'deleteFilePermanently',
+			'delete-file-to-trash': 'deleteFileToTrash',
+			'duplicate-file': 'duplicateFile',
+			'move-file-to-folder': 'moveFileToFolder',
+			'view-current-tags': 'viewCurrentTags',
+			'insert-tags': 'insertTags',
+			'open-command-palette': 'openCommandPalette',
+			'open-settings': 'openSettings',
+			'open-file-info': 'openFileInfo',
+			'edit-frontmatter': 'editFrontmatter',
+			'text-selection-actions': 'textSelectionActions',
+			'add-heading-numbering': 'addHeadingNumbering',
+			'remove-heading-numbering': 'removeHeadingNumbering',
+			'open-recent-files': 'openRecentFiles',
+			'convert-wiki-to-markdown-file': 'convertWikiToMarkdownFile',
+			'convert-markdown-to-wiki-file': 'convertMarkdownToWikiFile',
+			'convert-wiki-to-markdown-selection': 'convertWikiToMarkdownSelection',
+			'convert-markdown-to-wiki-selection': 'convertMarkdownToWikiSelection',
+			'smart-paste': 'smartPaste',
+			'insert-moment': 'insertMoment',
+			'insert-moment-at-cursor': 'insertMomentAtCursor',
+			'copy-current-heading': 'copyCurrentHeading',
+			'copy-current-code-block': 'copyCurrentCodeBlock',
+			'copy-current-table': 'copyCurrentTable',
+			'smart-copy-selector': 'smartCopySelector',
+			'select-table-rows': 'selectTableRows',
+			'select-code-lines': 'selectCodeLines',
+			'select-code-blocks': 'selectCodeBlocks',
+			'edit-table': 'editTable',
+			'create-table': 'createTable'
+		};
+		const i18nKey = idToKeyMap[commandId];
+		return i18nKey ? t(i18nKey as any) : commandId;
+	}
+
 	onOpen(): void {
 		const { contentEl, modalEl } = this;
 		contentEl.empty();
@@ -96,12 +140,14 @@ export class EfficiencyEstimatesModal extends Modal {
 		const commandName = infoSection.createEl('div', { cls: 'command-name' });
 		commandName.style.fontWeight = '500';
 		commandName.style.marginBottom = '4px';
-		commandName.textContent = config.commandId;
+		// Translate command name from ID
+		commandName.textContent = this.getTranslatedCommandName(config.commandId);
 
 		const description = infoSection.createEl('div', { cls: 'command-description' });
 		description.style.fontSize = '0.9em';
 		description.style.color = 'var(--text-muted)';
-		description.textContent = config.description;
+		// Translate description from key
+		description.textContent = t(config.descriptionKey as any);
 
 		// Time inputs
 		const timeSection = row.createDiv({ cls: 'estimate-times' });

@@ -6,6 +6,7 @@
  */
 
 import { EfficiencyEstimate } from './types';
+import { t } from '../../i18n/locale';
 
 /**
  * Default efficiency estimates for all commands
@@ -14,11 +15,12 @@ import { EfficiencyEstimate } from './types';
  * - commandId: Unique identifier for the command
  * - manualTimeSeconds: Estimated time to perform the task manually
  * - commandTimeSeconds: Time it takes to execute the command
- * - description: Human-readable description of what the command does
+ * - descriptionKey: i18n key for description
+ * - categoryKey: i18n key for category
  */
 export interface EfficiencyConfig extends EfficiencyEstimate {
-	description: string;
-	category?: string;
+	descriptionKey: string;
+	categoryKey: string;
 }
 
 /**
@@ -45,8 +47,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 实际价值：避免复制后手动重命名
 		// 节省：2-3 秒思考 + 输入自定义名称的时间
 		commandTimeSeconds: 1,
-		description: 'Duplicate with custom naming format',
-		category: 'File Operations'
+		descriptionKey: 'efficiencyDescDuplicateFile',
+		categoryKey: 'efficiencyCategoryFileOps'
 	},
 	'move-file-to-folder': {
 		commandId: 'move-file-to-folder',
@@ -56,8 +58,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 实际价值：更快找到目标文件夹（无需滚动完整列表）
 		// 节省：3-4 秒在排序列表中定位文件夹
 		commandTimeSeconds: 1.5,
-		description: 'Move file with smart folder suggestions',
-		category: 'File Operations'
+		descriptionKey: 'efficiencyDescMoveFile',
+		categoryKey: 'efficiencyCategoryFileOps'
 	},
 	'delete-file-permanently': {
 		commandId: 'delete-file-permanently',
@@ -66,8 +68,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 本插件：提供快速访问方式
 		// 节省：1.5 秒（在自定义面板中快速访问的便捷性）
 		commandTimeSeconds: 0.5,
-		description: 'Delete file permanently',
-		category: 'File Operations'
+		descriptionKey: 'efficiencyDescDeletePermanently',
+		categoryKey: 'efficiencyCategoryFileOps'
 	},
 	'delete-file-to-trash': {
 		commandId: 'delete-file-to-trash',
@@ -76,8 +78,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 本插件：提供快速访问方式
 		// 节省：1.5 秒（在自定义面板中快速访问的便捷性）
 		commandTimeSeconds: 0.5,
-		description: 'Move file to trash',
-		category: 'File Operations'
+		descriptionKey: 'efficiencyDescDeleteToTrash',
+		categoryKey: 'efficiencyCategoryFileOps'
 	},
 
 	// Path Operations
@@ -88,8 +90,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 替代方案：查看面包屑 (1秒) → 手动输入路径 (5秒) → 验证 (2秒) = 8秒
 		// 或者：查看文件树位置，心算构建路径
 		commandTimeSeconds: 0.5,
-		description: 'Copy relative path to clipboard',
-		category: 'Path Operations'
+		descriptionKey: 'efficiencyDescCopyRelativePath',
+		categoryKey: 'efficiencyCategoryPathOps'
 	},
 	'copy-absolute-path': {
 		commandId: 'copy-absolute-path',
@@ -98,8 +100,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 替代方案：右键 → 在系统资源管理器中显示 (2秒) → 在 Finder 中右键 (1秒)
 		// → 获取简介 (2秒) → 找到路径 (2秒) → 选择并复制 (2秒) → 返回 Obsidian (1秒) = 10秒
 		commandTimeSeconds: 0.5,
-		description: 'Copy absolute path to clipboard',
-		category: 'Path Operations'
+		descriptionKey: 'efficiencyDescCopyAbsolutePath',
+		categoryKey: 'efficiencyCategoryPathOps'
 	},
 	'copy-file-name': {
 		commandId: 'copy-file-name',
@@ -108,8 +110,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 替代方案：查看标题栏 (0.5秒) → 手动输入文件名 (2秒) → 验证扩展名 (0.5秒) = 3秒
 		// 或者：在文件树中右键复制名称
 		commandTimeSeconds: 0.5,
-		description: 'Copy file name with extension',
-		category: 'Path Operations'
+		descriptionKey: 'efficiencyDescCopyFileName',
+		categoryKey: 'efficiencyCategoryPathOps'
 	},
 	'copy-file-name-without-ext': {
 		commandId: 'copy-file-name-without-ext',
@@ -118,8 +120,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 替代方案：复制文件名 (3秒) → 手动删除扩展名 (1秒) = 4秒
 		// 或者：手动输入文件名（不含扩展名）
 		commandTimeSeconds: 0.5,
-		description: 'Copy file name without extension',
-		category: 'Path Operations'
+		descriptionKey: 'efficiencyDescCopyFileNameNoExt',
+		categoryKey: 'efficiencyCategoryPathOps'
 	},
 
 	// Content Operations
@@ -132,8 +134,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// + 检查层级一致性 (10秒) = 60秒
 		// 这是核心功能 - 巨大的时间节省
 		commandTimeSeconds: 1,
-		description: 'Auto-number headings',
-		category: 'Content Operations'
+		descriptionKey: 'efficiencyDescAddHeadingNumbering',
+		categoryKey: 'efficiencyCategoryContentOps'
 	},
 	'remove-heading-numbering': {
 		commandId: 'remove-heading-numbering',
@@ -142,8 +144,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 对于 10 个标题：手动删除每个编号 (每个 3秒) = 30秒
 		// 本插件：一键移除所有编号
 		commandTimeSeconds: 1,
-		description: 'Remove heading numbers',
-		category: 'Content Operations'
+		descriptionKey: 'efficiencyDescRemoveHeadingNumbering',
+		categoryKey: 'efficiencyCategoryContentOps'
 	},
 	'copy-current-heading': {
 		commandId: 'copy-current-heading',
@@ -152,8 +154,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 替代方案：找到标题开始 (1秒) → 选择到下一个标题前 (3秒) → 复制 (1秒) = 5秒
 		// 本插件：光标在标题内，一键复制整个段落
 		commandTimeSeconds: 0.5,
-		description: 'Copy heading section',
-		category: 'Content Operations'
+		descriptionKey: 'efficiencyDescCopyHeading',
+		categoryKey: 'efficiencyCategoryContentOps'
 	},
 	'copy-current-code-block': {
 		commandId: 'copy-current-code-block',
@@ -162,8 +164,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 本插件：光标在代码块内，快捷键直接复制
 		// 节省：3.5 秒（无需鼠标移动和点击）
 		commandTimeSeconds: 0.5,
-		description: 'Copy code block',
-		category: 'Content Operations'
+		descriptionKey: 'efficiencyDescCopyCodeBlock',
+		categoryKey: 'efficiencyCategoryContentOps'
 	},
 	'copy-current-table': {
 		commandId: 'copy-current-table',
@@ -172,8 +174,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 替代方案：找到表格开始 (1秒) → 选择到表格结束 (4秒) → 复制 (1秒) = 6秒
 		// 本插件：光标在表格内，一键复制整个表格
 		commandTimeSeconds: 0.5,
-		description: 'Copy table',
-		category: 'Content Operations'
+		descriptionKey: 'efficiencyDescCopyTable',
+		categoryKey: 'efficiencyCategoryContentOps'
 	},
 	'smart-copy-selector': {
 		commandId: 'smart-copy-selector',
@@ -182,8 +184,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 替代方案：复制第一个块 (3秒) → 粘贴到临时位置 (1秒) → 复制第二个块 (3秒) → 粘贴 (1秒) → 复制合并内容 (2秒) = 10秒
 		// 本插件：可视化多选，一次性复制多个非连续块
 		commandTimeSeconds: 2,
-		description: 'Multi-select and copy blocks',
-		category: 'Content Operations'
+		descriptionKey: 'efficiencyDescSmartCopySelector',
+		categoryKey: 'efficiencyCategoryContentOps'
 	},
 	'select-table-rows': {
 		commandId: 'select-table-rows',
@@ -192,8 +194,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 替代方案：手动选择第一行 (2秒) → 复制 (1秒) → 选择第二行 (2秒) → 复制 (1秒) → 合并 (2秒) = 8秒
 		// 本插件：可视化选择多行，一次性复制
 		commandTimeSeconds: 1.5,
-		description: 'Select specific table rows',
-		category: 'Content Operations'
+		descriptionKey: 'efficiencyDescSelectTableRows',
+		categoryKey: 'efficiencyCategoryContentOps'
 	},
 	'select-code-lines': {
 		commandId: 'select-code-lines',
@@ -202,8 +204,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 替代方案：手动选择行 (4秒) → 复制 (1秒) → 验证 (1秒) = 6秒
 		// 本插件：可视化选择代码行，一次性复制
 		commandTimeSeconds: 1,
-		description: 'Select specific code lines',
-		category: 'Content Operations'
+		descriptionKey: 'efficiencyDescSelectCodeLines',
+		categoryKey: 'efficiencyCategoryContentOps'
 	},
 	'select-code-blocks': {
 		commandId: 'select-code-blocks',
@@ -212,8 +214,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 替代方案：复制第一个代码块 (2秒) → 粘贴 (1秒) → 复制第二个 (2秒) → 粘贴 (1秒) → 合并 (2秒) = 8秒
 		// 本插件：可视化多选代码块，一次性复制
 		commandTimeSeconds: 1.5,
-		description: 'Select multiple code blocks',
-		category: 'Content Operations'
+		descriptionKey: 'efficiencyDescSelectCodeBlocks',
+		categoryKey: 'efficiencyCategoryContentOps'
 	},
 	'smart-paste': {
 		commandId: 'smart-paste',
@@ -223,8 +225,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 不用插件：粘贴 → 发现问题 → 撤销 → 手动查找替换不需要的内容 (8秒)
 		// 用插件：粘贴时自动应用规则 = 1秒
 		commandTimeSeconds: 1,
-		description: 'Paste with auto-cleanup rules',
-		category: 'Content Operations'
+		descriptionKey: 'efficiencyDescSmartPaste',
+		categoryKey: 'efficiencyCategoryContentOps'
 	},
 
 	// Link Operations
@@ -235,8 +237,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 对于 10 个链接：手动编辑每个 [[link]] 为 [link](./link.md) = 每个 3秒 = 30秒
 		// 本插件：一次性转换整个文件的所有链接，支持预览和选择
 		commandTimeSeconds: 2,
-		description: 'Convert wiki links to markdown (file)',
-		category: 'Link Operations'
+		descriptionKey: 'efficiencyDescConvertWikiToMdFile',
+		categoryKey: 'efficiencyCategoryLinkOps'
 	},
 	'convert-markdown-to-wiki-file': {
 		commandId: 'convert-markdown-to-wiki-file',
@@ -245,8 +247,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 对于 10 个链接：手动编辑每个 [link](./link.md) 为 [[link]] = 每个 3秒 = 30秒
 		// 本插件：一次性转换整个文件的所有链接，支持预览和选择
 		commandTimeSeconds: 2,
-		description: 'Convert markdown links to wiki (file)',
-		category: 'Link Operations'
+		descriptionKey: 'efficiencyDescConvertMdToWikiFile',
+		categoryKey: 'efficiencyCategoryLinkOps'
 	},
 	'convert-wiki-to-markdown-selection': {
 		commandId: 'convert-wiki-to-markdown-selection',
@@ -255,8 +257,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 对于选中的 5 个链接：手动编辑每个 = 每个 3秒 = 15秒
 		// 本插件：一次性转换选中区域的所有链接
 		commandTimeSeconds: 1,
-		description: 'Convert wiki links to markdown (selection)',
-		category: 'Link Operations'
+		descriptionKey: 'efficiencyDescConvertWikiToMdSelection',
+		categoryKey: 'efficiencyCategoryLinkOps'
 	},
 	'convert-markdown-to-wiki-selection': {
 		commandId: 'convert-markdown-to-wiki-selection',
@@ -265,8 +267,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 对于选中的 5 个链接：手动编辑每个 = 每个 3秒 = 15秒
 		// 本插件：一次性转换选中区域的所有链接
 		commandTimeSeconds: 1,
-		description: 'Convert markdown links to wiki (selection)',
-		category: 'Link Operations'
+		descriptionKey: 'efficiencyDescConvertMdToWikiSelection',
+		categoryKey: 'efficiencyCategoryLinkOps'
 	},
 
 	// Navigation
@@ -277,8 +279,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 本插件：按编辑/查看/创建时间智能排序，支持固定常用文件
 		// 节省：当你想找"刚用过的那个文件"时，不用输入名称搜索，省 2秒
 		commandTimeSeconds: 1,
-		description: 'Open recent files view',
-		category: 'Navigation'
+		descriptionKey: 'efficiencyDescOpenRecentFiles',
+		categoryKey: 'efficiencyCategoryNavigation'
 	},
 	'open-command-palette': {
 		commandId: 'open-command-palette',
@@ -287,8 +289,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 本插件：只显示本插件命令，支持固定常用命令到顶部
 		// 节省：高频命令不用输入搜索，省 1.5秒
 		commandTimeSeconds: 0.5,
-		description: 'Open plugin command palette',
-		category: 'Navigation'
+		descriptionKey: 'efficiencyDescOpenCommandPalette',
+		categoryKey: 'efficiencyCategoryNavigation'
 	},
 	'open-settings': {
 		commandId: 'open-settings',
@@ -296,8 +298,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 手动操作：Cmd+, → 滚动到插件设置 (2秒) → 找到本插件 (1秒) = 3秒
 		// 本插件：一键直达本插件设置页面
 		commandTimeSeconds: 0.5,
-		description: 'Open plugin settings',
-		category: 'Navigation'
+		descriptionKey: 'efficiencyDescOpenSettings',
+		categoryKey: 'efficiencyCategoryNavigation'
 	},
 	'open-file-info': {
 		commandId: 'open-file-info',
@@ -306,8 +308,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 替代方案：查看属性面板 (1秒) + 查看文件树 (1秒) + 查看反向链接 (1秒) + 手动计算字数 (2秒) = 5秒
 		// 本插件：一键打开侧边栏，显示所有文件信息（路径、大小、字数、阅读时间、标签、链接等）
 		commandTimeSeconds: 0.5,
-		description: 'Open file info sidebar',
-		category: 'Navigation'
+		descriptionKey: 'efficiencyDescOpenFileInfo',
+		categoryKey: 'efficiencyCategoryNavigation'
 	},
 
 	// Frontmatter
@@ -318,8 +320,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// → 修复 YAML 语法错误 (5秒) → 滚动回原位 (1秒) → 验证 (2秒) = 12秒
 		// 本插件：可视化编辑器，类型选择，自动验证，无语法错误
 		commandTimeSeconds: 3,
-		description: 'Visual frontmatter editor',
-		category: 'Frontmatter'
+		descriptionKey: 'efficiencyDescEditFrontmatter',
+		categoryKey: 'efficiencyCategoryFrontmatter'
 	},
 
 	// Tags
@@ -330,8 +332,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 替代方案：滚动整个文档查找所有 #tag (3秒) → 记录 (1秒) = 4秒
 		// 本插件：一键显示所有标签，点击可复制
 		commandTimeSeconds: 0.5,
-		description: 'View all tags in file',
-		category: 'Tags'
+		descriptionKey: 'efficiencyDescViewTags',
+		categoryKey: 'efficiencyCategoryTags'
 	},
 	'insert-tags': {
 		commandId: 'insert-tags',
@@ -339,8 +341,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 手动操作：直接输入 #tag (2秒) → 检查是否拼写错误 (1秒) → 可能需要修正 (2秒) = 5秒
 		// 本插件：从已有标签列表选择（按使用频率排序），防止拼写错误，支持多选
 		commandTimeSeconds: 1.5,
-		description: 'Insert tags with autocomplete',
-		category: 'Tags'
+		descriptionKey: 'efficiencyDescInsertTags',
+		categoryKey: 'efficiencyCategoryTags'
 	},
 
 	// Logging
@@ -351,8 +353,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 步骤：看时间 (1秒) → 输入日期 (2秒) → 输入时间 (2秒) → 格式检查 (1秒) = 6秒
 		// 本插件：自动插入格式化时间戳，智能追加到现有时间线
 		commandTimeSeconds: 0.5,
-		description: 'Auto-insert formatted timestamp',
-		category: 'Logging'
+		descriptionKey: 'efficiencyDescInsertMoment',
+		categoryKey: 'efficiencyCategoryLogging'
 	},
 	'insert-moment-at-cursor': {
 		commandId: 'insert-moment-at-cursor',
@@ -361,8 +363,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 步骤：看时间 (1秒) → 输入日期 (2秒) → 输入时间 (2秒) → 格式检查 (1秒) = 6秒
 		// 本插件：自动插入格式化时间戳到光标位置（手动模式）
 		commandTimeSeconds: 0.5,
-		description: 'Insert timestamp at cursor',
-		category: 'Logging'
+		descriptionKey: 'efficiencyDescInsertMomentAtCursor',
+		categoryKey: 'efficiencyCategoryLogging'
 	},
 
 	// Text Selection
@@ -373,8 +375,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 替代方案：选中文本 → 复制 → 打开命令面板 → 搜索操作 → 执行 = 8秒
 		// 本插件：选中文本后一键打开操作菜单（创建笔记、搜索、包裹为链接、添加标签、复制为引用、发送到其他文件等）
 		commandTimeSeconds: 2,
-		description: 'Quick actions for selected text',
-		category: 'Text Selection'
+		descriptionKey: 'efficiencyDescTextSelectionActions',
+		categoryKey: 'efficiencyCategoryTextSelection'
 	},
 
 	// Table Editor
@@ -390,8 +392,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// - 查找替换：手动逐个查找 (10秒) = 120秒
 		// 本插件：Excel 风格的可视化编辑器，拖拽排序，一键操作
 		commandTimeSeconds: 10,
-		description: 'Visual table editor with Excel-like features',
-		category: 'Table Editor'
+		descriptionKey: 'efficiencyDescEditTable',
+		categoryKey: 'efficiencyCategoryTableEditor'
 	},
 	'create-table': {
 		commandId: 'create-table',
@@ -401,8 +403,8 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		// 对于 3x3 表格：输入表头 (5秒) → 输入分隔符 (5秒) → 输入数据行 (15秒) → 调整对齐 (5秒) = 30秒
 		// 本插件：可视化创建表格，预设行列数，自动生成 Markdown
 		commandTimeSeconds: 5,
-		description: 'Create new table with visual editor',
-		category: 'Table Editor'
+		descriptionKey: 'efficiencyDescCreateTable',
+		categoryKey: 'efficiencyCategoryTableEditor'
 	}
 };
 
@@ -427,7 +429,7 @@ export function getEfficiencyEstimatesByCategory(): Record<string, EfficiencyCon
 	const grouped: Record<string, EfficiencyConfig[]> = {};
 
 	Object.values(DEFAULT_EFFICIENCY_CONFIG).forEach(config => {
-		const category = config.category || 'Other';
+		const category = t(config.categoryKey as any);
 		if (!grouped[category]) {
 			grouped[category] = [];
 		}
@@ -528,8 +530,8 @@ export function getEfficiencySummary(commandId: string, commandName: string): Ef
 	return {
 		commandId,
 		commandName,
-		description: estimate.description,
-		category: estimate.category || 'Other',
+		description: t(estimate.descriptionKey as any),
+		category: t(estimate.categoryKey as any),
 		timeSavedPerUse: timeSaved,
 		manualTime: estimate.manualTimeSeconds,
 		commandTime: estimate.commandTimeSeconds,

@@ -30,7 +30,7 @@ export class SmartPasteManager {
 
 			// Show notification if content was modified
 			if (transformedText !== content) {
-				const enabledRules = this.plugin.settings.clipboardRules.filter(r => r.enabled);
+				const enabledRules = this.plugin.clipboardRulesManager.getRules().filter(r => r.enabled);
 				new Notice(t('pastedWithRulesApplied', { count: enabledRules.length.toString(), s: enabledRules.length > 1 ? "s" : "" }));
 			}
 		} catch (error) {
@@ -207,7 +207,7 @@ export class SmartPasteManager {
 		let result = text;
 
 		// Get enabled rules
-		const enabledRules = this.plugin.settings.clipboardRules.filter(rule => rule.enabled);
+		const enabledRules = this.plugin.clipboardRulesManager.getRules().filter(rule => rule.enabled);
 
 		// Apply each rule in order
 		enabledRules.forEach(rule => {

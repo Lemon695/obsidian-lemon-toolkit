@@ -213,7 +213,7 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 				})
 			);
 
-		const rulesCount = this.plugin.settings.clipboardRules.filter(r => r.enabled).length;
+		const rulesCount = this.plugin.clipboardRulesManager.getRules().filter(r => r.enabled).length;
 		const rulesInfo = containerEl.createDiv({ cls: "setting-item-description" });
 		rulesInfo.style.marginTop = "-10px";
 		rulesInfo.style.paddingLeft = "0";
@@ -326,10 +326,10 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 		const modal = new ClipboardRulesSettingModal(
 			this.app,
 			this.plugin,
-			this.plugin.settings.clipboardRules,
+			this.plugin.clipboardRulesManager.getRules(),
 			async (rules: any) => {
-				this.plugin.settings.clipboardRules = rules;
-				await this.plugin.saveSettings();
+				this.plugin.clipboardRulesManager.setRules(rules);
+				await this.plugin.clipboardRulesManager.save();
 				this.display(); // Refresh to update rules count
 			}
 		);

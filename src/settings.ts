@@ -6,15 +6,6 @@ export interface ExternalApp {
 	openFolder: boolean;
 }
 
-export interface ClipboardRule {
-	id: string;
-	name: string;
-	enabled: boolean;
-	pattern: string; // Regex pattern to match
-	replacement: string; // Replacement string (can use $1, $2 for capture groups)
-	description?: string;
-}
-
 export interface StatisticsSettings {
 	enabled: boolean;
 	retentionDays: number;
@@ -50,7 +41,6 @@ export interface LemonToolkitSettings {
 		showTypeIcons: boolean;
 	};
 	externalApps: ExternalApp[];
-	clipboardRules: ClipboardRule[];
 	momentLoggerFormat: string;
 	statistics: StatisticsSettings;
 }
@@ -81,16 +71,6 @@ export const DEFAULT_SETTINGS: LemonToolkitSettings = {
 		showTypeIcons: true,
 	},
 	externalApps: [],
-	clipboardRules: [
-		{
-			id: "remove-weibo-timeline-image",
-			name: "Remove Weibo timeline image",
-			enabled: true,
-			pattern: "!\\[\\]\\(https://n\\.sinaimg\\.cn/photo/[^)]+/timeline_card_small[^)]+\\.png\\)",
-			replacement: "",
-			description: "Remove Weibo timeline card small images",
-		},
-	],
 	momentLoggerFormat: "YYYY-MM-DD HH:mm:ss",
 	statistics: {
 		enabled: true,

@@ -11,6 +11,7 @@ import { FolderMoveHistoryManager } from "./features/move/FolderMoveHistoryManag
 import { TagUsageHistoryManager } from "./features/tags/TagUsageHistoryManager";
 import { CommandHistoryManager } from "./features/commands/CommandHistoryManager";
 import { RecentFilesManager } from "./features/recent-files/RecentFilesManager";
+import { ClipboardRulesManager } from "./features/smart-paste/ClipboardRulesManager";
 import { PluginMetadataManager } from "./features/plugin-usage/PluginMetadataManager";
 import {t} from "./i18n/locale";
 
@@ -24,6 +25,7 @@ export default class LemonToolkitPlugin extends Plugin {
 	tagUsageHistoryManager: TagUsageHistoryManager;
 	commandHistoryManager: CommandHistoryManager;
 	recentFilesManager: RecentFilesManager;
+	clipboardRulesManager: ClipboardRulesManager;
 	pluginMetadataManager: PluginMetadataManager;
 	private saveTimeout: NodeJS.Timeout | null = null;
 	private recentCommands: Map<string, number> = new Map(); // For deduplication
@@ -66,6 +68,10 @@ export default class LemonToolkitPlugin extends Plugin {
 		// Initialize recent files manager
 		this.recentFilesManager = new RecentFilesManager(this);
 		await this.recentFilesManager.load();
+		
+		// Initialize clipboard rules manager
+		this.clipboardRulesManager = new ClipboardRulesManager(this);
+		await this.clipboardRulesManager.load();
 		
 		// Initialize plugin metadata manager
 		this.pluginMetadataManager = new PluginMetadataManager(this);

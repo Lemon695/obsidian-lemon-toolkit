@@ -51,6 +51,7 @@ export interface LemonToolkitSettings {
 	tagUsageHistory: Record<string, TagUsageHistory>;
 	commandHistory: Record<string, CommandHistory>; // For command palette sorting
 	pluginUsageHistory: Record<string, CommandHistory>; // For plugin usage statistics
+	pluginMetadata: Record<string, any>; // For plugin update times and metadata
 	pinnedCommands: string[];
 	commandPaletteSortBy: "recent" | "frequent";
 	commandPaletteTimeRange: 24 | 168 | 720 | 0; // hours: 24h, 7d, 30d, all time
@@ -81,6 +82,7 @@ export const DEFAULT_SETTINGS: LemonToolkitSettings = {
 	tagUsageHistory: {},
 	commandHistory: {},
 	pluginUsageHistory: {},
+	pluginMetadata: {},
 	pinnedCommands: [],
 	commandPaletteSortBy: "recent",
 	commandPaletteTimeRange: 720, // 30 days

@@ -1,7 +1,7 @@
 {
 	"id": "lemon-toolkit",
 	"name": "Lemon Toolkit",
-	"version": "1.1.6",
+	"version": "1.1.7",
 	"minAppVersion": "1.7.7",
 	"description": "A personal productivity toolkit with utility features for Obsidian.",
 	"author": "Lemon695",

@@ -17,7 +17,7 @@ interface PluginInfo {
 }
 
 type FilterType = 'all' | 'enabled' | 'disabled';
-type SortType = 'usage' | 'name' | 'recent';
+type SortType = 'usage' | 'name' | 'recent' | 'updated';
 
 export class PluginManagerModal extends Modal {
 	private plugin: LemonToolkitPlugin;
@@ -60,7 +60,17 @@ export class PluginManagerModal extends Modal {
 
 		const refreshBtn = header.createEl("button", { text: t('refresh') });
 		refreshBtn.style.padding = "6px 16px";
-		refreshBtn.addEventListener('click', () => this.loadPlugins());
+		refreshBtn.addEventListener('click', async () => {
+			refreshBtn.disabled = true;
+			refreshBtn.textContent = t('refreshing') || 'Refreshing...';
+			try {
+				await this.plugin.pluginMetadataManager.scanAllPlugins();
+				this.loadPlugins();
+			} finally {
+				refreshBtn.disabled = false;
+				refreshBtn.textContent = t('refresh');
+			}
+		});
 
 		// Filters and search
 		const controls = contentEl.createDiv({ cls: 'plugin-manager-controls' });
@@ -130,7 +140,8 @@ export class PluginManagerModal extends Modal {
 		[
 			{ value: 'usage', label: t('sortByUsage') },
 			{ value: 'name', label: t('pluginSortByName') },
-			{ value: 'recent', label: t('pluginSortByRecent') }
+			{ value: 'recent', label: t('pluginSortByRecent') },
+			{ value: 'updated', label: t('pluginSortByUpdated') }
 		].forEach(({ value, label }) => {
 			const option = sortSelect.createEl("option", { value });
 			option.textContent = label;
@@ -157,27 +168,16 @@ export class PluginManagerModal extends Modal {
 		this.plugins = [];
 		const manifests = (this.app as any).plugins.manifests;
 		const enabledPlugins = (this.app as any).plugins.enabledPlugins;
-		const plugins = (this.app as any).plugins.plugins; // Loaded plugin instances
 		const usageStats = this.analyzer.getPluginUsageStats('all');
 		const usageMap = new Map(usageStats.map(s => [s.pluginId, s]));
 
 		Object.keys(manifests).forEach(pluginId => {
 			const manifest = manifests[pluginId];
 			const usage = usageMap.get(pluginId);
-			const pluginInstance = plugins[pluginId];
-
-			// Try to get update time from various sources
-			let updatedAt: number | undefined;
 			
-			// Method 1: Check if plugin instance has loadTime
-			if (pluginInstance && pluginInstance.loadTime) {
-				updatedAt = pluginInstance.loadTime;
-			}
-			
-			// Method 2: Check manifest for any timestamp fields
-			if (!updatedAt && manifest) {
-				updatedAt = manifest.updatedAt || manifest.timestamp || manifest.loadTime;
-			}
+			// Get update time from PluginMetadataManager
+			const metadata = this.plugin.pluginMetadataManager.getMetadata(pluginId);
+			const updatedAt = metadata?.updatedAt;
 
 			this.plugins.push({
 				id: pluginId,
@@ -223,6 +223,8 @@ export class PluginManagerModal extends Modal {
 					return a.name.localeCompare(b.name);
 				case 'recent':
 					return b.lastUsed - a.lastUsed;
+				case 'updated':
+					return (b.updatedAt || 0) - (a.updatedAt || 0);
 				default:
 					return 0;
 			}

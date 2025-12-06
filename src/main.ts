@@ -7,6 +7,7 @@ import { RecentFilesView, RECENT_FILES_VIEW_TYPE } from "./views/RecentFilesView
 import { ExternalAppManager } from "./features/external-apps/ExternalAppManager";
 import { StatisticsManager } from "./features/statistics/StatisticsManager";
 import { RenameHistoryManager } from "./features/rename/RenameHistoryManager";
+import { PluginMetadataManager } from "./features/plugin-usage/PluginMetadataManager";
 import {t} from "./i18n/locale";
 
 export default class LemonToolkitPlugin extends Plugin {
@@ -15,6 +16,7 @@ export default class LemonToolkitPlugin extends Plugin {
 	private externalAppManager: ExternalAppManager;
 	statisticsManager: StatisticsManager;
 	renameHistoryManager: RenameHistoryManager;
+	pluginMetadataManager: PluginMetadataManager;
 	private saveTimeout: NodeJS.Timeout | null = null;
 	private recentCommands: Map<string, number> = new Map(); // For deduplication
 
@@ -40,6 +42,11 @@ export default class LemonToolkitPlugin extends Plugin {
 		// Initialize rename history manager
 		this.renameHistoryManager = new RenameHistoryManager(this);
 		await this.renameHistoryManager.load();
+		
+		// Initialize plugin metadata manager
+		this.pluginMetadataManager = new PluginMetadataManager(this);
+		await this.pluginMetadataManager.load();
+		this.pluginMetadataManager.startPeriodicScan();
 		
 		// Register views
 		this.registerView(
@@ -321,6 +328,11 @@ export default class LemonToolkitPlugin extends Plugin {
 		// Cleanup statistics manager
 		if (this.statisticsManager) {
 			this.statisticsManager.destroy();
+		}
+		
+		// Stop plugin metadata scanning
+		if (this.pluginMetadataManager) {
+			this.pluginMetadataManager.stopPeriodicScan();
 		}
 		
 		// Detach views

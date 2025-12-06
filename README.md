@@ -355,6 +355,45 @@ Use "Select code blocks to copy":
 - Optimize your plugin setup
 - Quick access to frequently used plugin settings
 
+### Plugin Manager
+
+- **Open Plugin Manager** - Manage all your plugins in one place with advanced features:
+
+**Features**:
+- **Enable/Disable plugins**: Toggle plugins on/off with one click
+- **Plugin information**: View name, version, author, description, and update time
+- **Usage statistics**: See how often you use each plugin's commands
+- **Smart filtering**: Filter by enabled/disabled status
+- **Search**: Quickly find plugins by name, ID, or author
+- **Multiple sort options**:
+  - Usage Count: Sort by most used plugins
+  - Name: Alphabetical order
+  - Recently Used: Sort by last command usage
+  - Recently Updated: Sort by plugin update time
+- **Quick actions**: Open plugin settings directly from the manager
+- **Auto-refresh**: Automatically scans plugin metadata every 30 minutes
+- **Manual refresh**: Click refresh button to update plugin information immediately
+
+**Display information**:
+- Plugin rank (top 3 highlighted when sorted by usage)
+- Plugin name and description
+- Version, author, and last update time
+- Enable/disable status badge
+- Usage statistics (command count and total uses)
+- Last used time
+
+**Plugin metadata tracking**:
+- Automatically tracks plugin update times from filesystem
+- Stores metadata in separate `plugin-metadata.json` file
+- Includes: ID, name, version, author, enabled status, update time
+
+**Use cases**:
+- Manage all plugins in one convenient interface
+- Identify which plugins are actually being used
+- Find recently updated plugins
+- Quickly enable/disable plugins without going to settings
+- Clean up unused plugins based on usage data
+
 ## Usage
 
 1. Open any file in your vault

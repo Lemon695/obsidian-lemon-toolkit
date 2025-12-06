@@ -249,6 +249,12 @@ Use "Select code blocks to copy":
   - Sanitizes filename (removes invalid characters like `/:*?"<>|`)
   - Shows notification if filename already matches heading
 
+- **Rename file** - Rename the current file with a modal dialog:
+  - Shows current filename in an editable input field
+  - Modify the name and save
+  - Automatically sanitizes invalid characters
+  - Quick and convenient without clicking the file title
+
 ### Table Editor
 
 - **Edit table** - Open a visual table editor with Excel-like experience:
@@ -346,6 +352,7 @@ Use "Select code blocks to copy":
 | `Lemon Toolkit: Add/update heading numbering` | Add or update hierarchical numbering for headings |
 | `Lemon Toolkit: Remove heading numbering` | Remove all numbering from headings |
 | `Lemon Toolkit: Rename file from H1 heading` | Rename file based on first level-1 heading |
+| `Lemon Toolkit: Rename file` | Rename the current file with a modal dialog |
 | `Lemon Toolkit: Edit table` | Open visual table editor with Excel-like features |
 | `Lemon Toolkit: Create table` | Create new table at cursor position |
 | `Lemon Toolkit: Show Statistics` | Open command usage analytics dashboard |

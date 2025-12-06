@@ -249,6 +249,12 @@
   - 自动清理非法文件名字符（如 `/:*?"<>|`）
   - 如果文件名已匹配标题则显示提示
 
+- **重命名文件** - 通过模态对话框重命名当前文件：
+  - 在可编辑输入框中显示当前文件名
+  - 修改名称并保存
+  - 自动清理非法字符
+  - 快捷方便，无需点击文件标题
+
 ### 命令统计与分析
 
 - **显示统计数据** - 打开全面的分析仪表板，追踪你的命令使用情况和生产力：
@@ -329,6 +335,7 @@
 | `Lemon Toolkit: Add/update heading numbering` | 添加或更新标题的层级序号 |
 | `Lemon Toolkit: Remove heading numbering` | 移除所有标题序号 |
 | `Lemon Toolkit: Rename file from H1 heading` | 根据一级标题重命名文件 |
+| `Lemon Toolkit: Rename file` | 通过模态对话框重命名当前文件 |
 | `Lemon Toolkit: Show Statistics` | 打开命令使用分析仪表板 |
 
 ## 安装方法

@@ -37,6 +37,7 @@ export const translations = {
 		editTable: 'Edit table',
 		createTable: 'Create table',
 		syncHeadingWithFilename: 'Rename file from H1 heading',
+		renameFile: 'Rename file',
 
 		// Table Editor
 		tableEditor: 'Table Editor',
@@ -176,6 +177,8 @@ export const translations = {
 		insertTags_modal: 'Insert tags',
 		cancel: 'Cancel',
 		save: 'Save',
+		rename: 'Rename',
+		newFileName: 'New file name:',
 		clipboardRules: 'Clipboard Rules',
 		addRule: '+ Add Rule',
 		testRule: 'Test Rule',
@@ -184,7 +187,6 @@ export const translations = {
 		error: 'Error:',
 		fileInformation: 'File Information',
 		duplicateFile_modal: 'Duplicate file',
-		newFileName: 'New file name:',
 		managePinnedCommands: 'Manage pinned commands',
 		pinnedCommands: 'Pinned commands',
 		availableCommands: 'Available commands',
@@ -587,6 +589,7 @@ export const translations = {
 		editTable: '编辑表格',
 		createTable: '新建表格',
 		syncHeadingWithFilename: '用一级标题重命名文件',
+		renameFile: '重命名文件',
 
 		// 表格编辑器
 		tableEditor: '表格编辑器',
@@ -726,6 +729,8 @@ export const translations = {
 		insertTags_modal: '插入标签',
 		cancel: '取消',
 		save: '保存',
+		rename: '重命名',
+		newFileName: '新文件名：',
 		clipboardRules: '剪贴板规则',
 		addRule: '+ 添加规则',
 		testRule: '测试规则',
@@ -734,7 +739,6 @@ export const translations = {
 		error: '错误：',
 		fileInformation: '文件信息',
 		duplicateFile_modal: '复制文件',
-		newFileName: '新文件名：',
 		managePinnedCommands: '管理固定命令',
 		pinnedCommands: '固定命令',
 		availableCommands: '可用命令',

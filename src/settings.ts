@@ -1,8 +1,3 @@
-export interface CommandHistory {
-	lastUsed: number;
-	useCount: number;
-}
-
 export interface ExternalApp {
 	id: string;
 	name: string;
@@ -36,8 +31,7 @@ export interface LemonToolkitSettings {
 	duplicateFileSuffixType: "timestamp" | "uuid";
 	folderSortType: "recent" | "day" | "week" | "month";
 	tagSortType: "recent" | "day" | "week" | "month" | "alphabetical";
-	commandHistory: Record<string, CommandHistory>; // For command palette sorting
-	pluginUsageHistory: Record<string, CommandHistory>; // For plugin usage statistics
+	pluginUsageHistory: Record<string, any>; // For plugin usage statistics
 	pluginMetadata: Record<string, any>; // For plugin update times and metadata
 	pinnedCommands: string[];
 	commandPaletteSortBy: "recent" | "frequent";
@@ -65,7 +59,6 @@ export const DEFAULT_SETTINGS: LemonToolkitSettings = {
 	duplicateFileSuffixType: "timestamp",
 	folderSortType: "recent",
 	tagSortType: "recent",
-	commandHistory: {},
 	pluginUsageHistory: {},
 	pluginMetadata: {},
 	pinnedCommands: [],

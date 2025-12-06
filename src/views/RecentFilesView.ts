@@ -59,16 +59,12 @@ export class RecentFilesView extends ItemView {
 	}
 
 	private async loadData(): Promise<void> {
-		const saved = await this.plugin.loadData();
-		if (saved?.recentFiles) {
-			this.data = saved.recentFiles;
-		}
+		this.data = this.plugin.recentFilesManager.getData();
 	}
 
 	private async saveData(): Promise<void> {
-		const pluginData = await this.plugin.loadData() || {};
-		pluginData.recentFiles = this.data;
-		await this.plugin.saveData(pluginData);
+		this.plugin.recentFilesManager.setData(this.data);
+		await this.plugin.recentFilesManager.save();
 	}
 
 	private registerEvents(): void {

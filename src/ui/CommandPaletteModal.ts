@@ -37,7 +37,7 @@ export class CommandPaletteModal extends FuzzySuggestModal<CommandItem> {
 		Object.keys(allCommands).forEach((commandId) => {
 			if (commandId.startsWith("lemon-toolkit:")) {
 				const command = allCommands[commandId];
-				const history = this.plugin.settings.commandHistory[commandId] || {
+				const history = this.plugin.commandHistoryManager.getHistory(commandId) || {
 					lastUsed: 0,
 					useCount: 0,
 				};

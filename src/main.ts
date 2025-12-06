@@ -9,6 +9,8 @@ import { StatisticsManager } from "./features/statistics/StatisticsManager";
 import { RenameHistoryManager } from "./features/rename/RenameHistoryManager";
 import { FolderMoveHistoryManager } from "./features/move/FolderMoveHistoryManager";
 import { TagUsageHistoryManager } from "./features/tags/TagUsageHistoryManager";
+import { CommandHistoryManager } from "./features/commands/CommandHistoryManager";
+import { RecentFilesManager } from "./features/recent-files/RecentFilesManager";
 import { PluginMetadataManager } from "./features/plugin-usage/PluginMetadataManager";
 import {t} from "./i18n/locale";
 
@@ -20,6 +22,8 @@ export default class LemonToolkitPlugin extends Plugin {
 	renameHistoryManager: RenameHistoryManager;
 	folderMoveHistoryManager: FolderMoveHistoryManager;
 	tagUsageHistoryManager: TagUsageHistoryManager;
+	commandHistoryManager: CommandHistoryManager;
+	recentFilesManager: RecentFilesManager;
 	pluginMetadataManager: PluginMetadataManager;
 	private saveTimeout: NodeJS.Timeout | null = null;
 	private recentCommands: Map<string, number> = new Map(); // For deduplication
@@ -54,6 +58,14 @@ export default class LemonToolkitPlugin extends Plugin {
 		// Initialize tag usage history manager
 		this.tagUsageHistoryManager = new TagUsageHistoryManager(this);
 		await this.tagUsageHistoryManager.load();
+		
+		// Initialize command history manager
+		this.commandHistoryManager = new CommandHistoryManager(this);
+		await this.commandHistoryManager.load();
+		
+		// Initialize recent files manager
+		this.recentFilesManager = new RecentFilesManager(this);
+		await this.recentFilesManager.load();
 		
 		// Initialize plugin metadata manager
 		this.pluginMetadataManager = new PluginMetadataManager(this);
@@ -177,13 +189,7 @@ export default class LemonToolkitPlugin extends Plugin {
 		this.recentCommands.set(commandId, now);
 		
 		// Record to commandHistory (for command palette sorting)
-		const commandHistory = this.settings.commandHistory[commandId] || {
-			lastUsed: 0,
-			useCount: 0,
-		};
-		commandHistory.lastUsed = now;
-		commandHistory.useCount++;
-		this.settings.commandHistory[commandId] = commandHistory;
+		await this.commandHistoryManager.recordUsage(commandId);
 		
 		// Record to pluginUsageHistory (for plugin usage statistics)
 		const pluginHistory = this.settings.pluginUsageHistory[commandId] || {

@@ -25,23 +25,28 @@ export interface RenameSuggestion {
 export class RenameHistoryManager {
 	private plugin: LemonToolkitPlugin;
 	private history: RenameRecord[] = [];
-	private readonly MAX_HISTORY = 500;
-	private readonly RETENTION_DAYS = 90;
+	private readonly MAX_HISTORY = 5000; //超过限制时自动删除最旧的记录
+	private readonly RETENTION_DAYS = 90; //只保留最近 90 天的数据
 
 	constructor(plugin: LemonToolkitPlugin) {
 		this.plugin = plugin;
 	}
 
 	async load(): Promise<void> {
-		const data = await this.plugin.loadData();
-		this.history = data?.renameHistory || [];
+		const data = await this.plugin.app.vault.adapter.read(
+			`${this.plugin.manifest.dir}/rename-history.json`
+		).catch(() => '{"history":[]}');
+		const parsed = JSON.parse(data);
+		this.history = parsed.history || [];
 		this.cleanup();
 	}
 
 	async save(): Promise<void> {
-		const data = await this.plugin.loadData() || {};
-		data.renameHistory = this.history;
-		await this.plugin.saveData(data);
+		const data = JSON.stringify({ history: this.history }, null, 2);
+		await this.plugin.app.vault.adapter.write(
+			`${this.plugin.manifest.dir}/rename-history.json`,
+			data
+		);
 	}
 
 	async recordRename(oldName: string, newName: string): Promise<void> {

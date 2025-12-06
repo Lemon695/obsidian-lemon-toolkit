@@ -2,9 +2,10 @@ import LemonToolkitPlugin from "../../main";
 import { moment } from "obsidian";
 
 interface RenameRecord {
-	timestamp: number;
 	oldName: string;
 	newName: string;
+	recentTimestamps: number[];
+	dailyCount: { [date: string]: number };
 }
 
 interface RenamePattern {
@@ -14,19 +15,36 @@ interface RenamePattern {
 	lastUsed: number;
 }
 
+interface SuggestionFeedback {
+	pattern: string;
+	recentTimestamps: number[];
+	dailyCount: { [date: string]: number };
+	accepted: number;
+	rejected: number;
+}
+
 export interface RenameSuggestion {
 	label: string;
 	value: string;
 	type: 'smart' | 'quick';
 	score: number;
 	icon: string;
+	patternKey?: string;
+	stats?: {
+		usageCount: number;
+		acceptRate: number;
+		last24h: number;
+		last7d: number;
+		last30d: number;
+	};
 }
 
 export class RenameHistoryManager {
 	private plugin: LemonToolkitPlugin;
-	private history: RenameRecord[] = [];
-	private readonly MAX_HISTORY = 5000; //超过限制时自动删除最旧的记录
-	private readonly RETENTION_DAYS = 90; //只保留最近 90 天的数据
+	private records: Map<string, RenameRecord> = new Map();
+	private feedback: Map<string, SuggestionFeedback> = new Map();
+	private readonly MAX_RECORDS = 1000;
+	private readonly RETENTION_DAYS = 365;
 
 	constructor(plugin: LemonToolkitPlugin) {
 		this.plugin = plugin;
@@ -35,59 +53,165 @@ export class RenameHistoryManager {
 	async load(): Promise<void> {
 		const data = await this.plugin.app.vault.adapter.read(
 			`${this.plugin.manifest.dir}/rename-history.json`
-		).catch(() => '{"history":[]}');
+		).catch(() => '{"records":{},"feedback":{}}');
 		const parsed = JSON.parse(data);
-		this.history = parsed.history || [];
+		
+		this.records = new Map(Object.entries(parsed.records || {}));
+		this.feedback = new Map(Object.entries(parsed.feedback || {}));
 		this.cleanup();
 	}
 
 	async save(): Promise<void> {
-		const data = JSON.stringify({ history: this.history }, null, 2);
+		const data = {
+			records: Object.fromEntries(this.records),
+			feedback: Object.fromEntries(this.feedback)
+		};
 		await this.plugin.app.vault.adapter.write(
 			`${this.plugin.manifest.dir}/rename-history.json`,
-			data
+			JSON.stringify(data, null, 2)
 		);
 	}
 
-	async recordRename(oldName: string, newName: string): Promise<void> {
-		this.history.unshift({
-			timestamp: Date.now(),
+	async recordRename(oldName: string, newName: string, usedSuggestion?: string): Promise<void> {
+		const key = `${oldName}→${newName}`;
+		const now = Date.now();
+		
+		const record = this.records.get(key) || {
 			oldName,
-			newName
-		});
-
-		if (this.history.length > this.MAX_HISTORY) {
-			this.history = this.history.slice(0, this.MAX_HISTORY);
+			newName,
+			recentTimestamps: [],
+			dailyCount: {}
+		};
+		
+		this.aggregateData(record, now);
+		this.records.set(key, record);
+		
+		if (usedSuggestion) {
+			this.recordFeedback(usedSuggestion, true, now);
 		}
-
+		
+		if (this.records.size > this.MAX_RECORDS) {
+			this.pruneOldest();
+		}
+		
 		await this.save();
+	}
+
+	async recordSuggestionRejection(patternKey: string): Promise<void> {
+		this.recordFeedback(patternKey, false, Date.now());
+		await this.save();
+	}
+
+	private recordFeedback(patternKey: string, accepted: boolean, timestamp: number): void {
+		const fb = this.feedback.get(patternKey) || {
+			pattern: patternKey,
+			recentTimestamps: [],
+			dailyCount: {},
+			accepted: 0,
+			rejected: 0
+		};
+		
+		this.aggregateData(fb, timestamp);
+		
+		if (accepted) {
+			fb.accepted++;
+		} else {
+			fb.rejected++;
+		}
+		
+		this.feedback.set(patternKey, fb);
+	}
+
+	private aggregateData(record: { recentTimestamps: number[]; dailyCount: { [date: string]: number } }, timestamp: number): void {
+		const now = Date.now();
+		const oneDayAgo = now - 24 * 60 * 60 * 1000;
+		const oneYearAgo = now - 365 * 24 * 60 * 60 * 1000;
+		
+		const toAggregate = record.recentTimestamps.filter(t => t < oneDayAgo);
+		toAggregate.forEach(t => {
+			const date = moment(t).format('YYYY-MM-DD');
+			record.dailyCount[date] = (record.dailyCount[date] || 0) + 1;
+		});
+		
+		record.recentTimestamps = record.recentTimestamps.filter(t => t >= oneDayAgo);
+		record.recentTimestamps.push(timestamp);
+		
+		Object.keys(record.dailyCount).forEach(date => {
+			const dateTs = moment(date).valueOf();
+			if (dateTs < oneYearAgo) {
+				delete record.dailyCount[date];
+			}
+		});
+	}
+
+	private getCountInTimeRange(record: { recentTimestamps: number[]; dailyCount: { [date: string]: number } }, hours: number): number {
+		const now = Date.now();
+		const cutoff = now - hours * 60 * 60 * 1000;
+		
+		if (hours <= 24) {
+			return record.recentTimestamps.filter(t => t >= cutoff).length;
+		}
+		
+		let count = record.recentTimestamps.length;
+		const cutoffDate = moment(cutoff).format('YYYY-MM-DD');
+		
+		Object.entries(record.dailyCount).forEach(([date, cnt]) => {
+			if (date >= cutoffDate) {
+				count += cnt;
+			}
+		});
+		
+		return count;
 	}
 
 	private cleanup(): void {
 		const cutoff = Date.now() - (this.RETENTION_DAYS * 24 * 60 * 60 * 1000);
-		this.history = this.history.filter(r => r.timestamp > cutoff);
+		
+		for (const [key, record] of this.records) {
+			const lastUsed = record.recentTimestamps[record.recentTimestamps.length - 1] || 0;
+			if (lastUsed < cutoff) {
+				this.records.delete(key);
+			}
+		}
 	}
 
-	getSuggestions(currentName: string): RenameSuggestion[] {
+	private pruneOldest(): void {
+		const sorted = Array.from(this.records.entries())
+			.sort((a, b) => {
+				const aLast = a[1].recentTimestamps[a[1].recentTimestamps.length - 1] || 0;
+				const bLast = b[1].recentTimestamps[b[1].recentTimestamps.length - 1] || 0;
+				return aLast - bLast;
+			});
+		
+		const toRemove = sorted.slice(0, sorted.length - this.MAX_RECORDS);
+		toRemove.forEach(([key]) => this.records.delete(key));
+	}
+
+	getSuggestions(currentName: string, maxSuggestions: number = 8): RenameSuggestion[] {
 		const suggestions: RenameSuggestion[] = [];
 		
-		// Smart suggestions from history
 		const patterns = this.extractPatterns();
 		patterns.forEach(pattern => {
 			const newName = this.applyPattern(currentName, pattern);
 			if (newName !== currentName) {
-				const score = this.calculateScore(pattern);
+				const patternKey = `${pattern.type}:${pattern.value}`;
+				const fb = this.feedback.get(patternKey);
+				const score = this.calculateScore(pattern, fb);
+				
+				const stats = this.getPatternStats(patternKey);
+				
 				suggestions.push({
 					label: newName,
 					value: newName,
 					type: 'smart',
 					score,
-					icon: '🔥'
+					icon: score > 10 ? '🔥' : score > 5 ? '⭐' : '💡',
+					patternKey,
+					stats
 				});
 			}
 		});
 
-		// Quick suggestions
 		const now = moment();
 		suggestions.push(
 			{
@@ -95,32 +219,35 @@ export class RenameHistoryManager {
 				value: `${currentName}-${now.format('YYYYMMDD')}`,
 				type: 'quick',
 				score: 0,
-				icon: '⚡'
-			},
-			{
-				label: `${currentName}-${Date.now()}`,
-				value: `${currentName}-${Date.now()}`,
-				type: 'quick',
-				score: 0,
-				icon: '⚡'
+				icon: '📅',
+				patternKey: 'quick:date-suffix'
 			},
 			{
 				label: `${now.format('YYYYMMDD')}-${currentName}`,
 				value: `${now.format('YYYYMMDD')}-${currentName}`,
 				type: 'quick',
 				score: 0,
-				icon: '⚡'
+				icon: '📅',
+				patternKey: 'quick:date-prefix'
+			},
+			{
+				label: `${currentName}-${Date.now()}`,
+				value: `${currentName}-${Date.now()}`,
+				type: 'quick',
+				score: 0,
+				icon: '⏱️',
+				patternKey: 'quick:timestamp'
 			},
 			{
 				label: `${currentName}-${this.generateShortUUID()}`,
 				value: `${currentName}-${this.generateShortUUID()}`,
 				type: 'quick',
 				score: 0,
-				icon: '⚡'
+				icon: '🎲',
+				patternKey: 'quick:uuid'
 			}
 		);
 
-		// Sort: smart by score desc, then quick
 		return suggestions
 			.sort((a, b) => {
 				if (a.type === 'smart' && b.type === 'smart') return b.score - a.score;
@@ -128,46 +255,47 @@ export class RenameHistoryManager {
 				if (b.type === 'smart') return 1;
 				return 0;
 			})
-			.slice(0, 8);
+			.slice(0, maxSuggestions);
 	}
 
 	private extractPatterns(): RenamePattern[] {
 		const patternMap = new Map<string, RenamePattern>();
-		const recentDays = 30;
+		const recentDays = 90;
 		const cutoff = Date.now() - (recentDays * 24 * 60 * 60 * 1000);
 
-		this.history
-			.filter(r => r.timestamp > cutoff)
-			.forEach(record => {
+		for (const record of this.records.values()) {
+			const lastUsed = record.recentTimestamps[record.recentTimestamps.length - 1];
+			if (lastUsed && lastUsed > cutoff) {
 				const pattern = this.detectPattern(record.oldName, record.newName);
 				if (pattern) {
 					const key = `${pattern.type}:${pattern.value}`;
 					const existing = patternMap.get(key);
+					const count = this.getCountInTimeRange(record, recentDays * 24);
+					
 					if (existing) {
-						existing.count++;
-						existing.lastUsed = Math.max(existing.lastUsed, record.timestamp);
+						existing.count += count;
+						existing.lastUsed = Math.max(existing.lastUsed, lastUsed);
 					} else {
-						patternMap.set(key, { ...pattern, count: 1, lastUsed: record.timestamp });
+						patternMap.set(key, { ...pattern, count, lastUsed });
 					}
 				}
-			});
+			}
+		}
 
 		return Array.from(patternMap.values());
 	}
 
 	private detectPattern(oldName: string, newName: string): RenamePattern | null {
-		// Suffix pattern
 		if (newName.startsWith(oldName)) {
 			const suffix = newName.substring(oldName.length);
-			if (suffix && !suffix.match(/^\d+$/)) { // Ignore pure numbers
+			if (suffix && !suffix.match(/^\d+$/) && !suffix.match(/^-\d{13,}$/)) {
 				return { type: 'suffix', value: suffix, count: 0, lastUsed: 0 };
 			}
 		}
 
-		// Prefix pattern
 		if (newName.endsWith(oldName)) {
 			const prefix = newName.substring(0, newName.length - oldName.length);
-			if (prefix && !prefix.match(/^\d+$/)) {
+			if (prefix && !prefix.match(/^\d+$/) && !prefix.match(/^\d{8}-$/)) {
 				return { type: 'prefix', value: prefix, count: 0, lastUsed: 0 };
 			}
 		}
@@ -176,18 +304,41 @@ export class RenameHistoryManager {
 	}
 
 	private applyPattern(name: string, pattern: RenamePattern): string {
-		if (pattern.type === 'suffix') {
-			return name + pattern.value;
-		} else if (pattern.type === 'prefix') {
-			return pattern.value + name;
-		}
-		return name;
+		return pattern.type === 'suffix' ? name + pattern.value : pattern.value + name;
 	}
 
-	private calculateScore(pattern: RenamePattern): number {
+	private calculateScore(pattern: RenamePattern, feedback?: SuggestionFeedback): number {
 		const daysSinceUse = (Date.now() - pattern.lastUsed) / (24 * 60 * 60 * 1000);
 		const timeDecay = daysSinceUse < 7 ? 1.0 : daysSinceUse < 30 ? 0.5 : 0.1;
-		return pattern.count * timeDecay;
+		
+		let acceptRate = 1.0;
+		if (feedback) {
+			const total = feedback.accepted + feedback.rejected;
+			if (total > 0) {
+				acceptRate = feedback.accepted / total;
+				acceptRate = Math.max(0.1, acceptRate);
+			}
+		}
+		
+		return pattern.count * timeDecay * acceptRate * 10;
+	}
+
+	private getPatternStats(patternKey: string): { usageCount: number; acceptRate: number; last24h: number; last7d: number; last30d: number } {
+		const fb = this.feedback.get(patternKey);
+		if (!fb) {
+			return { usageCount: 0, acceptRate: 0, last24h: 0, last7d: 0, last30d: 0 };
+		}
+		
+		const total = fb.accepted + fb.rejected;
+		const acceptRate = total > 0 ? fb.accepted / total : 0;
+		
+		return {
+			usageCount: fb.accepted,
+			acceptRate,
+			last24h: this.getCountInTimeRange(fb, 24),
+			last7d: this.getCountInTimeRange(fb, 168),
+			last30d: this.getCountInTimeRange(fb, 720)
+		};
 	}
 
 	private generateShortUUID(): string {

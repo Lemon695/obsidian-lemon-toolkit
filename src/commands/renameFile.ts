@@ -10,20 +10,28 @@ export async function renameFile(plugin: LemonToolkitPlugin): Promise<void> {
 		return;
 	}
 
-	const suggestions = plugin.renameHistoryManager.getSuggestions(file.basename);
+	const suggestions = plugin.renameHistoryManager.getSuggestions(file.basename, 15);
 
-	new RenameFileModal(plugin.app, file, suggestions, async (newName: string) => {
-		const oldName = file.basename;
-		const sanitized = newName.replace(/[\\/:*?"<>|]/g, '');
-		const newPath = file.parent ? `${file.parent.path}/${sanitized}.md` : `${sanitized}.md`;
-		
-		try {
-			await plugin.app.fileManager.renameFile(file, newPath);
-			await plugin.renameHistoryManager.recordRename(oldName, sanitized);
-			new Notice(t('fileRenamedToHeading', { name: sanitized }));
-		} catch (error) {
-			new Notice(t('fileRenameFailed'));
-			console.error('Rename failed:', error);
+	new RenameFileModal(
+		plugin.app, 
+		file, 
+		suggestions, 
+		async (newName: string, patternKey?: string) => {
+			const oldName = file.basename;
+			const sanitized = newName.replace(/[\\/:*?"<>|]/g, '');
+			const newPath = file.parent ? `${file.parent.path}/${sanitized}.md` : `${sanitized}.md`;
+			
+			try {
+				await plugin.app.fileManager.renameFile(file, newPath);
+				await plugin.renameHistoryManager.recordRename(oldName, sanitized, patternKey);
+				new Notice(t('fileRenamedToHeading', { name: sanitized }));
+			} catch (error) {
+				new Notice(t('fileRenameFailed'));
+				console.error('Rename failed:', error);
+			}
+		},
+		async (patternKey: string) => {
+			await plugin.renameHistoryManager.recordSuggestionRejection(patternKey);
 		}
-	}).open();
+	).open();
 }

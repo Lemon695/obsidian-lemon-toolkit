@@ -1,4 +1,4 @@
-import { App, FuzzySuggestModal, FuzzyMatch } from "obsidian";
+import { App, FuzzySuggestModal, FuzzyMatch, setIcon } from "obsidian";
 import LemonToolkitPlugin from "../main";
 import { t } from "../i18n/locale";
 
@@ -33,7 +33,8 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 	}
 	
 	private applyColumnLayout(): void {
-		const columns = this.plugin.settings.globalCommandPaletteColumns;
+		const config = this.plugin.globalCommandPaletteConfigManager.getConfig();
+		const columns = config.columns;
 		const modalEl = this.modalEl;
 		
 		// Set modal width for multi-column layouts only
@@ -74,7 +75,8 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 	}
 	
 	onOpen(): void {
-		const columns = this.plugin.settings.globalCommandPaletteColumns;
+		const config = this.plugin.globalCommandPaletteConfigManager.getConfig();
+		const columns = config.columns;
 		
 		if (columns === 1) {
 			super.onOpen();
@@ -92,7 +94,8 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 		contentEl.empty();
 		contentEl.style.padding = '10px';
 		
-		const columns = this.plugin.settings.globalCommandPaletteColumns;
+		const config = this.plugin.globalCommandPaletteConfigManager.getConfig();
+		const columns = config.columns;
 		
 		// Search input
 		const searchInput = contentEl.createEl('input', {
@@ -196,9 +199,10 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 			// Pin icon
 			if (cmd.isPinned) {
 				const pinIcon = item.createSpan();
-				pinIcon.textContent = '📌';
-				pinIcon.style.fontSize = '14px';
 				pinIcon.style.flexShrink = '0';
+				pinIcon.style.display = 'flex';
+				pinIcon.style.alignItems = 'center';
+				setIcon(pinIcon, 'pin');
 			}
 			
 			// Command text container
@@ -226,7 +230,7 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 			// Use count
 			if (cmd.useCount > 0) {
 				const countSpan = item.createSpan();
-				countSpan.textContent = `${cmd.useCount}`;
+				countSpan.textContent = `(${cmd.useCount})`;
 				countSpan.style.fontSize = '12px';
 				countSpan.style.color = 'var(--text-muted)';
 				countSpan.style.flexShrink = '0';
@@ -239,10 +243,17 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 				item.style.backgroundColor = '';
 			});
 			
-			item.addEventListener('click', () => {
-				if (cmd.callback) {
-					cmd.callback();
+			item.addEventListener('click', async () => {
+				try {
+					// Record usage via unified tracker
+					this.plugin.commandTracker.trackCommand(cmd.id);
+					
+					if (cmd.callback) {
+						await cmd.callback();
+					}
 					this.close();
+				} catch (e) {
+					console.error('Error executing command:', e);
 				}
 			});
 		});
@@ -256,7 +267,7 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 		// Get all commands from all plugins
 		Object.keys(allCommands).forEach((commandId) => {
 			const command = allCommands[commandId];
-			const history = this.plugin.globalCommandHistoryManager.getHistory(commandId) || {
+			const history = this.plugin.commandTracker.getGlobalCommandStorage().getHistory(commandId) || {
 				lastUsed: 0,
 				useCount: 0,
 			};
@@ -268,11 +279,23 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 				pluginName = this.getPluginDisplayName(pluginId);
 			}
 
+			// Create callback that handles both callback and editorCallback
+			const executeCommand = () => {
+				if (command.callback) {
+					command.callback();
+				} else if (command.editorCallback) {
+					const editor = this.plugin.app.workspace.activeEditor?.editor;
+					if (editor) {
+						command.editorCallback(editor, this.plugin.app.workspace.activeEditor);
+					}
+				}
+			};
+
 			allCommandsList.push({
 				id: commandId,
 				name: command.name,
 				pluginName,
-				callback: command.callback || command.editorCallback,
+				callback: executeCommand,
 				isPinned: false, // Will be set per column
 				lastUsed: history.lastUsed,
 				useCount: history.useCount,
@@ -280,19 +303,30 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 		});
 
 		// If multi-column, organize by column sorts
-		const columns = this.plugin.settings.globalCommandPaletteColumns;
-		if (columns > 1) {
-			this.commands = this.organizeByColumns(allCommandsList, columns);
-		} else {
-			// Single column: use global sort
-			const sortBy = this.plugin.settings.globalCommandPaletteSortBy;
+		const config = this.plugin.globalCommandPaletteConfigManager.getConfig();
+		const columns = config.columns;
+		if (columns === 1) {
+			// Single column: use 1-column config
+			const singleConfig = config.singleColumn;
 			const pinnedCommands = allCommandsList.filter(cmd => 
-				this.plugin.settings.pinnedGlobalCommands.includes(cmd.id)
+				singleConfig.pinnedCommands.includes(cmd.id)
 			).map(cmd => ({ ...cmd, isPinned: true }));
 			const unpinnedCommands = allCommandsList.filter(cmd => 
-				!this.plugin.settings.pinnedGlobalCommands.includes(cmd.id)
+				!singleConfig.pinnedCommands.includes(cmd.id)
 			);
-			this.commands = [...pinnedCommands, ...this.sortCommands(unpinnedCommands, sortBy)];
+			this.commands = [...pinnedCommands, ...this.sortCommands(unpinnedCommands, singleConfig.sortBy)];
+		} else if (columns === 2) {
+			// 2 columns: use 2-column config
+			this.commands = this.organizeByColumns(allCommandsList, 2, 
+				config.twoColumns.columnSorts,
+				config.twoColumns.columnPinned
+			);
+		} else {
+			// 3 columns: use 3-column config
+			this.commands = this.organizeByColumns(allCommandsList, 3,
+				config.threeColumns.columnSorts,
+				config.threeColumns.columnPinned
+			);
 		}
 
 		return this.commands;
@@ -300,10 +334,10 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 
 	private organizeByColumns(
 		allCommandsList: GlobalCommandItem[],
-		columns: number
+		columns: number,
+		columnSorts: Array<"recent" | "frequent" | "alphabetical" | "plugin">,
+		columnPinned: Array<string[]>
 	): GlobalCommandItem[] {
-		const columnSorts = this.plugin.settings.globalCommandPaletteColumnSorts;
-		const columnPinned = this.plugin.settings.globalCommandPaletteColumnPinned || [[], [], []];
 		const result: GlobalCommandItem[] = [];
 
 		// Process each column - each column shows ALL commands
@@ -413,7 +447,7 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 		// Pin icon
 		if (item.isPinned) {
 			const pinIcon = container.createSpan({ cls: "global-pin-icon" });
-			pinIcon.textContent = "📌";
+			setIcon(pinIcon, 'pin');
 			pinIcon.style.fontSize = "0.9em";
 		}
 
@@ -446,9 +480,16 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 		}
 	}
 
-	onChooseItem(item: GlobalCommandItem): void {
-		if (item.callback) {
-			item.callback();
+	async onChooseItem(item: GlobalCommandItem): Promise<void> {
+		try {
+			// Record usage via unified tracker
+			this.plugin.commandTracker.trackCommand(item.id);
+			
+			if (item.callback) {
+				item.callback();
+			}
+		} catch (e) {
+			console.error('Error executing command:', e);
 		}
 	}
 }

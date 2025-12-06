@@ -28,12 +28,24 @@ export interface LemonToolkitSettings {
 	commandPaletteSortBy: "recent" | "frequent";
 	commandPaletteTimeRange: 24 | 168 | 720 | 0; // hours: 24h, 7d, 30d, all time
 	commandPaletteColumns: 1 | 2 | 3; // Number of columns in command palette
-	pinnedGlobalCommands: string[];
 	globalCommandPaletteSortBy: "recent" | "frequent";
 	globalCommandPaletteTimeRange: 24 | 168 | 720 | 0;
 	globalCommandPaletteColumns: 1 | 2 | 3;
-	globalCommandPaletteColumnSorts: Array<"recent" | "frequent" | "alphabetical" | "plugin">;
-	globalCommandPaletteColumnPinned: Array<string[]>;
+	// Independent configurations for each column mode
+	globalCommandPalette1Column: {
+		pinnedCommands: string[];
+		sortBy: "recent" | "frequent" | "alphabetical" | "plugin";
+	};
+	globalCommandPalette2Columns: {
+		columnSorts: ["recent" | "frequent" | "alphabetical" | "plugin", "recent" | "frequent" | "alphabetical" | "plugin"];
+		columnPinned: [string[], string[]];
+		columnTimeRanges: [24 | 168 | 720 | 0, 24 | 168 | 720 | 0];
+	};
+	globalCommandPalette3Columns: {
+		columnSorts: ["recent" | "frequent" | "alphabetical" | "plugin", "recent" | "frequent" | "alphabetical" | "plugin", "recent" | "frequent" | "alphabetical" | "plugin"];
+		columnPinned: [string[], string[], string[]];
+		columnTimeRanges: [24 | 168 | 720 | 0, 24 | 168 | 720 | 0, 24 | 168 | 720 | 0];
+	};
 	showReadingTime: boolean;
 	dateTimeFormat: string;
 	fileInfoCollapsedSections?: {
@@ -62,12 +74,23 @@ export const DEFAULT_SETTINGS: LemonToolkitSettings = {
 	commandPaletteSortBy: "recent",
 	commandPaletteTimeRange: 720, // 30 days
 	commandPaletteColumns: 1, // Default to single column
-	pinnedGlobalCommands: [],
 	globalCommandPaletteSortBy: "frequent",
 	globalCommandPaletteTimeRange: 720,
 	globalCommandPaletteColumns: 2, // Default to 2 columns for global
-	globalCommandPaletteColumnSorts: ["recent", "frequent", "alphabetical"], // Default sort for each column
-	globalCommandPaletteColumnPinned: [[], [], []], // Pinned commands for each column
+	globalCommandPalette1Column: {
+		pinnedCommands: [],
+		sortBy: "recent"
+	},
+	globalCommandPalette2Columns: {
+		columnSorts: ["recent", "frequent"],
+		columnPinned: [[], []],
+		columnTimeRanges: [720, 720]
+	},
+	globalCommandPalette3Columns: {
+		columnSorts: ["recent", "frequent", "alphabetical"],
+		columnPinned: [[], [], []],
+		columnTimeRanges: [720, 720, 720]
+	},
 	showReadingTime: true,
 	dateTimeFormat: "YYYY-MM-DD HH:mm",
 	fileInfoCollapsedSections: {

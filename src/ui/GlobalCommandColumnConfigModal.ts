@@ -6,6 +6,7 @@ export class GlobalCommandColumnConfigModal extends Modal {
 	private plugin: LemonToolkitPlugin;
 	private columnSorts: Array<"recent" | "frequent" | "alphabetical" | "plugin">;
 	private columnPinned: Array<string[]>;
+	private columnTimeRanges: Array<24 | 168 | 720 | 0>; // Time range for each column
 	private allCommands: Array<{ id: string; name: string; pluginName: string }>;
 	private currentColumn: number = 0;
 	private searchQuery: string = "";
@@ -15,8 +16,24 @@ export class GlobalCommandColumnConfigModal extends Modal {
 	constructor(app: App, plugin: LemonToolkitPlugin) {
 		super(app);
 		this.plugin = plugin;
-		this.columnSorts = [...plugin.settings.globalCommandPaletteColumnSorts];
-		this.columnPinned = plugin.settings.globalCommandPaletteColumnPinned.map(arr => [...arr]);
+		
+		const config = plugin.globalCommandPaletteConfigManager.getConfig();
+		const columns = config.columns;
+		if (columns === 1) {
+			// Single column mode
+			this.columnSorts = [config.singleColumn.sortBy];
+			this.columnPinned = [config.singleColumn.pinnedCommands.slice()];
+			this.columnTimeRanges = [720]; // Default time range for single column
+		} else if (columns === 2) {
+			this.columnSorts = [...config.twoColumns.columnSorts];
+			this.columnPinned = config.twoColumns.columnPinned.map(arr => [...arr]);
+			this.columnTimeRanges = config.twoColumns.columnTimeRanges || [720, 720];
+		} else {
+			this.columnSorts = [...config.threeColumns.columnSorts];
+			this.columnPinned = config.threeColumns.columnPinned.map(arr => [...arr]);
+			this.columnTimeRanges = config.threeColumns.columnTimeRanges || [720, 720, 720];
+		}
+		
 		this.allCommands = [];
 		
 		// Set fixed modal size
@@ -59,7 +76,8 @@ export class GlobalCommandColumnConfigModal extends Modal {
 
 		contentEl.createEl("h2", { text: t('configureGlobalCommandColumns') });
 
-		const columns = this.plugin.settings.globalCommandPaletteColumns;
+		const config = this.plugin.globalCommandPaletteConfigManager.getConfig();
+		const columns = config.columns;
 		
 		// Column tabs
 		if (columns > 1) {
@@ -105,8 +123,27 @@ export class GlobalCommandColumnConfigModal extends Modal {
 					.setValue(this.columnSorts[this.currentColumn] || "recent")
 					.onChange((value: "recent" | "frequent" | "alphabetical" | "plugin") => {
 						this.columnSorts[this.currentColumn] = value;
+						this.render(); // Re-render to show/hide time range
 					})
 			);
+
+		// Time range setting (only show when sort is frequent)
+		if (this.columnSorts[this.currentColumn] === "frequent") {
+			new Setting(contentEl)
+				.setName(t('commandPaletteTimeRange'))
+				.setDesc(t('commandPaletteTimeRangeDesc'))
+				.addDropdown((dropdown) =>
+					dropdown
+						.addOption("24", t('timeRangeLast24Hours'))
+						.addOption("168", t('timeRangeLast7Days'))
+						.addOption("720", t('timeRangeLast30Days'))
+						.addOption("0", t('timeRangeAllTime'))
+						.setValue(String(this.columnTimeRanges[this.currentColumn] || 720))
+						.onChange((value: string) => {
+							this.columnTimeRanges[this.currentColumn] = Number(value) as 24 | 168 | 720 | 0;
+						})
+				);
+		}
 
 		// Pinned commands section
 		contentEl.createEl("h3", { text: t('pinnedCommandsForColumn', { column: (this.currentColumn + 1).toString() }) });
@@ -147,9 +184,27 @@ export class GlobalCommandColumnConfigModal extends Modal {
 					.setButtonText(t('save'))
 					.setCta()
 					.onClick(async () => {
-						this.plugin.settings.globalCommandPaletteColumnSorts = this.columnSorts;
-						this.plugin.settings.globalCommandPaletteColumnPinned = this.columnPinned;
-						await this.plugin.saveSettings();
+						const config = this.plugin.globalCommandPaletteConfigManager.getConfig();
+						const columns = config.columns;
+						if (columns === 1) {
+							this.plugin.globalCommandPaletteConfigManager.setSingleColumnConfig(
+								this.columnPinned[0],
+								this.columnSorts[0]
+							);
+						} else if (columns === 2) {
+							this.plugin.globalCommandPaletteConfigManager.setTwoColumnsConfig(
+								this.columnSorts as any,
+								this.columnPinned as any,
+								this.columnTimeRanges as any
+							);
+						} else {
+							this.plugin.globalCommandPaletteConfigManager.setThreeColumnsConfig(
+								this.columnSorts as any,
+								this.columnPinned as any,
+								this.columnTimeRanges as any
+							);
+						}
+						await this.plugin.globalCommandPaletteConfigManager.save();
 						this.close();
 					})
 			)

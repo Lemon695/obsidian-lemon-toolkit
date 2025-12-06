@@ -11,6 +11,8 @@ import { FolderMoveHistoryManager } from "./features/move/FolderMoveHistoryManag
 import { TagUsageHistoryManager } from "./features/tags/TagUsageHistoryManager";
 import { CommandHistoryManager } from "./features/commands/CommandHistoryManager";
 import { GlobalCommandHistoryManager } from "./features/commands/GlobalCommandHistoryManager";
+import { GlobalCommandPaletteConfigManager } from "./managers/GlobalCommandPaletteConfigManager";
+import { CommandTracker } from "./managers/CommandTracker";
 import { RecentFilesManager } from "./features/recent-files/RecentFilesManager";
 import { ClipboardRulesManager } from "./features/smart-paste/ClipboardRulesManager";
 import { PluginMetadataManager } from "./features/plugin-usage/PluginMetadataManager";
@@ -26,6 +28,8 @@ export default class LemonToolkitPlugin extends Plugin {
 	tagUsageHistoryManager: TagUsageHistoryManager;
 	commandHistoryManager: CommandHistoryManager;
 	globalCommandHistoryManager: GlobalCommandHistoryManager;
+	globalCommandPaletteConfigManager: GlobalCommandPaletteConfigManager;
+	commandTracker: CommandTracker;
 	recentFilesManager: RecentFilesManager;
 	clipboardRulesManager: ClipboardRulesManager;
 	pluginMetadataManager: PluginMetadataManager;
@@ -70,6 +74,14 @@ export default class LemonToolkitPlugin extends Plugin {
 		// Initialize global command history manager
 		this.globalCommandHistoryManager = new GlobalCommandHistoryManager(this);
 		await this.globalCommandHistoryManager.load();
+		
+		// Initialize global command palette config manager
+		this.globalCommandPaletteConfigManager = new GlobalCommandPaletteConfigManager(this);
+		await this.globalCommandPaletteConfigManager.load();
+		
+		// Initialize unified command tracker
+		this.commandTracker = new CommandTracker(this);
+		await this.commandTracker.load();
 		
 		// Initialize recent files manager
 		this.recentFilesManager = new RecentFilesManager(this);
@@ -354,15 +366,29 @@ export default class LemonToolkitPlugin extends Plugin {
 	}
 
 	async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		const loadedData = await this.loadData();
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedData);
 		
-		// Ensure globalCommandPaletteColumnPinned exists and has correct length
-		if (!this.settings.globalCommandPaletteColumnPinned || !Array.isArray(this.settings.globalCommandPaletteColumnPinned)) {
-			this.settings.globalCommandPaletteColumnPinned = [[], [], []];
+		// Deep merge for nested objects with arrays
+		if (loadedData?.globalCommandPalette1Column) {
+			this.settings.globalCommandPalette1Column = {
+				pinnedCommands: loadedData.globalCommandPalette1Column.pinnedCommands || [],
+				sortBy: loadedData.globalCommandPalette1Column.sortBy || DEFAULT_SETTINGS.globalCommandPalette1Column.sortBy
+			};
 		}
-		// Ensure it has at least 3 arrays
-		while (this.settings.globalCommandPaletteColumnPinned.length < 3) {
-			this.settings.globalCommandPaletteColumnPinned.push([]);
+		if (loadedData?.globalCommandPalette2Columns) {
+			this.settings.globalCommandPalette2Columns = {
+				columnSorts: loadedData.globalCommandPalette2Columns.columnSorts || DEFAULT_SETTINGS.globalCommandPalette2Columns.columnSorts,
+				columnPinned: loadedData.globalCommandPalette2Columns.columnPinned || [[], []],
+				columnTimeRanges: loadedData.globalCommandPalette2Columns.columnTimeRanges || [720, 720]
+			};
+		}
+		if (loadedData?.globalCommandPalette3Columns) {
+			this.settings.globalCommandPalette3Columns = {
+				columnSorts: loadedData.globalCommandPalette3Columns.columnSorts || DEFAULT_SETTINGS.globalCommandPalette3Columns.columnSorts,
+				columnPinned: loadedData.globalCommandPalette3Columns.columnPinned || [[], [], []],
+				columnTimeRanges: loadedData.globalCommandPalette3Columns.columnTimeRanges || [720, 720, 720]
+			};
 		}
 	}
 

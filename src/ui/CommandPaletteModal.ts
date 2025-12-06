@@ -1,4 +1,4 @@
-import { App, FuzzySuggestModal, FuzzyMatch, MarkdownView } from "obsidian";
+import { App, FuzzySuggestModal, FuzzyMatch, MarkdownView, setIcon } from "obsidian";
 import LemonToolkitPlugin from "../main";
 import { t } from "../i18n/locale";
 
@@ -74,7 +74,7 @@ export class CommandPaletteModal extends FuzzySuggestModal<CommandItem> {
 		Object.keys(allCommands).forEach((commandId) => {
 			if (commandId.startsWith("lemon-toolkit:")) {
 				const command = allCommands[commandId];
-				const history = this.plugin.commandHistoryManager.getHistory(commandId) || {
+				const history = this.plugin.commandTracker.getPluginCommandStorage().getHistory(commandId) || {
 					lastUsed: 0,
 					useCount: 0,
 				};
@@ -139,7 +139,7 @@ export class CommandPaletteModal extends FuzzySuggestModal<CommandItem> {
 		// Pin icon
 		if (item.isPinned) {
 			const pinIcon = container.createSpan({ cls: "lemon-pin-icon" });
-			pinIcon.textContent = "📌";
+			setIcon(pinIcon, 'pin');
 			pinIcon.style.fontSize = "0.9em";
 		}
 
@@ -158,8 +158,8 @@ export class CommandPaletteModal extends FuzzySuggestModal<CommandItem> {
 	}
 
 	async onChooseItem(item: CommandItem): Promise<void> {
-		// Record command usage
-		await this.plugin.recordCommandUsage(item.id);
+		// Record command usage via unified tracker
+		this.plugin.commandTracker.trackCommand(item.id);
 
 		// Execute the command
 		if (item.callback) {

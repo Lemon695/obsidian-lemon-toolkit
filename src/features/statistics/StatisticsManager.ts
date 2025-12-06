@@ -85,9 +85,13 @@ export class StatisticsManager {
 	 */
 	async loadData(): Promise<void> {
 		try {
-			const stored = await this.plugin.loadData();
-			if (stored && stored[STORAGE_KEY]) {
-				this.data = stored[STORAGE_KEY];
+			const fileData = await this.app.vault.adapter.read(
+				`${(this.plugin as any).manifest.dir}/statistics-data.json`
+			).catch(() => '{}');
+			const stored = JSON.parse(fileData);
+			
+			if (stored && stored.data) {
+				this.data = stored.data;
 				
 				// Validate and migrate data if needed
 				if (!this.data.metadata) {
@@ -102,6 +106,8 @@ export class StatisticsManager {
 					...this.getDefaultEfficiencyEstimates(),
 					...this.data.efficiencyEstimates
 				};
+			} else {
+				this.data = this.createEmptyData();
 			}
 		} catch (error) {
 			console.error('Failed to load statistics data:', error);
@@ -114,9 +120,11 @@ export class StatisticsManager {
 	 */
 	async saveData(): Promise<void> {
 		try {
-			const stored = await this.plugin.loadData() || {};
-			stored[STORAGE_KEY] = this.data;
-			await this.plugin.saveData(stored);
+			const fileData = JSON.stringify({ data: this.data }, null, 2);
+			await this.app.vault.adapter.write(
+				`${(this.plugin as any).manifest.dir}/statistics-data.json`,
+				fileData
+			);
 		} catch (error) {
 			console.error('Failed to save statistics data:', error);
 		}

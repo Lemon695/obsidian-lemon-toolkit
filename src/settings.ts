@@ -49,7 +49,8 @@ export interface LemonToolkitSettings {
 	folderMoveHistory: Record<string, FolderMoveHistory>;
 	tagSortType: "recent" | "day" | "week" | "month" | "alphabetical";
 	tagUsageHistory: Record<string, TagUsageHistory>;
-	commandHistory: Record<string, CommandHistory>;
+	commandHistory: Record<string, CommandHistory>; // For command palette sorting
+	pluginUsageHistory: Record<string, CommandHistory>; // For plugin usage statistics
 	pinnedCommands: string[];
 	commandPaletteSortBy: "recent" | "frequent";
 	commandPaletteTimeRange: 24 | 168 | 720 | 0; // hours: 24h, 7d, 30d, all time
@@ -79,6 +80,7 @@ export const DEFAULT_SETTINGS: LemonToolkitSettings = {
 	tagSortType: "recent",
 	tagUsageHistory: {},
 	commandHistory: {},
+	pluginUsageHistory: {},
 	pinnedCommands: [],
 	commandPaletteSortBy: "recent",
 	commandPaletteTimeRange: 720, // 30 days

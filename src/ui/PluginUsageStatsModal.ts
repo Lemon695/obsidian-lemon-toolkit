@@ -20,8 +20,25 @@ export class PluginUsageStatsModal extends Modal {
 		contentEl.empty();
 		contentEl.addClass('plugin-usage-stats-modal');
 
-		// Title
-		contentEl.createEl("h2", { text: t('pluginUsageStats') });
+		// Header with title and reset button
+		const header = contentEl.createDiv({ cls: 'plugin-usage-header' });
+		header.style.display = "flex";
+		header.style.justifyContent = "space-between";
+		header.style.alignItems = "center";
+		header.style.marginBottom = "8px";
+
+		header.createEl("h2", { text: t('pluginUsageStats') });
+
+		// Reset button
+		const resetButton = header.createEl("button", { text: t('resetPluginStats') });
+		resetButton.style.padding = "6px 12px";
+		resetButton.style.fontSize = "0.9em";
+		resetButton.addEventListener('click', async () => {
+			if (confirm(t('confirmResetPluginStats'))) {
+				await this.analyzer.clearPluginUsageHistory();
+				this.refreshStats();
+			}
+		});
 
 		// Description
 		const desc = contentEl.createDiv({ cls: 'plugin-usage-desc' });

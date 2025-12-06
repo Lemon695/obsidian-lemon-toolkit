@@ -28,7 +28,7 @@ export class PluginUsageAnalyzer {
 
 		const pluginMap = new Map<string, PluginUsageStats>();
 		const previousPluginMap = new Map<string, number>();
-		const commandHistory = this.plugin.settings.commandHistory;
+		const commandHistory = this.plugin.settings.pluginUsageHistory; // Use pluginUsageHistory instead
 
 		let totalUsage = 0;
 
@@ -147,7 +147,7 @@ export class PluginUsageAnalyzer {
 	 * Count usage in a specific time period
 	 */
 	private countUsageInPeriod(commandId: string, startTime: number, endTime: number): number {
-		const history = this.plugin.settings.commandHistory[commandId];
+		const history = this.plugin.settings.pluginUsageHistory[commandId]; // Use pluginUsageHistory
 		if (!history) return 0;
 
 		// For 'all' time range, return total count
@@ -187,5 +187,13 @@ export class PluginUsageAnalyzer {
 			setting.open();
 			setting.openTabById(pluginId);
 		}
+	}
+
+	/**
+	 * Clear plugin usage history (only affects plugin stats, not command palette sorting)
+	 */
+	async clearPluginUsageHistory(): Promise<void> {
+		this.plugin.settings.pluginUsageHistory = {};
+		await this.plugin.saveSettings();
 	}
 }

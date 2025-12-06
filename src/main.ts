@@ -15,6 +15,8 @@ export default class LemonToolkitPlugin extends Plugin {
 	private externalAppManager: ExternalAppManager;
 	statisticsManager: StatisticsManager;
 	renameHistoryManager: RenameHistoryManager;
+	private saveTimeout: NodeJS.Timeout | null = null;
+	private recentCommands: Map<string, number> = new Map(); // For deduplication
 
 	async onload() {
 		console.log(t('loadingPlugin') + this.manifest.version);
@@ -66,6 +68,9 @@ export default class LemonToolkitPlugin extends Plugin {
 				this.statisticsManager.openModal();
 			}
 		});
+		
+		// Hook into global command execution to track all plugin commands
+		this.registerGlobalCommandListener();
 		
 		this.addSettingTab(new LemonToolkitSettingTab(this.app, this));
 		this.registerEventListeners();
@@ -181,16 +186,135 @@ export default class LemonToolkitPlugin extends Plugin {
 
 	async recordCommandUsage(commandId: string): Promise<void> {
 		const now = Date.now();
-		const history = this.settings.commandHistory[commandId] || {
+		
+		// Deduplication: ignore if same command was recorded within 100ms
+		const lastRecorded = this.recentCommands.get(commandId);
+		if (lastRecorded && (now - lastRecorded) < 100) {
+			console.log('Lemon Toolkit: Skipping duplicate command:', commandId);
+			return;
+		}
+		this.recentCommands.set(commandId, now);
+		
+		// Record to commandHistory (for command palette sorting)
+		const commandHistory = this.settings.commandHistory[commandId] || {
 			lastUsed: 0,
 			useCount: 0,
 		};
+		commandHistory.lastUsed = now;
+		commandHistory.useCount++;
+		this.settings.commandHistory[commandId] = commandHistory;
+		
+		// Record to pluginUsageHistory (for plugin usage statistics)
+		const pluginHistory = this.settings.pluginUsageHistory[commandId] || {
+			lastUsed: 0,
+			useCount: 0,
+		};
+		pluginHistory.lastUsed = now;
+		pluginHistory.useCount++;
+		this.settings.pluginUsageHistory[commandId] = pluginHistory;
+		
+		// Debounce save to avoid too frequent writes
+		if (this.saveTimeout) {
+			clearTimeout(this.saveTimeout);
+		}
+		this.saveTimeout = setTimeout(() => {
+			this.saveSettings();
+		}, 1000);
+	}
 
-		history.lastUsed = now;
-		history.useCount++;
+	/**
+	 * Register global command listener to track all plugin commands
+	 */
+	private registerGlobalCommandListener(): void {
+		const commands = (this.app as any).commands;
+		if (!commands) {
+			console.log('Lemon Toolkit: Commands object not found');
+			return;
+		}
 
-		this.settings.commandHistory[commandId] = history;
-		await this.saveSettings();
+		const self = this;
+
+		// Hook 1: executeCommandById (for programmatic execution and buttons)
+		const originalExecuteById = commands.executeCommandById?.bind(commands);
+		if (originalExecuteById) {
+			commands.executeCommandById = function(commandId: string, ...args: any[]) {
+				console.log('Lemon Toolkit: executeCommandById:', commandId);
+				
+				if (commandId && commandId.includes(':')) {
+					self.recordCommandUsage(commandId);
+				}
+
+				return originalExecuteById(commandId, ...args);
+			};
+
+			this.register(() => {
+				commands.executeCommandById = originalExecuteById;
+			});
+		}
+
+		// Hook 2: executeCommand (for command palette)
+		const originalExecuteCommand = commands.executeCommand?.bind(commands);
+		if (originalExecuteCommand) {
+			commands.executeCommand = function(command: any) {
+				const commandId = command?.id;
+				console.log('Lemon Toolkit: executeCommand:', commandId);
+				
+				if (commandId && commandId.includes(':')) {
+					self.recordCommandUsage(commandId);
+				}
+
+				return originalExecuteCommand(command);
+			};
+
+			this.register(() => {
+				commands.executeCommand = originalExecuteCommand;
+			});
+		}
+
+		// Hook 3: Try to hook into command objects directly
+		const allCommands = commands.commands;
+		if (allCommands) {
+			Object.keys(allCommands).forEach(commandId => {
+				if (!commandId.includes(':')) return; // Skip core commands
+				
+				const command = allCommands[commandId];
+				if (!command) return;
+
+				// Hook callback
+				if (command.callback) {
+					const originalCallback = command.callback.bind(command);
+					command.callback = function(...args: any[]) {
+						console.log('Lemon Toolkit: Direct callback:', commandId);
+						self.recordCommandUsage(commandId);
+						return originalCallback(...args);
+					};
+				}
+
+				// Hook editorCallback
+				if (command.editorCallback) {
+					const originalEditorCallback = command.editorCallback.bind(command);
+					command.editorCallback = function(...args: any[]) {
+						console.log('Lemon Toolkit: Direct editorCallback:', commandId);
+						self.recordCommandUsage(commandId);
+						return originalEditorCallback(...args);
+					};
+				}
+
+				// Note: We don't hook checkCallback and editorCheckCallback
+				// because they are called to check if command is available,
+				// not to execute the command. Hooking them would cause
+				// false recordings when opening command palette.
+			});
+		}
+
+		console.log('Lemon Toolkit: Global command listener registered');
+	}
+
+	/**
+	 * Try to hook into command palette to track command executions
+	 */
+	private tryHookCommandPalette(): void {
+		// This method is now integrated into registerGlobalCommandListener
 	}
 
 	onunload() {

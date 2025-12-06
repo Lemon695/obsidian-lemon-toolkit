@@ -24,7 +24,7 @@ export interface LemonToolkitSettings {
 	tagSortType: "recent" | "day" | "week" | "month" | "alphabetical";
 	pinnedCommands: string[];
 	commandPaletteSortBy: "recent" | "frequent";
-	commandPaletteTimeRange: 24 | 168 | 720 | 0; // hours: 24h, 7d, 30d, all time
+	commandPaletteTimeRange: 24 | 168 | 240 | 720 | 2160 | 4380 | 8760 | 0; // hours: 24h, 7d, 10d, 30d, 90d, 6m, 1y, all time
 	commandPaletteColumns: 1 | 2 | 3; // Number of columns in command palette
 	showReadingTime: boolean;
 	dateTimeFormat: string;

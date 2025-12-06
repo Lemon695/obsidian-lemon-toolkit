@@ -10,12 +10,12 @@ export interface GlobalCommandPaletteConfig {
 	twoColumns: {
 		columnSorts: ["recent" | "frequent" | "alphabetical" | "plugin", "recent" | "frequent" | "alphabetical" | "plugin"];
 		columnPinned: [string[], string[]];
-		columnTimeRanges: [24 | 168 | 720 | 0, 24 | 168 | 720 | 0];
+		columnTimeRanges: [24 | 168 | 240 | 720 | 2160 | 4380 | 8760 | 0, 24 | 168 | 240 | 720 | 2160 | 4380 | 8760 | 0];
 	};
 	threeColumns: {
 		columnSorts: ["recent" | "frequent" | "alphabetical" | "plugin", "recent" | "frequent" | "alphabetical" | "plugin", "recent" | "frequent" | "alphabetical" | "plugin"];
 		columnPinned: [string[], string[], string[]];
-		columnTimeRanges: [24 | 168 | 720 | 0, 24 | 168 | 720 | 0, 24 | 168 | 720 | 0];
+		columnTimeRanges: [24 | 168 | 240 | 720 | 2160 | 4380 | 8760 | 0, 24 | 168 | 240 | 720 | 2160 | 4380 | 8760 | 0, 24 | 168 | 240 | 720 | 2160 | 4380 | 8760 | 0];
 	};
 }
 

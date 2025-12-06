@@ -116,9 +116,47 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 		resultsContainer.style.gap = '12px';
 		resultsContainer.style.height = '500px';
 		
+		// Show loading indicator
+		const loadingEl = resultsContainer.createDiv();
+		loadingEl.textContent = 'Loading commands...';
+		loadingEl.style.padding = '20px';
+		loadingEl.style.textAlign = 'center';
+		loadingEl.style.color = 'var(--text-muted)';
+		
+		// Defer heavy work to next frame
+		setTimeout(() => {
+			loadingEl.remove();
+			this.loadAndRenderColumns(resultsContainer, searchInput, columns);
+		}, 0);
+		
+		// Focus search input
+		searchInput.focus();
+	}
+	
+	private loadAndRenderColumns(
+		resultsContainer: HTMLElement,
+		searchInput: HTMLInputElement,
+		columns: number
+	): void {
 		// Get all commands organized by columns
 		const allCommands = this.getItems();
-		const commandsPerColumn = allCommands.length / columns;
+		const commandsPerColumn = Math.ceil(allCommands.length / columns);
+		
+		// Get column configurations
+		const config = this.plugin.globalCommandPaletteConfigManager.getConfig();
+		let columnSorts: string[];
+		let columnPinned: string[][];
+		
+		if (columns === 1) {
+			columnSorts = [config.singleColumn.sortBy];
+			columnPinned = [config.singleColumn.pinnedCommands];
+		} else if (columns === 2) {
+			columnSorts = config.twoColumns.columnSorts;
+			columnPinned = config.twoColumns.columnPinned;
+		} else {
+			columnSorts = config.threeColumns.columnSorts;
+			columnPinned = config.threeColumns.columnPinned;
+		}
 		
 		// Store column data
 		const columnData: Array<{
@@ -128,17 +166,52 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 		
 		// Create columns
 		for (let col = 0; col < columns; col++) {
-			const columnEl = resultsContainer.createDiv();
+			const columnWrapper = resultsContainer.createDiv();
+			columnWrapper.style.flex = '1';
+			columnWrapper.style.display = 'flex';
+			columnWrapper.style.flexDirection = 'column';
+			columnWrapper.style.minWidth = '0';
+			
+			// Column header
+			const header = columnWrapper.createDiv();
+			header.style.padding = '8px 12px';
+			header.style.borderBottom = '1px solid var(--background-modifier-border)';
+			header.style.backgroundColor = 'var(--background-secondary)';
+			header.style.fontWeight = '500';
+			header.style.fontSize = '13px';
+			header.style.display = 'flex';
+			header.style.justifyContent = 'space-between';
+			header.style.alignItems = 'center';
+			
+			// Sort type label
+			const sortLabel = this.getSortLabel(columnSorts[col]);
+			const pinnedCount = columnPinned[col]?.length || 0;
+			
+			const titleSpan = header.createSpan();
+			titleSpan.textContent = `${t('columnTab', { column: (col + 1).toString() })}: ${sortLabel}`;
+			
+			if (pinnedCount > 0) {
+				const pinnedSpan = header.createSpan();
+				pinnedSpan.style.fontSize = '12px';
+				pinnedSpan.style.color = 'var(--text-muted)';
+				pinnedSpan.style.display = 'flex';
+				pinnedSpan.style.alignItems = 'center';
+				pinnedSpan.style.gap = '4px';
+				
+				const pinIcon = pinnedSpan.createSpan();
+				setIcon(pinIcon, 'pin');
+				pinIcon.style.width = '14px';
+				pinIcon.style.height = '14px';
+				
+				const countText = pinnedSpan.createSpan();
+				countText.textContent = pinnedCount.toString();
+			}
+			
+			// Column content
+			const columnEl = columnWrapper.createDiv();
 			columnEl.style.flex = '1';
 			columnEl.style.overflowY = 'auto';
-			columnEl.style.border = '1px solid var(--background-modifier-border)';
-			columnEl.style.borderRadius = '4px';
 			columnEl.style.padding = '8px';
-			columnEl.style.backgroundColor = 'var(--background-primary)';
-			
-			if (col > 0) {
-				columnEl.style.borderLeft = '2px solid var(--background-modifier-border)';
-			}
 			
 			// Get commands for this column
 			const startIdx = col * commandsPerColumn;
@@ -184,123 +257,182 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 			)
 			: commands;
 		
-		filteredCommands.forEach((cmd, idx) => {
-			
-			const item = container.createDiv();
-			item.style.padding = '8px';
-			item.style.cursor = 'pointer';
-			item.style.marginBottom = '4px';
-			item.style.borderRadius = '4px';
-			item.style.display = 'flex';
-			item.style.alignItems = 'center';
-			item.style.gap = '8px';
-			item.style.transition = 'background-color 0.1s';
-			
-			// Pin icon
-			if (cmd.isPinned) {
-				const pinIcon = item.createSpan();
-				pinIcon.style.flexShrink = '0';
-				pinIcon.style.display = 'flex';
-				pinIcon.style.alignItems = 'center';
-				setIcon(pinIcon, 'pin');
+		// Virtual scrolling: only render visible items + buffer
+		const ITEM_HEIGHT = 60; // Approximate height per item
+		const INITIAL_BATCH = 30; // Render first 30 items immediately
+		const BATCH_SIZE = 20; // Load 20 more when scrolling
+		
+		let renderedCount = 0;
+		
+		// Render initial batch
+		const renderBatch = (startIdx: number, endIdx: number) => {
+			for (let i = startIdx; i < Math.min(endIdx, filteredCommands.length); i++) {
+				const cmd = filteredCommands[i];
+				this.renderCommandItem(container, cmd);
 			}
-			
-			// Command text container
-			const textContainer = item.createDiv();
-			textContainer.style.flex = '1';
-			textContainer.style.minWidth = '0';
-			
-			// Command name
-			const nameEl = textContainer.createDiv();
-			nameEl.textContent = cmd.name;
-			nameEl.style.overflow = 'hidden';
-			nameEl.style.textOverflow = 'ellipsis';
-			nameEl.style.whiteSpace = 'nowrap';
-			nameEl.style.fontSize = '14px';
-			
-			// Plugin name
-			const pluginEl = textContainer.createDiv();
-			pluginEl.textContent = cmd.pluginName;
-			pluginEl.style.fontSize = '12px';
-			pluginEl.style.color = 'var(--text-muted)';
-			pluginEl.style.overflow = 'hidden';
-			pluginEl.style.textOverflow = 'ellipsis';
-			pluginEl.style.whiteSpace = 'nowrap';
-			
-			// Use count
-			if (cmd.useCount > 0) {
-				const countSpan = item.createSpan();
-				countSpan.textContent = `(${cmd.useCount})`;
-				countSpan.style.fontSize = '12px';
-				countSpan.style.color = 'var(--text-muted)';
-				countSpan.style.flexShrink = '0';
-			}
-			
-			item.addEventListener('mouseenter', () => {
-				item.style.backgroundColor = 'var(--background-modifier-hover)';
-			});
-			item.addEventListener('mouseleave', () => {
-				item.style.backgroundColor = '';
-			});
-			
-			item.addEventListener('click', async () => {
-				try {
-					// Record usage via unified tracker
-					this.plugin.commandTracker.trackCommand(cmd.id);
-					
-					if (cmd.callback) {
-						await cmd.callback();
-					}
-					this.close();
-				} catch (e) {
-					console.error('Error executing command:', e);
+		};
+		
+		// Render first batch immediately
+		renderBatch(0, INITIAL_BATCH);
+		renderedCount = INITIAL_BATCH;
+		
+		// Lazy load remaining items on scroll
+		if (filteredCommands.length > INITIAL_BATCH) {
+			const loadMore = () => {
+				if (renderedCount >= filteredCommands.length) return;
+				
+				const scrollTop = container.scrollTop;
+				const scrollHeight = container.scrollHeight;
+				const clientHeight = container.clientHeight;
+				
+				// Load more when scrolled 70% down
+				if (scrollTop + clientHeight > scrollHeight * 0.7) {
+					const nextBatch = Math.min(renderedCount + BATCH_SIZE, filteredCommands.length);
+					renderBatch(renderedCount, nextBatch);
+					renderedCount = nextBatch;
 				}
-			});
+			};
+			
+			container.addEventListener('scroll', loadMore);
+		}
+	}
+	
+	private renderCommandItem(container: HTMLElement, cmd: GlobalCommandItem): void {
+		const item = container.createDiv();
+		item.style.padding = '8px';
+		item.style.cursor = 'pointer';
+		item.style.marginBottom = '4px';
+		item.style.borderRadius = '4px';
+		item.style.display = 'flex';
+		item.style.alignItems = 'center';
+		item.style.gap = '8px';
+		item.style.transition = 'background-color 0.1s';
+		
+		// Pin icon
+		if (cmd.isPinned) {
+			const pinIcon = item.createSpan();
+			pinIcon.style.flexShrink = '0';
+			pinIcon.style.display = 'flex';
+			pinIcon.style.alignItems = 'center';
+			setIcon(pinIcon, 'pin');
+		}
+		
+		// Command text container
+		const textContainer = item.createDiv();
+		textContainer.style.flex = '1';
+		textContainer.style.minWidth = '0';
+		
+		// Command name
+		const nameEl = textContainer.createDiv();
+		nameEl.textContent = cmd.name;
+		nameEl.style.overflow = 'hidden';
+		nameEl.style.textOverflow = 'ellipsis';
+		nameEl.style.whiteSpace = 'nowrap';
+		nameEl.style.fontSize = '14px';
+		
+		// Plugin name
+		const pluginEl = textContainer.createDiv();
+		pluginEl.textContent = cmd.pluginName;
+		pluginEl.style.fontSize = '12px';
+		pluginEl.style.color = 'var(--text-muted)';
+		pluginEl.style.overflow = 'hidden';
+		pluginEl.style.textOverflow = 'ellipsis';
+		pluginEl.style.whiteSpace = 'nowrap';
+		
+		// Use count
+		if (cmd.useCount > 0) {
+			const countSpan = item.createSpan();
+			countSpan.textContent = `(${cmd.useCount})`;
+			countSpan.style.fontSize = '12px';
+			countSpan.style.color = 'var(--text-muted)';
+			countSpan.style.flexShrink = '0';
+		}
+		
+		item.addEventListener('mouseenter', () => {
+			item.style.backgroundColor = 'var(--background-modifier-hover)';
+		});
+		item.addEventListener('mouseleave', () => {
+			item.style.backgroundColor = '';
+		});
+		
+		item.addEventListener('click', async () => {
+			try {
+				// Execute the command (global listener will track it)
+				if (cmd.callback) {
+					await cmd.callback();
+				}
+				this.close();
+			} catch (e) {
+				console.error('Error executing command:', e);
+			}
 		});
 	}
 
 	getItems(): GlobalCommandItem[] {
-		// Get all registered commands
-		const allCommands = (this.plugin.app as any).commands.commands;
+		// Get cached commands for fast loading
+		const cachedCommands = this.plugin.globalCommandCacheManager.getCommands();
 		const allCommandsList: GlobalCommandItem[] = [];
 
-		// Get all commands from all plugins
-		Object.keys(allCommands).forEach((commandId) => {
-			const command = allCommands[commandId];
-			const history = this.plugin.commandTracker.getGlobalCommandStorage().getHistory(commandId) || {
-				lastUsed: 0,
-				useCount: 0,
-			};
+		// Get actual command objects for callbacks
+		const allCommands = (this.plugin.app as any).commands.commands;
 
-			// Extract plugin name from command ID
-			let pluginName = "Obsidian";
-			if (commandId.includes(":")) {
-				const pluginId = commandId.split(":")[0];
-				pluginName = this.getPluginDisplayName(pluginId);
-			}
+		// Use cached data if available
+		if (cachedCommands.length > 0) {
+			cachedCommands.forEach((cachedCmd) => {
+				const command = allCommands[cachedCmd.id];
+				if (!command) return; // Command no longer exists
 
-			// Create callback that handles both callback and editorCallback
-			const executeCommand = () => {
-				if (command.callback) {
-					command.callback();
-				} else if (command.editorCallback) {
-					const editor = this.plugin.app.workspace.activeEditor?.editor;
-					if (editor) {
-						command.editorCallback(editor, this.plugin.app.workspace.activeEditor);
-					}
-				}
-			};
+				const history = this.plugin.commandTracker.getGlobalCommandStorage().getHistory(cachedCmd.id) || {
+					lastUsed: 0,
+					useCount: 0,
+				};
 
-			allCommandsList.push({
-				id: commandId,
-				name: command.name,
-				pluginName,
-				callback: executeCommand,
-				isPinned: false, // Will be set per column
-				lastUsed: history.lastUsed,
-				useCount: history.useCount,
+				// Use Obsidian's native command execution
+				const executeCommand = () => {
+					(this.plugin.app as any).commands.executeCommandById(cachedCmd.id);
+				};
+
+				allCommandsList.push({
+					id: cachedCmd.id,
+					name: cachedCmd.name,
+					pluginName: cachedCmd.pluginName,
+					callback: executeCommand,
+					isPinned: false, // Will be set per column
+					lastUsed: history.lastUsed,
+					useCount: history.useCount,
+				});
 			});
-		});
+		} else {
+			// Fallback: if cache is empty, load synchronously (first time only)
+			Object.keys(allCommands).forEach((commandId) => {
+				const command = allCommands[commandId];
+				const history = this.plugin.commandTracker.getGlobalCommandStorage().getHistory(commandId) || {
+					lastUsed: 0,
+					useCount: 0,
+				};
+
+				let pluginName = "Obsidian";
+				if (commandId.includes(":")) {
+					const pluginId = commandId.split(":")[0];
+					pluginName = this.getPluginDisplayName(pluginId);
+				}
+
+				// Use Obsidian's native command execution
+				const executeCommand = () => {
+					(this.plugin.app as any).commands.executeCommandById(commandId);
+				};
+
+				allCommandsList.push({
+					id: commandId,
+					name: command.name,
+					pluginName,
+					callback: executeCommand,
+					isPinned: false,
+					lastUsed: history.lastUsed,
+					useCount: history.useCount,
+				});
+			});
+		}
 
 		// If multi-column, organize by column sorts
 		const config = this.plugin.globalCommandPaletteConfigManager.getConfig();
@@ -330,6 +462,21 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 		}
 
 		return this.commands;
+	}
+
+	private getSortLabel(sortType: string): string {
+		switch (sortType) {
+			case 'recent':
+				return t('sortByRecent');
+			case 'frequent':
+				return t('sortByFrequent');
+			case 'alphabetical':
+				return t('sortByAlphabetical');
+			case 'plugin':
+				return t('sortByPlugin');
+			default:
+				return sortType;
+		}
 	}
 
 	private organizeByColumns(
@@ -481,9 +628,7 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 
 	async onChooseItem(item: GlobalCommandItem): Promise<void> {
 		try {
-			// Record usage via unified tracker
-			this.plugin.commandTracker.trackCommand(item.id);
-			
+			// Execute the command (global listener will track it)
 			if (item.callback) {
 				item.callback();
 			}

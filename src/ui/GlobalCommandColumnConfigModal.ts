@@ -6,7 +6,7 @@ export class GlobalCommandColumnConfigModal extends Modal {
 	private plugin: LemonToolkitPlugin;
 	private columnSorts: Array<"recent" | "frequent" | "alphabetical" | "plugin">;
 	private columnPinned: Array<string[]>;
-	private columnTimeRanges: Array<24 | 168 | 720 | 0>; // Time range for each column
+	private columnTimeRanges: Array<24 | 168 | 240 | 720 | 2160 | 4380 | 8760 | 0>; // Time range for each column
 	private allCommands: Array<{ id: string; name: string; pluginName: string }>;
 	private currentColumn: number = 0;
 	private searchQuery: string = "";
@@ -137,10 +137,14 @@ export class GlobalCommandColumnConfigModal extends Modal {
 						.addOption("24", t('timeRangeLast24Hours'))
 						.addOption("168", t('timeRangeLast7Days'))
 						.addOption("720", t('timeRangeLast30Days'))
+						.addOption("240", t('timeRangeLast10Days'))
+						.addOption("2160", t('timeRangeLast90Days'))
+						.addOption("4380", t('timeRangeLast6Months'))
+						.addOption("8760", t('timeRangeLast1Year'))
 						.addOption("0", t('timeRangeAllTime'))
 						.setValue(String(this.columnTimeRanges[this.currentColumn] || 720))
 						.onChange((value: string) => {
-							this.columnTimeRanges[this.currentColumn] = Number(value) as 24 | 168 | 720 | 0;
+							this.columnTimeRanges[this.currentColumn] = Number(value) as 24 | 168 | 240 | 720 | 2160 | 4380 | 8760 | 0;
 						})
 				);
 		}

@@ -158,10 +158,7 @@ export class CommandPaletteModal extends FuzzySuggestModal<CommandItem> {
 	}
 
 	async onChooseItem(item: CommandItem): Promise<void> {
-		// Record command usage via unified tracker
-		this.plugin.commandTracker.trackCommand(item.id);
-
-		// Execute the command
+		// Execute the command (global listener will track it)
 		if (item.callback) {
 			// Check if it's an editor callback
 			const command = (this.plugin.app as any).commands.commands[item.id];

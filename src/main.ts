@@ -12,6 +12,7 @@ import { TagUsageHistoryManager } from "./features/tags/TagUsageHistoryManager";
 import { CommandHistoryManager } from "./features/commands/CommandHistoryManager";
 import { GlobalCommandHistoryManager } from "./features/commands/GlobalCommandHistoryManager";
 import { GlobalCommandPaletteConfigManager } from "./managers/GlobalCommandPaletteConfigManager";
+import { GlobalCommandCacheManager } from "./managers/GlobalCommandCacheManager";
 import { CommandTracker } from "./managers/CommandTracker";
 import { RecentFilesManager } from "./features/recent-files/RecentFilesManager";
 import { ClipboardRulesManager } from "./features/smart-paste/ClipboardRulesManager";
@@ -29,6 +30,7 @@ export default class LemonToolkitPlugin extends Plugin {
 	commandHistoryManager: CommandHistoryManager;
 	globalCommandHistoryManager: GlobalCommandHistoryManager;
 	globalCommandPaletteConfigManager: GlobalCommandPaletteConfigManager;
+	globalCommandCacheManager: GlobalCommandCacheManager;
 	commandTracker: CommandTracker;
 	recentFilesManager: RecentFilesManager;
 	clipboardRulesManager: ClipboardRulesManager;
@@ -78,6 +80,11 @@ export default class LemonToolkitPlugin extends Plugin {
 		// Initialize global command palette config manager
 		this.globalCommandPaletteConfigManager = new GlobalCommandPaletteConfigManager(this);
 		await this.globalCommandPaletteConfigManager.load();
+		
+		// Initialize global command cache manager
+		this.globalCommandCacheManager = new GlobalCommandCacheManager(this);
+		await this.globalCommandCacheManager.load();
+		this.globalCommandCacheManager.startAutoRefresh();
 		
 		// Initialize unified command tracker
 		this.commandTracker = new CommandTracker(this);
@@ -215,6 +222,9 @@ export default class LemonToolkitPlugin extends Plugin {
 		// Use unified command tracker
 		this.commandTracker.trackCommand(commandId);
 		
+		// Track for cache refresh
+		this.globalCommandCacheManager.trackCommandExecution();
+		
 		// Record to statistics manager (need command name)
 		const allCommands = (this.app as any).commands.commands;
 		const commandName = allCommands[commandId]?.name || commandId;
@@ -325,6 +335,11 @@ export default class LemonToolkitPlugin extends Plugin {
 		// Stop plugin metadata scanning
 		if (this.pluginMetadataManager) {
 			this.pluginMetadataManager.stopPeriodicScan();
+		}
+		
+		// Stop global command cache auto refresh
+		if (this.globalCommandCacheManager) {
+			this.globalCommandCacheManager.stopAutoRefresh();
 		}
 		
 		// Detach views

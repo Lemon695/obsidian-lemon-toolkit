@@ -29,10 +29,10 @@ export class StatisticsManager {
 	private readonly BUFFER_SIZE = 10;
 	private readonly SAVE_DELAY_MS = 5000;
 
-	constructor(plugin: Plugin, app: App, settings: StatisticsSettings) {
+	constructor(plugin: Plugin, app: App) {
 		this.plugin = plugin;
 		this.app = app;
-		this.settings = settings;
+		this.settings = { ...DEFAULT_STATISTICS_SETTINGS };
 		this.data = this.createEmptyData();
 	}
 
@@ -41,6 +41,13 @@ export class StatisticsManager {
 	 */
 	async initialize(): Promise<void> {
 		await this.loadData();
+	}
+
+	/**
+	 * Get current settings
+	 */
+	getSettings(): StatisticsSettings {
+		return this.settings;
 	}
 
 	/**

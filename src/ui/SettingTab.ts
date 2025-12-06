@@ -297,11 +297,11 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 			.setDesc(t('enableStatisticsDesc'))
 			.addToggle((toggle) =>
 				toggle
-					.setValue(this.plugin.settings.statistics.enabled)
+					.setValue(this.plugin.statisticsManager.getSettings().enabled)
 					.onChange(async (value) => {
-						this.plugin.settings.statistics.enabled = value;
-						this.plugin.statisticsManager?.updateSettings(this.plugin.settings.statistics);
-						await this.plugin.saveSettings();
+						const settings = this.plugin.statisticsManager.getSettings();
+						settings.enabled = value;
+						this.plugin.statisticsManager.updateSettings(settings);
 					})
 			);
 
@@ -314,11 +314,11 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 					.addOption("90", t('retention90Days'))
 					.addOption("365", t('retention365Days'))
 					.addOption("-1", t('retentionForever'))
-					.setValue(this.plugin.settings.statistics.retentionDays.toString())
+					.setValue(this.plugin.statisticsManager.getSettings().retentionDays.toString())
 					.onChange(async (value) => {
-						this.plugin.settings.statistics.retentionDays = parseInt(value);
-						this.plugin.statisticsManager?.updateSettings(this.plugin.settings.statistics);
-						await this.plugin.saveSettings();
+						const settings = this.plugin.statisticsManager.getSettings();
+						settings.retentionDays = parseInt(value);
+						this.plugin.statisticsManager.updateSettings(settings);
 					})
 			);
 

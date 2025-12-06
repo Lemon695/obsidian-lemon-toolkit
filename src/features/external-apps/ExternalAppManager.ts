@@ -3,21 +3,48 @@ import { exec } from "child_process";
 import { promisify } from "util";
 import LemonToolkitPlugin from "../../main";
 import { t } from "../../i18n/locale";
+import { ExternalApp } from "../../settings";
 
 const execAsync = promisify(exec);
 
 export class ExternalAppManager {
 	private plugin: LemonToolkitPlugin;
+	private apps: ExternalApp[] = [];
+	private filePath: string;
 
 	constructor(plugin: LemonToolkitPlugin) {
 		this.plugin = plugin;
+		this.filePath = `${plugin.manifest.dir}/external-apps.json`;
+	}
+
+	async load(): Promise<void> {
+		try {
+			const data = await this.plugin.app.vault.adapter.read(this.filePath);
+			const parsed = JSON.parse(data);
+			this.apps = parsed.apps || [];
+		} catch (e) {
+			this.apps = [];
+		}
+	}
+
+	async save(): Promise<void> {
+		const data = JSON.stringify({ apps: this.apps }, null, 2);
+		await this.plugin.app.vault.adapter.write(this.filePath, data);
+	}
+
+	getApps(): ExternalApp[] {
+		return this.apps;
+	}
+
+	setApps(apps: ExternalApp[]): void {
+		this.apps = apps;
 	}
 
 	/**
 	 * Open file or folder with external application
 	 */
 	async openWith(appId: string, path: string, isFolder: boolean = false): Promise<void> {
-		const app = this.plugin.settings.externalApps.find((a) => a.id === appId);
+		const app = this.apps.find((a) => a.id === appId);
 		
 		if (!app) {
 			new Notice(t('externalAppNotFound', { id: appId }));
@@ -67,7 +94,7 @@ export class ExternalAppManager {
 	 * Register commands for all configured external apps
 	 */
 	registerCommands(): void {
-		this.plugin.settings.externalApps.forEach((app) => {
+		this.apps.forEach((app) => {
 			// Register open file command
 			if (app.openFile) {
 				this.plugin.addCommand({

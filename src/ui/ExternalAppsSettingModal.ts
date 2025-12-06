@@ -11,7 +11,7 @@ export class ExternalAppsSettingModal extends Modal {
 	constructor(app: App, plugin: LemonToolkitPlugin) {
 		super(app);
 		this.plugin = plugin;
-		this.apps = [...plugin.settings.externalApps];
+		this.apps = [...plugin.externalAppManager.getApps()];
 	}
 
 	onOpen() {
@@ -170,9 +170,9 @@ export class ExternalAppsSettingModal extends Modal {
 			}
 		}
 
-		// Save to settings
-		this.plugin.settings.externalApps = this.apps;
-		await this.plugin.saveSettings();
+		// Save to external app manager
+		this.plugin.externalAppManager.setApps(this.apps);
+		await this.plugin.externalAppManager.save();
 
 		// Re-register commands
 		this.plugin.reloadExternalAppCommands();

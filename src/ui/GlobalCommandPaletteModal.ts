@@ -364,8 +364,7 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 		return result;
 	}
 
-	private sortCommands(commands: GlobalCommandItem[], sortType: string): GlobalCommandItem[] {
-		const timeRange = this.plugin.settings.globalCommandPaletteTimeRange;
+	private sortCommands(commands: GlobalCommandItem[], sortType: string, timeRange: number = 720): GlobalCommandItem[] {
 		const now = Date.now();
 		const cutoff = timeRange === 0 ? 0 : now - (timeRange * 60 * 60 * 1000);
 

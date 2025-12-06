@@ -46,12 +46,12 @@ export default class LemonToolkitPlugin extends Plugin {
 		
 		// Initialize external app manager
 		this.externalAppManager = new ExternalAppManager(this);
+		await this.externalAppManager.load();
 		
 		// Initialize statistics manager
 		this.statisticsManager = new StatisticsManager(
 			this,
-			this.app,
-			this.settings.statistics
+			this.app
 		);
 		await this.statisticsManager.initialize();
 		
@@ -212,25 +212,13 @@ export default class LemonToolkitPlugin extends Plugin {
 		}
 		this.recentCommands.set(commandId, now);
 		
-		// Record to commandHistory (for command palette sorting)
-		await this.commandHistoryManager.recordUsage(commandId);
+		// Use unified command tracker
+		this.commandTracker.trackCommand(commandId);
 		
-		// Record to pluginUsageHistory (for plugin usage statistics)
-		const pluginHistory = this.settings.pluginUsageHistory[commandId] || {
-			lastUsed: 0,
-			useCount: 0,
-		};
-		pluginHistory.lastUsed = now;
-		pluginHistory.useCount++;
-		this.settings.pluginUsageHistory[commandId] = pluginHistory;
-		
-		// Debounce save to avoid too frequent writes
-		if (this.saveTimeout) {
-			clearTimeout(this.saveTimeout);
-		}
-		this.saveTimeout = setTimeout(() => {
-			this.saveSettings();
-		}, 1000);
+		// Record to statistics manager (need command name)
+		const allCommands = (this.app as any).commands.commands;
+		const commandName = allCommands[commandId]?.name || commandId;
+		this.statisticsManager.recordUsage(commandId, commandName);
 	}
 
 	/**
@@ -368,28 +356,6 @@ export default class LemonToolkitPlugin extends Plugin {
 	async loadSettings() {
 		const loadedData = await this.loadData();
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, loadedData);
-		
-		// Deep merge for nested objects with arrays
-		if (loadedData?.globalCommandPalette1Column) {
-			this.settings.globalCommandPalette1Column = {
-				pinnedCommands: loadedData.globalCommandPalette1Column.pinnedCommands || [],
-				sortBy: loadedData.globalCommandPalette1Column.sortBy || DEFAULT_SETTINGS.globalCommandPalette1Column.sortBy
-			};
-		}
-		if (loadedData?.globalCommandPalette2Columns) {
-			this.settings.globalCommandPalette2Columns = {
-				columnSorts: loadedData.globalCommandPalette2Columns.columnSorts || DEFAULT_SETTINGS.globalCommandPalette2Columns.columnSorts,
-				columnPinned: loadedData.globalCommandPalette2Columns.columnPinned || [[], []],
-				columnTimeRanges: loadedData.globalCommandPalette2Columns.columnTimeRanges || [720, 720]
-			};
-		}
-		if (loadedData?.globalCommandPalette3Columns) {
-			this.settings.globalCommandPalette3Columns = {
-				columnSorts: loadedData.globalCommandPalette3Columns.columnSorts || DEFAULT_SETTINGS.globalCommandPalette3Columns.columnSorts,
-				columnPinned: loadedData.globalCommandPalette3Columns.columnPinned || [[], [], []],
-				columnTimeRanges: loadedData.globalCommandPalette3Columns.columnTimeRanges || [720, 720, 720]
-			};
-		}
 	}
 
 	async saveSettings() {

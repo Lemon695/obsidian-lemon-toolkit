@@ -119,11 +119,25 @@ export class StatisticsCommandStorage extends CommandHistoryStorage {
 }
 
 /**
- * Storage for plugin usage tracking
+ * Storage for plugin usage tracking (plugin-level, not command-level)
  */
 export class PluginUsageStorage extends CommandHistoryStorage {
 	constructor(plugin: LemonToolkitPlugin) {
 		super(plugin, "plugin-usage.json");
+	}
+
+	/**
+	 * Get usage for a plugin (by plugin ID)
+	 */
+	getPluginUsage(pluginId: string): CommandRecord | null {
+		return this.getHistory(pluginId);
+	}
+
+	/**
+	 * Get all plugin usage
+	 */
+	getAllPluginUsage(): CommandHistory {
+		return this.getAllHistory();
 	}
 }
 

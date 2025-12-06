@@ -34,7 +34,7 @@ Manage file deletion with two options:
 
 ### Command Palette
 
-- **Open command palette** - Open a dedicated command palette showing only Lemon Toolkit commands. Commands are sorted by most recently used, with pinned commands always at the top. Includes fuzzy search and usage statistics
+- **Open command palette** - Open a dedicated command palette showing only Lemon Toolkit commands. Commands can be sorted by most recently used or most frequently used, with pinned commands always at the top. Includes fuzzy search and usage statistics
 - **Open settings** - Quickly open the plugin settings page to modify configurations
 
 ### File Information View
@@ -416,7 +416,17 @@ Note: The plugin automatically tracks tag usage when you manually type tags in y
 
 ### Command Palette
 
-- **Pinned commands** - Select commands to pin at the top of the command palette. Pinned commands will always appear first, followed by recently used commands
+- **Sort by** - Choose how to sort commands in the command palette
+  - Most recently used (default): Shows the most recently used commands first
+  - Most frequently used: Sorts by usage count
+  
+- **Time range** (only for "Most frequently used" mode) - Only count command usage within this time range
+  - Last 24 hours: Only count commands used in the last day
+  - Last 7 days: Only count commands used in the last week
+  - Last 30 days (default): Only count commands used in the last month
+  - All time: Count all command usage since installation
+
+- **Pinned commands** - Select commands to pin at the top of the command palette. Pinned commands will always appear first, followed by sorted commands
 
 ### File Info View
 

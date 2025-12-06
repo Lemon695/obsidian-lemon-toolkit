@@ -51,6 +51,8 @@ export interface LemonToolkitSettings {
 	tagUsageHistory: Record<string, TagUsageHistory>;
 	commandHistory: Record<string, CommandHistory>;
 	pinnedCommands: string[];
+	commandPaletteSortBy: "recent" | "frequent";
+	commandPaletteTimeRange: 24 | 168 | 720 | 0; // hours: 24h, 7d, 30d, all time
 	showReadingTime: boolean;
 	dateTimeFormat: string;
 	fileInfoCollapsedSections?: {
@@ -78,6 +80,8 @@ export const DEFAULT_SETTINGS: LemonToolkitSettings = {
 	tagUsageHistory: {},
 	commandHistory: {},
 	pinnedCommands: [],
+	commandPaletteSortBy: "recent",
+	commandPaletteTimeRange: 720, // 30 days
 	showReadingTime: true,
 	dateTimeFormat: "YYYY-MM-DD HH:mm",
 	fileInfoCollapsedSections: {

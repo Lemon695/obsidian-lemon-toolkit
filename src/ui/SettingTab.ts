@@ -80,6 +80,41 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 		containerEl.createEl("h3", { text: t('commandPaletteSettings') });
 
 		new Setting(containerEl)
+			.setName(t('commandPaletteSortBy'))
+			.setDesc(t('commandPaletteSortByDesc'))
+			.addDropdown((dropdown) =>
+				dropdown
+					.addOption("recent", t('sortByRecent'))
+					.addOption("frequent", t('sortByFrequent'))
+					.setValue(this.plugin.settings.commandPaletteSortBy)
+					.onChange(async (value: "recent" | "frequent") => {
+						this.plugin.settings.commandPaletteSortBy = value;
+						await this.plugin.saveSettings();
+						// Refresh to show/hide time range setting
+						this.display();
+					})
+			);
+
+		// Show time range setting only when sort by frequent
+		if (this.plugin.settings.commandPaletteSortBy === "frequent") {
+			new Setting(containerEl)
+				.setName(t('commandPaletteTimeRange'))
+				.setDesc(t('commandPaletteTimeRangeDesc'))
+				.addDropdown((dropdown) =>
+					dropdown
+						.addOption("24", t('timeRangeLast24Hours'))
+						.addOption("168", t('timeRangeLast7Days'))
+						.addOption("720", t('timeRangeLast30Days'))
+						.addOption("0", t('timeRangeAllTime'))
+						.setValue(String(this.plugin.settings.commandPaletteTimeRange))
+						.onChange(async (value: string) => {
+							this.plugin.settings.commandPaletteTimeRange = Number(value) as 24 | 168 | 720 | 0;
+							await this.plugin.saveSettings();
+						})
+				);
+		}
+
+		new Setting(containerEl)
 			.setName(t('pinnedCommandsSetting'))
 			.setDesc(t('pinnedCommandsSettingDesc'))
 			.addButton((button) =>

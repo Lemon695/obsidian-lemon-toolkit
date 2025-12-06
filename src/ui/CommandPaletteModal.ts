@@ -54,14 +54,35 @@ export class CommandPaletteModal extends FuzzySuggestModal<CommandItem> {
 			}
 		});
 
-		// Sort: pinned first, then by last used
+		// Sort: pinned first, then by configured sort method
 		this.commands.sort((a, b) => {
 			// Pinned commands always come first
 			if (a.isPinned && !b.isPinned) return -1;
 			if (!a.isPinned && b.isPinned) return 1;
 
-			// Among pinned or unpinned, sort by last used
-			return b.lastUsed - a.lastUsed;
+			const sortBy = this.plugin.settings.commandPaletteSortBy;
+			const timeRange = this.plugin.settings.commandPaletteTimeRange;
+
+			if (sortBy === 'frequent') {
+				// Filter by time range if not "all time"
+				const now = Date.now();
+				const cutoff = timeRange === 0 ? 0 : now - (timeRange * 60 * 60 * 1000);
+				
+				// If command was used outside time range, treat as 0 count
+				const aCount = a.lastUsed >= cutoff ? a.useCount : 0;
+				const bCount = b.lastUsed >= cutoff ? b.useCount : 0;
+				
+				// Sort by use count (descending)
+				if (bCount !== aCount) {
+					return bCount - aCount;
+				}
+				
+				// If use count is the same, sort by last used
+				return b.lastUsed - a.lastUsed;
+			} else {
+				// Sort by last used (recent)
+				return b.lastUsed - a.lastUsed;
+			}
 		});
 
 		return this.commands;

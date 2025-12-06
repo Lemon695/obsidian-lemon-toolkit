@@ -36,6 +36,7 @@ export const translations = {
 		selectCodeBlocks: 'Select code blocks to copy',
 		editTable: 'Edit table',
 		createTable: 'Create table',
+		syncHeadingWithFilename: 'Rename file from H1 heading',
 
 		// Table Editor
 		tableEditor: 'Table Editor',
@@ -474,6 +475,10 @@ export const translations = {
 		noActiveFile: 'No active file',
 		noHeadingsFound: 'No headings found in document',
 		noTextSelected: 'No text selected',
+		noH1HeadingFound: 'No H1 heading found in document',
+		filenameAlreadySynced: 'Filename already matches H1 heading',
+		fileRenamedToHeading: 'File renamed to: {name}',
+		fileRenameFailed: 'Failed to rename file',
 		copied: 'Copied: {text}',
 		deleted: 'Deleted {name}',
 		movedToTrash: 'Moved to trash: {name}',
@@ -581,6 +586,7 @@ export const translations = {
 		selectCodeBlocks: '选择代码块复制',
 		editTable: '编辑表格',
 		createTable: '新建表格',
+		syncHeadingWithFilename: '用一级标题重命名文件',
 
 		// 表格编辑器
 		tableEditor: '表格编辑器',
@@ -1020,6 +1026,10 @@ export const translations = {
 		noActiveFile: '没有活动文件',
 		noHeadingsFound: '文档中未找到标题',
 		noTextSelected: '未选择文本',
+		noH1HeadingFound: '文档中未找到一级标题',
+		filenameAlreadySynced: '文件名已与一级标题一致',
+		fileRenamedToHeading: '文件已重命名为：{name}',
+		fileRenameFailed: '文件重命名失败',
 		copied: '已复制：{text}',
 		deleted: '已删除 {name}',
 		movedToTrash: '已移动到回收站：{name}',

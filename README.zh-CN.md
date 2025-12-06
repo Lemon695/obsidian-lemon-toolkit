@@ -238,8 +238,16 @@
   - 高亮显示修改的标题
   - 保留标题文本内容
   - 智能识别已有序号
+  - 自动跳过代码块
   
 - **移除标题序号** - 移除文档中所有标题的序号
+
+- **用一级标题重命名文件** - 根据文档中第一个一级标题重命名文件：
+  - 自动查找文档中第一个 `# 标题`
+  - 将文件重命名为标题文本
+  - 跳过代码块中的标题
+  - 自动清理非法文件名字符（如 `/:*?"<>|`）
+  - 如果文件名已匹配标题则显示提示
 
 ### 命令统计与分析
 
@@ -320,6 +328,7 @@
 | `Lemon Toolkit: Text selection actions` | 选中文本的快捷操作 |
 | `Lemon Toolkit: Add/update heading numbering` | 添加或更新标题的层级序号 |
 | `Lemon Toolkit: Remove heading numbering` | 移除所有标题序号 |
+| `Lemon Toolkit: Rename file from H1 heading` | 根据一级标题重命名文件 |
 | `Lemon Toolkit: Show Statistics` | 打开命令使用分析仪表板 |
 
 ## 安装方法

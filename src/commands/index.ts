@@ -16,6 +16,7 @@ import { openSettings } from "./openSettings";
 import { editFrontmatter } from "./editFrontmatter";
 import { openTextSelectionActions } from "./textSelection";
 import { addHeadingNumbering, removeHeadingNumbering } from "./headingNumbering";
+import { syncHeadingWithFilename } from "./syncHeadingWithFilename";
 import { openRecentFilesView } from "./recentFiles";
 import {
 	convertWikiToMarkdownInFile,
@@ -178,6 +179,13 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "remove-heading-numbering",
 		name: t('removeHeadingNumbering'),
 		editorCallback: trackEditorCommand(plugin, "remove-heading-numbering", t('removeHeadingNumbering'), (editor) => removeHeadingNumbering(plugin, editor)),
+	});
+
+	// Sync H1 heading with filename
+	plugin.addCommand({
+		id: "sync-heading-with-filename",
+		name: t('syncHeadingWithFilename'),
+		editorCallback: trackEditorCommand(plugin, "sync-heading-with-filename", t('syncHeadingWithFilename'), (editor) => syncHeadingWithFilename(plugin, editor)),
 	});
 
 	// Recent files

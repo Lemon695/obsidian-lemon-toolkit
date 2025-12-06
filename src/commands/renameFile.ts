@@ -10,12 +10,16 @@ export async function renameFile(plugin: LemonToolkitPlugin): Promise<void> {
 		return;
 	}
 
-	new RenameFileModal(plugin.app, file, async (newName: string) => {
+	const suggestions = plugin.renameHistoryManager.getSuggestions(file.basename);
+
+	new RenameFileModal(plugin.app, file, suggestions, async (newName: string) => {
+		const oldName = file.basename;
 		const sanitized = newName.replace(/[\\/:*?"<>|]/g, '');
 		const newPath = file.parent ? `${file.parent.path}/${sanitized}.md` : `${sanitized}.md`;
 		
 		try {
 			await plugin.app.fileManager.renameFile(file, newPath);
+			await plugin.renameHistoryManager.recordRename(oldName, sanitized);
 			new Notice(t('fileRenamedToHeading', { name: sanitized }));
 		} catch (error) {
 			new Notice(t('fileRenameFailed'));

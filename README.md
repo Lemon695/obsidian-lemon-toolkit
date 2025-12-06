@@ -251,9 +251,19 @@ Use "Select code blocks to copy":
 
 - **Rename file** - Rename the current file with a modal dialog:
   - Shows current filename in an editable input field
-  - Modify the name and save
+  - **Smart suggestions** based on your rename history:
+    - Analyzes recent rename patterns (last 30 days)
+    - Detects suffix/prefix additions (e.g., "- DataviewJS", "Draft - ")
+    - Ranks suggestions by frequency and recency
+    - Shows usage count for each pattern
+  - **Quick suggestions**:
+    - Add timestamp: `filename-20250106`
+    - Add date prefix: `20250106-filename`
+    - Add Unix timestamp: `filename-1733456789`
+    - Add short UUID: `filename-a1b2c3d4`
+  - Click any suggestion to apply instantly
   - Automatically sanitizes invalid characters
-  - Quick and convenient without clicking the file title
+  - History stored locally (max 500 records, 90-day retention)
 
 ### Table Editor
 

@@ -6,6 +6,7 @@ import { FileInfoView, FILE_INFO_VIEW_TYPE } from "./views/FileInfoView";
 import { RecentFilesView, RECENT_FILES_VIEW_TYPE } from "./views/RecentFilesView";
 import { ExternalAppManager } from "./features/external-apps/ExternalAppManager";
 import { StatisticsManager } from "./features/statistics/StatisticsManager";
+import { RenameHistoryManager } from "./features/rename/RenameHistoryManager";
 import {t} from "./i18n/locale";
 
 export default class LemonToolkitPlugin extends Plugin {
@@ -13,6 +14,7 @@ export default class LemonToolkitPlugin extends Plugin {
 	private fileTagsCache: Map<string, Set<string>> = new Map();
 	private externalAppManager: ExternalAppManager;
 	statisticsManager: StatisticsManager;
+	renameHistoryManager: RenameHistoryManager;
 
 	async onload() {
 		console.log(t('loadingPlugin') + this.manifest.version);
@@ -32,6 +34,10 @@ export default class LemonToolkitPlugin extends Plugin {
 			this.settings.statistics
 		);
 		await this.statisticsManager.initialize();
+		
+		// Initialize rename history manager
+		this.renameHistoryManager = new RenameHistoryManager(this);
+		await this.renameHistoryManager.load();
 		
 		// Register views
 		this.registerView(

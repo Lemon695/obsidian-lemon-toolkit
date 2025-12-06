@@ -7,6 +7,7 @@ import { RecentFilesView, RECENT_FILES_VIEW_TYPE } from "./views/RecentFilesView
 import { ExternalAppManager } from "./features/external-apps/ExternalAppManager";
 import { StatisticsManager } from "./features/statistics/StatisticsManager";
 import { RenameHistoryManager } from "./features/rename/RenameHistoryManager";
+import { FolderMoveHistoryManager } from "./features/move/FolderMoveHistoryManager";
 import { PluginMetadataManager } from "./features/plugin-usage/PluginMetadataManager";
 import {t} from "./i18n/locale";
 
@@ -16,6 +17,7 @@ export default class LemonToolkitPlugin extends Plugin {
 	private externalAppManager: ExternalAppManager;
 	statisticsManager: StatisticsManager;
 	renameHistoryManager: RenameHistoryManager;
+	folderMoveHistoryManager: FolderMoveHistoryManager;
 	pluginMetadataManager: PluginMetadataManager;
 	private saveTimeout: NodeJS.Timeout | null = null;
 	private recentCommands: Map<string, number> = new Map(); // For deduplication
@@ -42,6 +44,10 @@ export default class LemonToolkitPlugin extends Plugin {
 		// Initialize rename history manager
 		this.renameHistoryManager = new RenameHistoryManager(this);
 		await this.renameHistoryManager.load();
+		
+		// Initialize folder move history manager
+		this.folderMoveHistoryManager = new FolderMoveHistoryManager(this);
+		await this.folderMoveHistoryManager.load();
 		
 		// Initialize plugin metadata manager
 		this.pluginMetadataManager = new PluginMetadataManager(this);
@@ -146,24 +152,7 @@ export default class LemonToolkitPlugin extends Plugin {
 	}
 
 	async recordFolderMove(folderPath: string): Promise<void> {
-		const now = Date.now();
-		const history = this.settings.folderMoveHistory[folderPath] || {
-			count: 0,
-			lastMoved: 0,
-			timestamps: [],
-		};
-
-		history.count++;
-		history.lastMoved = now;
-		history.timestamps.push(now);
-
-		// Keep only last 100 timestamps
-		if (history.timestamps.length > 100) {
-			history.timestamps = history.timestamps.slice(-100);
-		}
-
-		this.settings.folderMoveHistory[folderPath] = history;
-		await this.saveSettings();
+		await this.folderMoveHistoryManager.recordMove(folderPath);
 	}
 
 	async recordTagUsage(tags: string[], updateLastUsed: boolean = true): Promise<void> {

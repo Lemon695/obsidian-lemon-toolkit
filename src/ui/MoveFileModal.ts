@@ -36,7 +36,7 @@ export class MoveFileModal extends FuzzySuggestModal<FolderItem> {
 		// Build folder items with history data
 		this.allFolders = folders.map((folder) => {
 			const path = folder.path;
-			const history = this.plugin.settings.folderMoveHistory[path];
+			const history = this.plugin.folderMoveHistoryManager.getHistory(path);
 			
 			return {
 				path: path,
@@ -50,8 +50,8 @@ export class MoveFileModal extends FuzzySuggestModal<FolderItem> {
 		this.allFolders.unshift({
 			path: "",
 			displayName: "(Root)",
-			moveCount: this.plugin.settings.folderMoveHistory[""]?.count || 0,
-			lastMoved: this.plugin.settings.folderMoveHistory[""]?.lastMoved || 0,
+			moveCount: this.plugin.folderMoveHistoryManager.getHistory("")?.count || 0,
+			lastMoved: this.plugin.folderMoveHistoryManager.getHistory("")?.lastMoved || 0,
 		});
 
 		// Sort based on settings
@@ -93,7 +93,7 @@ export class MoveFileModal extends FuzzySuggestModal<FolderItem> {
 	}
 
 	private getCountInWindow(path: string, now: number, timeWindow: number): number {
-		const history = this.plugin.settings.folderMoveHistory[path];
+		const history = this.plugin.folderMoveHistoryManager.getHistory(path);
 		if (!history || !history.timestamps) return 0;
 
 		if (timeWindow === 0) {

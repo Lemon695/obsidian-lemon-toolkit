@@ -567,8 +567,18 @@ export const translations = {
 		pluginUsageStats: 'Plugin Usage Statistics',
 		pluginUsageStatsDesc: 'View which plugins you use most frequently based on command usage',
 		noPluginUsageData: 'No plugin usage data available yet',
+		noPluginUsageDataForPeriod: 'No plugin usage data for this period',
 		pluginUsageDetails: '{commands} commands • {usage} total uses',
 		pluginUsageFooter: 'Click on any plugin to open its settings',
+		pluginStatsTimeRange: 'Time Range',
+		selectTimeRangeForStats: 'Select time range to analyze plugin usage',
+		timeRangeToday: 'Today',
+		timeRangeThisWeek: 'This Week',
+		timeRangeThisMonth: 'This Month',
+		timeRangeThisYear: 'This Year',
+		pluginStatsTotal: 'Total Plugins',
+		pluginStatsCommands: 'Total Commands',
+		pluginStatsUsage: 'Total Usage',
 	},
 	'zh': {
 		// 命令名称
@@ -1139,8 +1149,18 @@ export const translations = {
 		pluginUsageStats: '插件使用统计',
 		pluginUsageStatsDesc: '查看基于命令使用情况的插件使用频率',
 		noPluginUsageData: '暂无插件使用数据',
+		noPluginUsageDataForPeriod: '此时间段内暂无插件使用数据',
 		pluginUsageDetails: '{commands} 个命令 • 共使用 {usage} 次',
 		pluginUsageFooter: '点击任意插件可打开其设置页面',
+		pluginStatsTimeRange: '时间范围',
+		selectTimeRangeForStats: '选择时间范围以分析插件使用情况',
+		timeRangeToday: '今天',
+		timeRangeThisWeek: '本周',
+		timeRangeThisMonth: '本月',
+		timeRangeThisYear: '本年',
+		pluginStatsTotal: '插件总数',
+		pluginStatsCommands: '命令总数',
+		pluginStatsUsage: '使用总次数',
 	}
 };
 

@@ -177,7 +177,7 @@ export class InsertTagsModal extends Modal {
 
 		// Convert to array with history data
 		this.allTags = Array.from(allTagsMap.entries()).map(([tag, count]) => {
-			const history = this.plugin.settings.tagUsageHistory[tag];
+			const history = this.plugin.tagUsageHistoryManager.getHistory(tag);
 			return {
 				tag,
 				count,
@@ -223,7 +223,7 @@ export class InsertTagsModal extends Modal {
 	}
 
 	private getCountInWindow(tag: string, now: number, timeWindow: number): number {
-		const history = this.plugin.settings.tagUsageHistory[tag];
+		const history = this.plugin.tagUsageHistoryManager.getHistory(tag);
 		if (!history || !history.timestamps) return 0;
 
 		if (timeWindow === 0) {

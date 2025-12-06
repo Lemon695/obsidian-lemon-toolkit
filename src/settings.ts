@@ -1,8 +1,3 @@
-export interface TagUsageHistory {
-	lastUsed: number;
-	timestamps: number[];
-}
-
 export interface CommandHistory {
 	lastUsed: number;
 	useCount: number;
@@ -41,7 +36,6 @@ export interface LemonToolkitSettings {
 	duplicateFileSuffixType: "timestamp" | "uuid";
 	folderSortType: "recent" | "day" | "week" | "month";
 	tagSortType: "recent" | "day" | "week" | "month" | "alphabetical";
-	tagUsageHistory: Record<string, TagUsageHistory>;
 	commandHistory: Record<string, CommandHistory>; // For command palette sorting
 	pluginUsageHistory: Record<string, CommandHistory>; // For plugin usage statistics
 	pluginMetadata: Record<string, any>; // For plugin update times and metadata
@@ -71,7 +65,6 @@ export const DEFAULT_SETTINGS: LemonToolkitSettings = {
 	duplicateFileSuffixType: "timestamp",
 	folderSortType: "recent",
 	tagSortType: "recent",
-	tagUsageHistory: {},
 	commandHistory: {},
 	pluginUsageHistory: {},
 	pluginMetadata: {},

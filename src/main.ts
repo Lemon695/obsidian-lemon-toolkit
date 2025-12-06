@@ -8,6 +8,7 @@ import { ExternalAppManager } from "./features/external-apps/ExternalAppManager"
 import { StatisticsManager } from "./features/statistics/StatisticsManager";
 import { RenameHistoryManager } from "./features/rename/RenameHistoryManager";
 import { FolderMoveHistoryManager } from "./features/move/FolderMoveHistoryManager";
+import { TagUsageHistoryManager } from "./features/tags/TagUsageHistoryManager";
 import { PluginMetadataManager } from "./features/plugin-usage/PluginMetadataManager";
 import {t} from "./i18n/locale";
 
@@ -18,6 +19,7 @@ export default class LemonToolkitPlugin extends Plugin {
 	statisticsManager: StatisticsManager;
 	renameHistoryManager: RenameHistoryManager;
 	folderMoveHistoryManager: FolderMoveHistoryManager;
+	tagUsageHistoryManager: TagUsageHistoryManager;
 	pluginMetadataManager: PluginMetadataManager;
 	private saveTimeout: NodeJS.Timeout | null = null;
 	private recentCommands: Map<string, number> = new Map(); // For deduplication
@@ -48,6 +50,10 @@ export default class LemonToolkitPlugin extends Plugin {
 		// Initialize folder move history manager
 		this.folderMoveHistoryManager = new FolderMoveHistoryManager(this);
 		await this.folderMoveHistoryManager.load();
+		
+		// Initialize tag usage history manager
+		this.tagUsageHistoryManager = new TagUsageHistoryManager(this);
+		await this.tagUsageHistoryManager.load();
 		
 		// Initialize plugin metadata manager
 		this.pluginMetadataManager = new PluginMetadataManager(this);
@@ -156,28 +162,7 @@ export default class LemonToolkitPlugin extends Plugin {
 	}
 
 	async recordTagUsage(tags: string[], updateLastUsed: boolean = true): Promise<void> {
-		const now = Date.now();
-
-		tags.forEach((tag) => {
-			const history = this.settings.tagUsageHistory[tag] || {
-				lastUsed: 0,
-				timestamps: [],
-			};
-
-			if (updateLastUsed) {
-				history.lastUsed = now;
-			}
-			history.timestamps.push(now);
-
-			// Keep only last 100 timestamps
-			if (history.timestamps.length > 100) {
-				history.timestamps = history.timestamps.slice(-100);
-			}
-
-			this.settings.tagUsageHistory[tag] = history;
-		});
-
-		await this.saveSettings();
+		await this.tagUsageHistoryManager.recordUsage(tags, updateLastUsed);
 	}
 
 	async recordCommandUsage(commandId: string): Promise<void> {

@@ -37,6 +37,7 @@ import {
 	selectCodeBlocks,
 } from "./smartCopy";
 import { openTableEditor, createTable } from "./tableEditor";
+import { showPluginUsageStats } from "./pluginUsageStats";
 import LemonToolkitPlugin from "../main";
 import { t } from "../i18n/locale";
 
@@ -304,5 +305,12 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "create-table",
 		name: t('createTable'),
 		editorCallback: trackEditorCommand(plugin, "create-table", t('createTable'), (editor) => createTable(plugin, editor)),
+	});
+
+	// Plugin usage stats
+	plugin.addCommand({
+		id: "show-plugin-usage-stats",
+		name: t('showPluginUsageStats'),
+		callback: trackCommand(plugin, "show-plugin-usage-stats", t('showPluginUsageStats'), () => showPluginUsageStats(plugin)),
 	});
 }

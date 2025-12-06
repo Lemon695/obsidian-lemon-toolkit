@@ -36,6 +36,7 @@ export const translations = {
 		selectCodeBlocks: 'Select code blocks to copy',
 		editTable: 'Edit table',
 		createTable: 'Create table',
+		showPluginUsageStats: 'Show Plugin Usage Stats',
 		syncHeadingWithFilename: 'Rename file from H1 heading',
 		renameFile: 'Rename file',
 
@@ -561,6 +562,13 @@ export const translations = {
 		minute: 'minute',
 		minutes: 'minutes',
 		minutesCount: '{count} minute{s}',
+		
+		// Plugin Usage Stats
+		pluginUsageStats: 'Plugin Usage Statistics',
+		pluginUsageStatsDesc: 'View which plugins you use most frequently based on command usage',
+		noPluginUsageData: 'No plugin usage data available yet',
+		pluginUsageDetails: '{commands} commands • {usage} total uses',
+		pluginUsageFooter: 'Click on any plugin to open its settings',
 	},
 	'zh': {
 		// 命令名称
@@ -599,6 +607,7 @@ export const translations = {
 		selectCodeBlocks: '选择代码块复制',
 		editTable: '编辑表格',
 		createTable: '新建表格',
+		showPluginUsageStats: '显示插件使用统计',
 		syncHeadingWithFilename: '用一级标题重命名文件',
 		renameFile: '重命名文件',
 
@@ -1125,6 +1134,13 @@ export const translations = {
 		minute: '分钟',
 		minutes: '分钟',
 		minutesCount: '{count} 分钟',
+		
+		// 插件使用统计
+		pluginUsageStats: '插件使用统计',
+		pluginUsageStatsDesc: '查看基于命令使用情况的插件使用频率',
+		noPluginUsageData: '暂无插件使用数据',
+		pluginUsageDetails: '{commands} 个命令 • 共使用 {usage} 次',
+		pluginUsageFooter: '点击任意插件可打开其设置页面',
 	}
 };
 

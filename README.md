@@ -332,6 +332,29 @@ Use "Select code blocks to copy":
 - Optimize your command usage
 - Justify plugin value with time savings data
 
+### Plugin Usage Statistics
+
+- **Show Plugin Usage Stats** - View which plugins you use most frequently based on command usage:
+
+**Features**:
+- **Usage ranking**: Plugins sorted by total command usage
+- **Detailed metrics**: Shows command count and total uses for each plugin
+- **Quick access**: Click any plugin to open its settings
+- **Smart aggregation**: Automatically extracts plugin data from command statistics
+
+**Display information**:
+- Plugin rank (top 3 highlighted)
+- Plugin name
+- Number of commands used
+- Total usage count
+- Visual ranking with color coding
+
+**Use cases**:
+- Discover which plugins you actually use
+- Identify unused plugins for cleanup
+- Optimize your plugin setup
+- Quick access to frequently used plugin settings
+
 ## Usage
 
 1. Open any file in your vault
@@ -366,6 +389,7 @@ Use "Select code blocks to copy":
 | `Lemon Toolkit: Edit table` | Open visual table editor with Excel-like features |
 | `Lemon Toolkit: Create table` | Create new table at cursor position |
 | `Lemon Toolkit: Show Statistics` | Open command usage analytics dashboard |
+| `Lemon Toolkit: Show Plugin Usage Stats` | View plugin usage statistics based on command usage |
 
 ## Installation
 

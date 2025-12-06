@@ -223,14 +223,7 @@ export class InsertTagsModal extends Modal {
 	}
 
 	private getCountInWindow(tag: string, now: number, timeWindow: number): number {
-		const history = this.plugin.tagUsageHistoryManager.getHistory(tag);
-		if (!history || !history.timestamps) return 0;
-
-		if (timeWindow === 0) {
-			return history.timestamps.length;
-		}
-
-		return history.timestamps.filter((ts) => now - ts < timeWindow).length;
+		return this.plugin.tagUsageHistoryManager.getCountInWindow(tag, timeWindow);
 	}
 
 	private async insertSelectedTags(): Promise<void> {

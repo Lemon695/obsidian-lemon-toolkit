@@ -512,14 +512,12 @@ export class GlobalCommandPaletteModal extends FuzzySuggestModal<GlobalCommandIt
 	}
 
 	private sortCommands(commands: GlobalCommandItem[], sortType: string, timeRange: number = 720): GlobalCommandItem[] {
-		const now = Date.now();
-		const cutoff = timeRange === 0 ? 0 : now - (timeRange * 60 * 60 * 1000);
-
 		return commands.sort((a, b) => {
 			switch (sortType) {
 				case 'frequent':
-					const aCount = a.lastUsed >= cutoff ? a.useCount : 0;
-					const bCount = b.lastUsed >= cutoff ? b.useCount : 0;
+					// Use precise time range counting
+					const aCount = this.plugin.commandTracker.getGlobalCommandStorage().getCountInTimeRange(a.id, timeRange);
+					const bCount = this.plugin.commandTracker.getGlobalCommandStorage().getCountInTimeRange(b.id, timeRange);
 					if (bCount !== aCount) return bCount - aCount;
 					return b.lastUsed - a.lastUsed;
 				

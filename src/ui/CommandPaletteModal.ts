@@ -101,13 +101,9 @@ export class CommandPaletteModal extends FuzzySuggestModal<CommandItem> {
 			const timeRange = this.plugin.settings.commandPaletteTimeRange;
 
 			if (sortBy === 'frequent') {
-				// Filter by time range if not "all time"
-				const now = Date.now();
-				const cutoff = timeRange === 0 ? 0 : now - (timeRange * 60 * 60 * 1000);
-				
-				// If command was used outside time range, treat as 0 count
-				const aCount = a.lastUsed >= cutoff ? a.useCount : 0;
-				const bCount = b.lastUsed >= cutoff ? b.useCount : 0;
+				// Use precise time range counting
+				const aCount = this.plugin.commandTracker.getPluginCommandStorage().getCountInTimeRange(a.id, timeRange);
+				const bCount = this.plugin.commandTracker.getPluginCommandStorage().getCountInTimeRange(b.id, timeRange);
 				
 				// Sort by use count (descending)
 				if (bCount !== aCount) {

@@ -4,6 +4,10 @@ import LemonToolkitPlugin from "../main";
 export interface CommandRecord {
 	lastUsed: number;
 	useCount: number;
+	recentTimestamps?: number[];  // 最近 24 小时的精确时间戳
+	dailyCount?: {
+		[date: string]: number;    // 超过 24 小时的按天聚合 "2025-01-06": 45
+	};
 }
 
 export interface CommandHistory {
@@ -53,16 +57,83 @@ export abstract class CommandHistoryStorage {
 
 	recordUsage(commandId: string): void {
 		const now = Date.now();
+		const today = new Date(now).toISOString().split('T')[0];
+		const oneDayAgo = now - 24 * 60 * 60 * 1000;
+		
 		if (!this.history[commandId]) {
-			this.history[commandId] = { lastUsed: now, useCount: 0 };
+			this.history[commandId] = { 
+				lastUsed: now, 
+				useCount: 0,
+				recentTimestamps: [],
+				dailyCount: {}
+			};
 		}
-		this.history[commandId].lastUsed = now;
-		this.history[commandId].useCount++;
+		
+		const record = this.history[commandId];
+		record.lastUsed = now;
+		record.useCount++;
+		
+		// Initialize if needed
+		if (!record.recentTimestamps) record.recentTimestamps = [];
+		if (!record.dailyCount) record.dailyCount = {};
+		
+		// 1. Add to recent timestamps
+		record.recentTimestamps.push(now);
+		
+		// 2. Aggregate timestamps older than 24 hours to dailyCount
+		const oldTimestamps = record.recentTimestamps.filter(ts => ts < oneDayAgo);
+		if (oldTimestamps.length > 0) {
+			oldTimestamps.forEach(ts => {
+				const date = new Date(ts).toISOString().split('T')[0];
+				record.dailyCount![date] = (record.dailyCount![date] || 0) + 1;
+			});
+			
+			// Keep only recent 24 hours
+			record.recentTimestamps = record.recentTimestamps.filter(ts => ts >= oneDayAgo);
+		}
+		
+		// 3. Clean up data older than 1 year
+		const oneYearAgo = new Date(now - 365 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+		Object.keys(record.dailyCount).forEach(date => {
+			if (date < oneYearAgo) {
+				delete record.dailyCount![date];
+			}
+		});
+		
 		this.debouncedSave();
 	}
 
 	getHistory(commandId: string): CommandRecord | null {
 		return this.history[commandId] || null;
+	}
+
+	/**
+	 * Get command usage count within a specific time range
+	 */
+	getCountInTimeRange(commandId: string, hours: number): number {
+		const record = this.history[commandId];
+		if (!record) return 0;
+		
+		const now = Date.now();
+		
+		// All time
+		if (hours === 0) {
+			return record.useCount;
+		}
+		
+		// Within 24 hours: use precise timestamps
+		if (hours <= 24) {
+			const cutoff = now - hours * 60 * 60 * 1000;
+			return (record.recentTimestamps || []).filter(ts => ts >= cutoff).length;
+		}
+		
+		// Beyond 24 hours: use daily aggregation + recent timestamps
+		const cutoffDate = new Date(now - hours * 60 * 60 * 1000).toISOString().split('T')[0];
+		const dailySum = Object.entries(record.dailyCount || {})
+			.filter(([date]) => date >= cutoffDate)
+			.reduce((sum, [, count]) => sum + count, 0);
+		
+		return dailySum + (record.recentTimestamps || []).length;
 	}
 
 	getAllHistory(): CommandHistory {

@@ -93,14 +93,7 @@ export class MoveFileModal extends FuzzySuggestModal<FolderItem> {
 	}
 
 	private getCountInWindow(path: string, now: number, timeWindow: number): number {
-		const history = this.plugin.folderMoveHistoryManager.getHistory(path);
-		if (!history || !history.timestamps) return 0;
-
-		if (timeWindow === 0) {
-			return history.count || 0;
-		}
-
-		return history.timestamps.filter((ts) => now - ts < timeWindow).length;
+		return this.plugin.folderMoveHistoryManager.getCountInWindow(path, timeWindow);
 	}
 
 	getItemText(item: FolderItem): string {

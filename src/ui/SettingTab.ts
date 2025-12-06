@@ -1,6 +1,8 @@
 import { App, PluginSettingTab, Setting } from "obsidian";
 import LemonToolkitPlugin from "../main";
 import { PinnedCommandsModal } from "./PinnedCommandsModal";
+import { PinnedGlobalCommandsModal } from "./PinnedGlobalCommandsModal";
+import { GlobalCommandColumnConfigModal } from "./GlobalCommandColumnConfigModal";
 import { t } from "../i18n/locale";
 
 // TODO 管理时间估算-是否显示
@@ -136,6 +138,66 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 			.addButton((button) =>
 				button.setButtonText(t('manage')).onClick(() => {
 					this.showPinnedCommandsModal();
+				})
+			);
+
+		// Global command palette settings
+		containerEl.createEl("h3", { text: t('globalCommandPaletteSettings') });
+
+		new Setting(containerEl)
+			.setName(t('commandPaletteSortBy'))
+			.setDesc(t('commandPaletteSortByDesc'))
+			.addDropdown((dropdown) =>
+				dropdown
+					.addOption("recent", t('sortByRecent'))
+					.addOption("frequent", t('sortByFrequent'))
+					.setValue(this.plugin.settings.globalCommandPaletteSortBy)
+					.onChange(async (value: "recent" | "frequent") => {
+						this.plugin.settings.globalCommandPaletteSortBy = value;
+						await this.plugin.saveSettings();
+						this.display();
+					})
+			);
+
+		new Setting(containerEl)
+			.setName(t('commandPaletteColumns'))
+			.setDesc(t('commandPaletteColumnsDesc'))
+			.addDropdown((dropdown) =>
+				dropdown
+					.addOption("1", t('oneColumn'))
+					.addOption("2", t('twoColumns'))
+					.addOption("3", t('threeColumns'))
+					.setValue(String(this.plugin.settings.globalCommandPaletteColumns))
+					.onChange(async (value: string) => {
+						this.plugin.settings.globalCommandPaletteColumns = Number(value) as 1 | 2 | 3;
+						await this.plugin.saveSettings();
+					})
+			);
+
+		if (this.plugin.settings.globalCommandPaletteSortBy === "frequent") {
+			new Setting(containerEl)
+				.setName(t('commandPaletteTimeRange'))
+				.setDesc(t('commandPaletteTimeRangeDesc'))
+				.addDropdown((dropdown) =>
+					dropdown
+						.addOption("24", t('timeRangeLast24Hours'))
+						.addOption("168", t('timeRangeLast7Days'))
+						.addOption("720", t('timeRangeLast30Days'))
+						.addOption("0", t('timeRangeAllTime'))
+						.setValue(String(this.plugin.settings.globalCommandPaletteTimeRange))
+						.onChange(async (value: string) => {
+							this.plugin.settings.globalCommandPaletteTimeRange = Number(value) as 24 | 168 | 720 | 0;
+							await this.plugin.saveSettings();
+						})
+				);
+		}
+
+		new Setting(containerEl)
+			.setName(t('configureColumns'))
+			.setDesc(t('configureColumnsDesc'))
+			.addButton((button) =>
+				button.setButtonText(t('configure')).onClick(() => {
+					new GlobalCommandColumnConfigModal(this.app, this.plugin).open();
 				})
 			);
 
@@ -334,6 +396,11 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 
 	private showPinnedCommandsModal(): void {
 		const modal = new PinnedCommandsModal(this.app, this.plugin);
+		modal.open();
+	}
+
+	private showPinnedGlobalCommandsModal(): void {
+		const modal = new PinnedGlobalCommandsModal(this.app, this.plugin);
 		modal.open();
 	}
 

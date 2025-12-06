@@ -12,6 +12,7 @@ import { duplicateFile } from "./duplicateFile";
 import { moveFileToFolder } from "./moveFile";
 import { viewCurrentTags, insertTags } from "./tags";
 import { openCommandPalette } from "./commandPalette";
+import { openGlobalCommandPalette } from "./openGlobalCommandPalette";
 import { openSettings } from "./openSettings";
 import { editFrontmatter } from "./editFrontmatter";
 import { openTextSelectionActions } from "./textSelection";
@@ -141,6 +142,13 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "open-command-palette",
 		name: t('openCommandPalette'),
 		callback: trackCommand(plugin, "open-command-palette", t('openCommandPalette'), () => openCommandPalette(plugin)),
+	});
+
+	// Open global command palette
+	plugin.addCommand({
+		id: "open-global-command-palette",
+		name: t('openGlobalCommandPalette'),
+		callback: trackCommand(plugin, "open-global-command-palette", t('openGlobalCommandPalette'), () => openGlobalCommandPalette(plugin)),
 	});
 
 	// Open settings

@@ -10,6 +10,7 @@ import { RenameHistoryManager } from "./features/rename/RenameHistoryManager";
 import { FolderMoveHistoryManager } from "./features/move/FolderMoveHistoryManager";
 import { TagUsageHistoryManager } from "./features/tags/TagUsageHistoryManager";
 import { CommandHistoryManager } from "./features/commands/CommandHistoryManager";
+import { GlobalCommandHistoryManager } from "./features/commands/GlobalCommandHistoryManager";
 import { RecentFilesManager } from "./features/recent-files/RecentFilesManager";
 import { ClipboardRulesManager } from "./features/smart-paste/ClipboardRulesManager";
 import { PluginMetadataManager } from "./features/plugin-usage/PluginMetadataManager";
@@ -24,6 +25,7 @@ export default class LemonToolkitPlugin extends Plugin {
 	folderMoveHistoryManager: FolderMoveHistoryManager;
 	tagUsageHistoryManager: TagUsageHistoryManager;
 	commandHistoryManager: CommandHistoryManager;
+	globalCommandHistoryManager: GlobalCommandHistoryManager;
 	recentFilesManager: RecentFilesManager;
 	clipboardRulesManager: ClipboardRulesManager;
 	pluginMetadataManager: PluginMetadataManager;
@@ -64,6 +66,10 @@ export default class LemonToolkitPlugin extends Plugin {
 		// Initialize command history manager
 		this.commandHistoryManager = new CommandHistoryManager(this);
 		await this.commandHistoryManager.load();
+		
+		// Initialize global command history manager
+		this.globalCommandHistoryManager = new GlobalCommandHistoryManager(this);
+		await this.globalCommandHistoryManager.load();
 		
 		// Initialize recent files manager
 		this.recentFilesManager = new RecentFilesManager(this);
@@ -349,6 +355,15 @@ export default class LemonToolkitPlugin extends Plugin {
 
 	async loadSettings() {
 		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		
+		// Ensure globalCommandPaletteColumnPinned exists and has correct length
+		if (!this.settings.globalCommandPaletteColumnPinned || !Array.isArray(this.settings.globalCommandPaletteColumnPinned)) {
+			this.settings.globalCommandPaletteColumnPinned = [[], [], []];
+		}
+		// Ensure it has at least 3 arrays
+		while (this.settings.globalCommandPaletteColumnPinned.length < 3) {
+			this.settings.globalCommandPaletteColumnPinned.push([]);
+		}
 	}
 
 	async saveSettings() {

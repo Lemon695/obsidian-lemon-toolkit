@@ -28,6 +28,12 @@ export interface LemonToolkitSettings {
 	commandPaletteSortBy: "recent" | "frequent";
 	commandPaletteTimeRange: 24 | 168 | 720 | 0; // hours: 24h, 7d, 30d, all time
 	commandPaletteColumns: 1 | 2 | 3; // Number of columns in command palette
+	pinnedGlobalCommands: string[];
+	globalCommandPaletteSortBy: "recent" | "frequent";
+	globalCommandPaletteTimeRange: 24 | 168 | 720 | 0;
+	globalCommandPaletteColumns: 1 | 2 | 3;
+	globalCommandPaletteColumnSorts: Array<"recent" | "frequent" | "alphabetical" | "plugin">;
+	globalCommandPaletteColumnPinned: Array<string[]>;
 	showReadingTime: boolean;
 	dateTimeFormat: string;
 	fileInfoCollapsedSections?: {
@@ -56,6 +62,12 @@ export const DEFAULT_SETTINGS: LemonToolkitSettings = {
 	commandPaletteSortBy: "recent",
 	commandPaletteTimeRange: 720, // 30 days
 	commandPaletteColumns: 1, // Default to single column
+	pinnedGlobalCommands: [],
+	globalCommandPaletteSortBy: "frequent",
+	globalCommandPaletteTimeRange: 720,
+	globalCommandPaletteColumns: 2, // Default to 2 columns for global
+	globalCommandPaletteColumnSorts: ["recent", "frequent", "alphabetical"], // Default sort for each column
+	globalCommandPaletteColumnPinned: [[], [], []], // Pinned commands for each column
 	showReadingTime: true,
 	dateTimeFormat: "YYYY-MM-DD HH:mm",
 	fileInfoCollapsedSections: {

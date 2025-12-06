@@ -95,6 +95,22 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 					})
 			);
 
+		// Command palette columns
+		new Setting(containerEl)
+			.setName(t('commandPaletteColumns'))
+			.setDesc(t('commandPaletteColumnsDesc'))
+			.addDropdown((dropdown) =>
+				dropdown
+					.addOption("1", t('oneColumn'))
+					.addOption("2", t('twoColumns'))
+					.addOption("3", t('threeColumns'))
+					.setValue(String(this.plugin.settings.commandPaletteColumns))
+					.onChange(async (value: string) => {
+						this.plugin.settings.commandPaletteColumns = Number(value) as 1 | 2 | 3;
+						await this.plugin.saveSettings();
+					})
+			);
+
 		// Show time range setting only when sort by frequent
 		if (this.plugin.settings.commandPaletteSortBy === "frequent") {
 			new Setting(containerEl)

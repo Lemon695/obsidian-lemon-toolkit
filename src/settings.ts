@@ -27,6 +27,7 @@ export interface LemonToolkitSettings {
 	pinnedCommands: string[];
 	commandPaletteSortBy: "recent" | "frequent";
 	commandPaletteTimeRange: 24 | 168 | 720 | 0; // hours: 24h, 7d, 30d, all time
+	commandPaletteColumns: 1 | 2 | 3; // Number of columns in command palette
 	showReadingTime: boolean;
 	dateTimeFormat: string;
 	fileInfoCollapsedSections?: {
@@ -54,6 +55,7 @@ export const DEFAULT_SETTINGS: LemonToolkitSettings = {
 	pinnedCommands: [],
 	commandPaletteSortBy: "recent",
 	commandPaletteTimeRange: 720, // 30 days
+	commandPaletteColumns: 1, // Default to single column
 	showReadingTime: true,
 	dateTimeFormat: "YYYY-MM-DD HH:mm",
 	fileInfoCollapsedSections: {

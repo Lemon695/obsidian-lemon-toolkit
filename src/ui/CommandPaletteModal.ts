@@ -26,6 +26,43 @@ export class CommandPaletteModal extends FuzzySuggestModal<CommandItem> {
 			{ command: "↵", purpose: "to execute" },
 			{ command: "esc", purpose: "to dismiss" },
 		]);
+		
+		// Apply multi-column layout
+		this.applyColumnLayout();
+	}
+	
+	private applyColumnLayout(): void {
+		const columns = this.plugin.settings.commandPaletteColumns;
+		const modalEl = this.modalEl;
+		
+		// Set modal width for multi-column layouts only
+		if (columns > 1) {
+			const widthMap = {
+				2: '1000px',
+				3: '1400px'
+			};
+			modalEl.style.width = widthMap[columns as 2 | 3];
+			modalEl.style.maxWidth = '90vw'; // Don't exceed 90% of viewport width
+		}
+		
+		// Add custom CSS for multi-column layout
+		const style = modalEl.createEl("style");
+		style.textContent = `
+			.lemon-command-palette-${columns}-col .prompt-results {
+				display: grid;
+				grid-template-columns: repeat(${columns}, 1fr);
+				gap: 4px;
+				padding: 4px;
+			}
+			.lemon-command-palette-${columns}-col .suggestion-item {
+				margin: 0;
+			}
+			.lemon-command-palette-${columns}-col .suggestion-content {
+				padding: 6px 8px;
+			}
+		`;
+		
+		modalEl.addClass(`lemon-command-palette-${columns}-col`);
 	}
 
 	getItems(): CommandItem[] {

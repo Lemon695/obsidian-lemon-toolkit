@@ -40,6 +40,7 @@ import {
 import { openTableEditor, createTable } from "./tableEditor";
 import { showPluginUsageStats } from "./pluginUsageStats";
 import { openPluginManager } from "./pluginManager";
+import { showOutline } from "./outline";
 import LemonToolkitPlugin from "../main";
 import { t } from "../i18n/locale";
 
@@ -328,5 +329,12 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "open-plugin-manager",
 		name: t('openPluginManager'),
 		callback: trackCommand(plugin, "open-plugin-manager", t('openPluginManager'), () => openPluginManager(plugin)),
+	});
+
+	// Show outline
+	plugin.addCommand({
+		id: "show-outline",
+		name: t('showOutline'),
+		editorCallback: trackEditorCommand(plugin, "show-outline", t('showOutline'), (editor) => showOutline(plugin, editor)),
 	});
 }

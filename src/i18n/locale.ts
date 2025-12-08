@@ -41,6 +41,13 @@ export const translations = {
 		syncHeadingWithFilename: 'Rename file from H1 heading',
 		renameFile: 'Rename file',
 		openGlobalCommandPalette: 'Open global command palette',
+		showOutline: 'Show document outline',
+
+		// Outline
+		outlineTitle: 'Document Outline',
+		outlineEmpty: 'No headings found in this document',
+		outlineCopy: 'Copy Outline',
+		outlineCopied: 'Copied!',
 
 		// Table Editor
 		tableEditor: 'Table Editor',
@@ -683,6 +690,13 @@ export const translations = {
 		syncHeadingWithFilename: '用一级标题重命名文件',
 		renameFile: '重命名文件',
 		openGlobalCommandPalette: '打开全局命令面板',
+		showOutline: '显示文档大纲',
+
+		// 大纲
+		outlineTitle: '文档大纲',
+		outlineEmpty: '当前文档中没有找到标题',
+		outlineCopy: '复制大纲',
+		outlineCopied: '已复制！',
 
 		// 表格编辑器
 		tableEditor: '表格编辑器',

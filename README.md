@@ -394,6 +394,35 @@ Use "Select code blocks to copy":
 - Quickly enable/disable plugins without going to settings
 - Clean up unused plugins based on usage data
 
+### Document Outline
+
+- **Show document outline** - Display a navigable outline of the current document:
+
+**Features**:
+- **Smart extraction**: Automatically extracts all headings (H1-H6) from the document
+- **Code block filtering**: Excludes headings inside code blocks (```java, ```dataviewjs, etc.)
+- **Hierarchical display**: Shows heading levels with visual indentation
+- **Click to navigate**: Click any heading to jump to that position in the document
+- **One-click copy**: Copy entire outline to clipboard in list format
+- **Empty state handling**: Friendly message when no headings are found
+
+**Outline format**:
+- Each heading level is indented with tabs
+- Example:
+  ```
+  - Main Heading
+  	- Subheading
+  		- Sub-subheading
+  	- Another Subheading
+  - Another Main Heading
+  ```
+
+**Use cases**:
+- Quick navigation in long documents
+- Get an overview of document structure
+- Copy outline for sharing or documentation
+- Verify heading hierarchy
+
 ## Usage
 
 1. Open any file in your vault
@@ -429,6 +458,7 @@ Use "Select code blocks to copy":
 | `Lemon Toolkit: Create table` | Create new table at cursor position |
 | `Lemon Toolkit: Show Statistics` | Open command usage analytics dashboard |
 | `Lemon Toolkit: Show Plugin Usage Stats` | View plugin usage statistics based on command usage |
+| `Lemon Toolkit: Show document outline` | Display document outline with clickable headings |
 
 ## Installation
 

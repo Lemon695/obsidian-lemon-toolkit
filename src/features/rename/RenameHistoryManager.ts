@@ -1,5 +1,6 @@
 import LemonToolkitPlugin from "../../main";
 import { moment } from "obsidian";
+import { HistoricalPattern } from "./RenameFilenameSuggestionEngine";
 
 interface RenameRecord {
 	oldName: string;
@@ -343,5 +344,30 @@ export class RenameHistoryManager {
 
 	private generateShortUUID(): string {
 		return Math.random().toString(36).substring(2, 10);
+	}
+
+	getHistoricalPatterns(): HistoricalPattern[] {
+		const patterns = this.extractPatterns();
+		
+		return patterns.map(pattern => {
+			const patternKey = `${pattern.type}:${pattern.value}`;
+			const fb = this.feedback.get(patternKey);
+			
+			let acceptRate = 0.5;
+			if (fb) {
+				const total = fb.accepted + fb.rejected;
+				if (total > 0) {
+					acceptRate = fb.accepted / total;
+				}
+			}
+			
+			return {
+				type: pattern.type,
+				value: pattern.value,
+				frequency: pattern.count,
+				lastUsed: pattern.lastUsed,
+				acceptRate
+			};
+		});
 	}
 }

@@ -42,12 +42,14 @@ export const translations = {
 		renameFile: 'Rename file',
 		openGlobalCommandPalette: 'Open global command palette',
 		showOutline: 'Show document outline',
+		copyOutline: 'Copy document outline',
 
 		// Outline
 		outlineTitle: 'Document Outline',
 		outlineEmpty: 'No headings found in this document',
 		outlineCopy: 'Copy Outline',
 		outlineCopied: 'Copied!',
+		outlineCopiedNotice: 'Outline copied to clipboard',
 
 		// Table Editor
 		tableEditor: 'Table Editor',
@@ -691,12 +693,14 @@ export const translations = {
 		renameFile: '重命名文件',
 		openGlobalCommandPalette: '打开全局命令面板',
 		showOutline: '显示文档大纲',
+		copyOutline: '复制文档大纲',
 
 		// 大纲
 		outlineTitle: '文档大纲',
 		outlineEmpty: '当前文档中没有找到标题',
 		outlineCopy: '复制大纲',
 		outlineCopied: '已复制！',
+		outlineCopiedNotice: '大纲已复制到剪贴板',
 
 		// 表格编辑器
 		tableEditor: '表格编辑器',

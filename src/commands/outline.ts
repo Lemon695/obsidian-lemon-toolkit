@@ -1,6 +1,7 @@
-import { Editor } from "obsidian";
+import { Editor, Notice } from "obsidian";
 import LemonToolkitPlugin from "../main";
 import { OutlineModal } from "../ui/OutlineModal";
+import { t } from "../i18n/locale";
 
 export interface HeadingItem {
 	level: number;
@@ -40,4 +41,20 @@ export function extractHeadings(editor: Editor): HeadingItem[] {
 export function showOutline(plugin: LemonToolkitPlugin, editor: Editor): void {
 	const headings = extractHeadings(editor);
 	new OutlineModal(plugin.app, headings, editor).open();
+}
+
+export function copyOutline(editor: Editor): void {
+	const headings = extractHeadings(editor);
+	
+	if (headings.length === 0) {
+		new Notice(t("outlineEmpty"));
+		return;
+	}
+
+	const outlineText = headings
+		.map((h) => `${"\t".repeat(h.level - 1)}- ${h.text}`)
+		.join("\n");
+	
+	navigator.clipboard.writeText(outlineText);
+	new Notice(t("outlineCopiedNotice"));
 }

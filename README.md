@@ -459,6 +459,7 @@ Use "Select code blocks to copy":
 | `Lemon Toolkit: Show Statistics` | Open command usage analytics dashboard |
 | `Lemon Toolkit: Show Plugin Usage Stats` | View plugin usage statistics based on command usage |
 | `Lemon Toolkit: Show document outline` | Display document outline with clickable headings |
+| `Lemon Toolkit: Copy document outline` | Copy document outline directly to clipboard |
 
 ## Installation
 

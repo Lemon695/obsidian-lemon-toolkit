@@ -440,6 +440,7 @@
 | `Lemon Toolkit: Show Statistics` | 打开命令使用分析仪表板 |
 | `Lemon Toolkit: Show Plugin Usage Stats` | 查看基于命令使用的插件统计 |
 | `Lemon Toolkit: Show document outline` | 显示带可点击标题的文档大纲 |
+| `Lemon Toolkit: Copy document outline` | 直接复制文档大纲到剪贴板 |
 
 ## 安装方法
 

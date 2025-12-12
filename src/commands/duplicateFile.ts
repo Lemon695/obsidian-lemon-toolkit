@@ -2,7 +2,7 @@ import { Notice } from "obsidian";
 import { DuplicateFileModal } from "../ui/DuplicateFileModal";
 import { generateSuffix } from "../utils/suffix";
 import LemonToolkitPlugin from "../main";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 /**
  * Duplicate the active file with a modal to rename

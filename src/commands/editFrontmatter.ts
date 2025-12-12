@@ -1,7 +1,7 @@
 import { Notice } from "obsidian";
 import { FrontmatterEditorModal } from "../features/frontmatter-editor/FrontmatterEditorModal";
 import LemonToolkitPlugin from "../main";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 /**
  * Open the frontmatter editor for the active file

@@ -1,7 +1,7 @@
 import { Modal, App } from 'obsidian';
 import { StatisticsManager } from './StatisticsManager';
 import { StatisticsTab } from './types';
-import { t } from '../../i18n/locale';
+import { t } from "../../i18n/legacy";
 
 /**
  * Modal window for displaying command usage statistics

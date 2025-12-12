@@ -1,7 +1,7 @@
 import { Editor, Notice } from "obsidian";
 import { TextSelectionModal } from "../features/text-selection/TextSelectionModal";
 import LemonToolkitPlugin from "../main";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 /**
  * Open text selection actions menu

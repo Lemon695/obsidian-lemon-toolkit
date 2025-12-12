@@ -1,6 +1,6 @@
 import { App, Modal, Editor } from "obsidian";
 import { HeadingItem } from "../commands/outline";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 export class OutlineModal extends Modal {
 	headings: HeadingItem[];

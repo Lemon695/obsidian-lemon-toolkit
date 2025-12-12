@@ -1,5 +1,5 @@
 import { App, Modal, Notice } from "obsidian";
-import { t } from "../../i18n/locale";
+import { t } from "../../i18n/legacy";
 
 export class TableRowSelectorModal extends Modal {
 	private tableContent: string;

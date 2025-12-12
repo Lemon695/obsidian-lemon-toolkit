@@ -1,7 +1,7 @@
 import { Editor, Notice } from "obsidian";
 import { LinkConverterPreviewModal } from "./LinkConverterPreviewModal";
 import LemonToolkitPlugin from "../../main";
-import { t } from "../../i18n/locale";
+import { t } from "../../i18n/legacy";
 
 export type ConversionType = "wiki-to-markdown" | "markdown-to-wiki";
 export type LinkType = "image" | "video" | "document";

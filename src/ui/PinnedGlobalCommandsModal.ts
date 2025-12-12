@@ -1,6 +1,6 @@
 import { App, Modal, Setting } from "obsidian";
 import LemonToolkitPlugin from "../main";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 export class PinnedGlobalCommandsModal extends Modal {
 	private plugin: LemonToolkitPlugin;

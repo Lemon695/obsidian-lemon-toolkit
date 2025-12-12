@@ -2,7 +2,7 @@ import { Notice, Platform } from "obsidian";
 import { exec } from "child_process";
 import { promisify } from "util";
 import LemonToolkitPlugin from "../../main";
-import { t } from "../../i18n/locale";
+import { t } from "../../i18n/legacy";
 import { ExternalApp } from "../../settings";
 
 const execAsync = promisify(exec);

@@ -1,7 +1,7 @@
 import { App, Modal, Notice, Setting } from "obsidian";
 import LemonToolkitPlugin from "../main";
 import { ExternalApp } from "../settings";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 export class ExternalAppsSettingModal extends Modal {
 	private plugin: LemonToolkitPlugin;

@@ -2,7 +2,7 @@ import { Editor, Notice } from "obsidian";
 import { ViewCurrentTagsModal } from "../ui/ViewCurrentTagsModal";
 import { InsertTagsModal } from "../ui/InsertTagsModal";
 import LemonToolkitPlugin from "../main";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 /**
  * View all tags in the current file

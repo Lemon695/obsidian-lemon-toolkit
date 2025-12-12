@@ -28,7 +28,7 @@ import { CommandTracker } from "./managers/CommandTracker";
 import { RecentFilesManager } from "./features/recent-files/RecentFilesManager";
 import { ClipboardRulesManager } from "./features/smart-paste/ClipboardRulesManager";
 import { PluginMetadataManager } from "./features/plugin-usage/PluginMetadataManager";
-import {t} from "./i18n/locale";
+import { t } from "./i18n/legacy";
 
 export default class LemonToolkitPlugin extends Plugin {
 	settings: LemonToolkitSettings;

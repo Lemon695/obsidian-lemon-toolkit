@@ -4,7 +4,7 @@ import { Notice } from "obsidian";
  * Copy text to clipboard and show a success notice
  * @param text - The text to copy to clipboard
  */
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 export async function copyToClipboard(text: string): Promise<void> {
 	await navigator.clipboard.writeText(text);

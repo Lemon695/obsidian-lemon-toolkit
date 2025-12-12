@@ -1,6 +1,6 @@
 import { App, Modal, Setting, Notice } from 'obsidian';
 import LemonToolkitPlugin from '../main';
-import { t } from '../i18n/locale';
+import { t } from "../i18n/legacy";
 import { 
 	getAllEfficiencyEstimates, 
 	getEfficiencyEstimatesByCategory,

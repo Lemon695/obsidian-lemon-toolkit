@@ -1,5 +1,5 @@
 import { App, Modal, Notice, TFile } from "obsidian";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 export class DuplicateFileModal extends Modal {
 	private file: TFile;

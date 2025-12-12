@@ -1,7 +1,7 @@
 import { App, Modal, Setting } from "obsidian";
 import LemonToolkitPlugin from "../main";
 import { PluginUsageAnalyzer, TimeRange } from "../features/plugin-usage/PluginUsageAnalyzer";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 export class PluginUsageStatsModal extends Modal {
 	private plugin: LemonToolkitPlugin;

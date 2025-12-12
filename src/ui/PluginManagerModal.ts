@@ -1,7 +1,7 @@
 import { App, Modal, Setting, Notice } from "obsidian";
 import LemonToolkitPlugin from "../main";
 import { PluginUsageAnalyzer } from "../features/plugin-usage/PluginUsageAnalyzer";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 interface PluginInfo {
 	id: string;

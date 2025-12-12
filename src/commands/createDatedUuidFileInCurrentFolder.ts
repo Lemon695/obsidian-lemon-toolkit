@@ -1,6 +1,6 @@
 import { Notice, TFolder } from "obsidian";
 import LemonToolkitPlugin from "../main";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 /**
  * Generate a date-UUID filename format: YYYY-MM-DD——UUID

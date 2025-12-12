@@ -1,6 +1,6 @@
 import { ItemView, WorkspaceLeaf, TFile, Menu, Notice } from "obsidian";
 import LemonToolkitPlugin from "../main";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 export const RECENT_FILES_VIEW_TYPE = "lemon-recent-files-view";
 

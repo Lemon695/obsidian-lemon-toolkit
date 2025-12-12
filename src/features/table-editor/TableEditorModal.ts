@@ -1,5 +1,5 @@
 import { App, Modal, Notice } from "obsidian";
-import { t } from "../../i18n/locale";
+import { t } from "../../i18n/legacy";
 
 interface TableCell {
 	content: string;

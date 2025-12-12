@@ -1,6 +1,6 @@
 import { Editor, Notice } from "obsidian";
 import LemonToolkitPlugin from "../../main";
-import { t } from "../../i18n/locale";
+import { t } from "../../i18n/legacy";
 
 export class SmartPasteManager {
 	private plugin: LemonToolkitPlugin;

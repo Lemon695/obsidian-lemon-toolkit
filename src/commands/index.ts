@@ -43,7 +43,7 @@ import { openPluginManager } from "./pluginManager";
 import { showOutline, copyOutline } from "./outline";
 import { createDatedUuidFileInCurrentFolder } from "./createDatedUuidFileInCurrentFolder";
 import LemonToolkitPlugin from "../main";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 /**
  * Wrap a callback to track command usage

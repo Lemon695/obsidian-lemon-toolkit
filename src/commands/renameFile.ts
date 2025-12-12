@@ -1,7 +1,7 @@
 import { Notice } from "obsidian";
 import LemonToolkitPlugin from "../main";
 import { RenameFileModal } from "../ui/RenameFileModal";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 export async function renameFile(plugin: LemonToolkitPlugin): Promise<void> {
 	const file = plugin.app.workspace.getActiveFile();

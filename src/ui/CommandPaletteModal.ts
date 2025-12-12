@@ -1,6 +1,6 @@
 import { App, FuzzySuggestModal, FuzzyMatch, MarkdownView, setIcon } from "obsidian";
 import LemonToolkitPlugin from "../main";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 interface CommandItem {
 	id: string;

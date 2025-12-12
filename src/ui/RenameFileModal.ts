@@ -1,5 +1,5 @@
 import { App, Modal, TFile } from "obsidian";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 import { RenameSuggestion } from "../features/rename/RenameHistoryManager";
 
 export class RenameFileModal extends Modal {

@@ -4,7 +4,7 @@ import { FieldData, FieldType } from "./types";
 import { inferFieldType, convertValueToType } from "./utils/typeInference";
 import { replaceVariables } from "./utils/variableReplacer";
 import { getTypeIconSVG, icons } from "./utils/icons";
-import { t } from "../../i18n/locale";
+import { t } from "../../i18n/legacy";
 
 export class FrontmatterEditorModal extends Modal {
 	private plugin: LemonToolkitPlugin;

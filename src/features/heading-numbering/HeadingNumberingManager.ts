@@ -1,7 +1,7 @@
 import { Editor, Notice } from "obsidian";
 import { HeadingNumberingPreviewModal } from "./HeadingNumberingPreviewModal";
 import LemonToolkitPlugin from "../../main";
-import { t } from "../../i18n/locale";
+import { t } from "../../i18n/legacy";
 
 interface HeadingInfo {
 	line: number;

@@ -1,6 +1,6 @@
 import { Notice, Plugin, TFile } from "obsidian";
 import { copyToClipboard } from "../utils/clipboard";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 /**
  * Copy the relative path of the active file

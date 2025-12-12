@@ -1,7 +1,7 @@
 import { Editor, Notice } from "obsidian";
 import LemonToolkitPlugin from "../main";
 import { OutlineModal } from "../ui/OutlineModal";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 export interface HeadingItem {
 	level: number;

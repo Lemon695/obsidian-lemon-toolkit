@@ -1,5 +1,5 @@
 import { Notice, Plugin } from "obsidian";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 /**
  * Delete the active file permanently

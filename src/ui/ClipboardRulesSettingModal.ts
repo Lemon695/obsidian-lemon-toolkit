@@ -2,7 +2,7 @@ import { App, Modal, Setting, Notice } from "obsidian";
 import { ClipboardRule } from "../settings";
 import { SmartPasteManager } from "../features/smart-paste/SmartPasteManager";
 import LemonToolkitPlugin from "../main";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 export class ClipboardRulesSettingModal extends Modal {
 	private plugin: LemonToolkitPlugin;

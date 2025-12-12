@@ -1,7 +1,7 @@
 import { Editor, EditorPosition, Notice } from "obsidian";
 import LemonToolkitPlugin from "../../main";
 import { TableEditorModal } from "./TableEditorModal";
-import { t } from "../../i18n/locale";
+import { t } from "../../i18n/legacy";
 
 interface TableCell {
 	content: string;

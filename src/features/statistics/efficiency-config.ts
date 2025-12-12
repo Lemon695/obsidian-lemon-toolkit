@@ -6,7 +6,7 @@
  */
 
 import { EfficiencyEstimate } from './types';
-import { t } from '../../i18n/locale';
+import { t } from '../../i18n/legacy';
 
 /**
  * Default efficiency estimates for all commands

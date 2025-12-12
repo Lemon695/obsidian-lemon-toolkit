@@ -1,6 +1,6 @@
 import { App, Modal, Notice } from "obsidian";
 import { ContentBlock } from "./SmartCopyManager";
-import { t } from "../../i18n/locale";
+import { t } from "../../i18n/legacy";
 
 export class CodeBlockSelectorModal extends Modal {
 	private codeBlocks: ContentBlock[];

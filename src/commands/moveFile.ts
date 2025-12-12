@@ -1,7 +1,7 @@
 import { Notice } from "obsidian";
 import { MoveFileModal } from "../ui/MoveFileModal";
 import LemonToolkitPlugin from "../main";
-import { t } from "../i18n/locale";
+import { t } from "../i18n/legacy";
 
 /**
  * Move the active file to a folder with history

@@ -175,21 +175,36 @@ export class TableEditorManager {
 		const alignLine = lines[1].trim();
 		const alignments = this.parseAlignments(alignLine);
 
+		// Determine the expected number of columns
+		const expectedColumns = Math.max(headers.length, alignments.length);
+
 		// Parse data rows
 		const rows: TableCell[][] = [];
 		for (let i = 2; i < lines.length; i++) {
 			const cells = this.parseCells(lines[i].trim());
-			rows.push(cells.map((content, idx) => ({
-				content,
-				align: alignments[idx] || 'left'
-			})));
+			
+			// Ensure each row has the same number of columns as headers
+			const normalizedCells: TableCell[] = [];
+			for (let j = 0; j < expectedColumns; j++) {
+				normalizedCells.push({
+					content: cells[j] || '',
+					align: alignments[j] || 'left'
+				});
+			}
+			rows.push(normalizedCells);
+		}
+
+		// Ensure headers array has the correct length
+		const normalizedHeaders: TableCell[] = [];
+		for (let i = 0; i < expectedColumns; i++) {
+			normalizedHeaders.push({
+				content: headers[i] || `Column ${i + 1}`,
+				align: alignments[i] || 'left'
+			});
 		}
 
 		return {
-			headers: headers.map((content, idx) => ({
-				content,
-				align: alignments[idx] || 'left'
-			})),
+			headers: normalizedHeaders,
 			rows,
 			startLine,
 			endLine: startLine + lines.length - 1
@@ -228,9 +243,10 @@ export class TableEditorManager {
 	 */
 	private async applyTableChanges(editor: Editor, tableData: TableData, originalCursor: EditorPosition): Promise<void> {
 		const lines: string[] = [];
+		const columnCount = tableData.headers.length;
 
 		// Generate header row
-		const headerCells = tableData.headers.map(h => h.content);
+		const headerCells = tableData.headers.map(h => h.content || '');
 		lines.push(this.formatTableRow(headerCells));
 
 		// Generate alignment row
@@ -242,9 +258,12 @@ export class TableEditorManager {
 		});
 		lines.push(this.formatTableRow(alignRow));
 
-		// Generate data rows
+		// Generate data rows - ensure each row has the correct number of columns
 		tableData.rows.forEach(row => {
-			const cells = row.map(cell => cell.content);
+			const cells: string[] = [];
+			for (let i = 0; i < columnCount; i++) {
+				cells.push(row[i]?.content || '');
+			}
 			lines.push(this.formatTableRow(cells));
 		});
 
@@ -286,9 +305,10 @@ export class TableEditorManager {
 	 */
 	private async insertNewTable(editor: Editor, tableData: TableData, cursor: EditorPosition): Promise<void> {
 		const lines: string[] = [];
+		const columnCount = tableData.headers.length;
 
 		// Generate header row
-		const headerCells = tableData.headers.map(h => h.content);
+		const headerCells = tableData.headers.map(h => h.content || '');
 		lines.push(this.formatTableRow(headerCells));
 
 		// Generate alignment row
@@ -300,9 +320,12 @@ export class TableEditorManager {
 		});
 		lines.push(this.formatTableRow(alignRow));
 
-		// Generate data rows
+		// Generate data rows - ensure each row has the correct number of columns
 		tableData.rows.forEach(row => {
-			const cells = row.map(cell => cell.content);
+			const cells: string[] = [];
+			for (let i = 0; i < columnCount; i++) {
+				cells.push(row[i]?.content || '');
+			}
 			lines.push(this.formatTableRow(cells));
 		});
 

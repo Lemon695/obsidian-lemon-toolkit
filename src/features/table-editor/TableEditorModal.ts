@@ -255,8 +255,8 @@ export class TableEditorModal extends Modal {
 				this.selectRow(rowIdx);
 			});
 			
-			// Row drag handle (show on left edge hover)
-			const dragHandle = tr.createDiv('row-drag-handle');
+			// Row drag handle (show on left edge hover) - should be inside the row number cell
+			const dragHandle = rowNumberCell.createDiv('row-drag-handle');
 			dragHandle.innerHTML = '⋮<br>⋮<br>⋮';
 			
 			// Drag events for rows
@@ -283,11 +283,15 @@ export class TableEditorModal extends Modal {
 				}
 			});
 			
-			row.forEach((cell, colIdx) => {
+			// Ensure we have the correct number of cells to match headers
+			const cellsToRender = Math.max(row.length, this.tableData.headers.length);
+			
+			for (let colIdx = 0; colIdx < cellsToRender; colIdx++) {
+				const cell = row[colIdx] || { content: '', align: 'left' };
 				const td = tr.createEl('td');
 				td.style.textAlign = cell.align || this.tableData.headers[colIdx]?.align || 'left';
-				td.style.width = `${Math.max(this.columnWidths[colIdx], 100)}px`;
-				td.style.minWidth = `${Math.max(this.columnWidths[colIdx], 100)}px`;
+				td.style.width = `${Math.max(this.columnWidths[colIdx] || 150, 100)}px`;
+				td.style.minWidth = `${Math.max(this.columnWidths[colIdx] || 150, 100)}px`;
 				
 				// Apply frozen column style
 				if (this.freezeFirstColumn && colIdx === 0) {
@@ -297,11 +301,15 @@ export class TableEditorModal extends Modal {
 				
 				const input = td.createEl('input', {
 					type: 'text',
-					value: cell.content,
+					value: cell.content || '',
 					cls: 'table-cell-input'
 				});
 
 				input.addEventListener('input', (e) => {
+					// Ensure the row has enough cells
+					while (this.tableData.rows[rowIdx].length <= colIdx) {
+						this.tableData.rows[rowIdx].push({ content: '', align: 'left' });
+					}
 					this.tableData.rows[rowIdx][colIdx].content = (e.target as HTMLInputElement).value;
 				});
 
@@ -319,7 +327,7 @@ export class TableEditorModal extends Modal {
 						this.navigateCell('down');
 					}
 				});
-			});
+			}
 		});
 	}
 

@@ -505,6 +505,18 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		commandTimeSeconds: 1,
 		descriptionKey: 'efficiencyDescOpenPluginManager',
 		categoryKey: 'efficiencyCategoryPluginManagement'
+	},
+
+	// Folder Management
+	'open-folder-manager': {
+		commandId: 'open-folder-manager',
+		manualTimeSeconds: 15,
+		// 手动操作：Obsidian 没有文件夹管理器
+		// 替代方案：在文件浏览器中手动浏览文件夹结构 (5秒) → 创建子文件夹需要右键菜单 (3秒) → 输入名称 (2秒) → 导航到文件夹 (5秒) = 15秒
+		// 本插件：树形结构一览所有文件夹，一键创建子文件夹，快速导航
+		commandTimeSeconds: 3,
+		descriptionKey: 'efficiencyDescOpenFolderManager',
+		categoryKey: 'efficiencyCategoryNavigation'
 	}
 };
 

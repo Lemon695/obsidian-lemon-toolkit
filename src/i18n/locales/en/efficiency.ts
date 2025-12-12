@@ -116,6 +116,7 @@ const efficiencyTranslations = {
   efficiencyDescCopyOutline: 'Copy document structure with hierarchy',
   efficiencyDescShowPluginUsageStats: 'Comprehensive plugin usage analytics',
   efficiencyDescOpenPluginManager: 'Advanced plugin management interface',
+  efficiencyDescOpenFolderManager: 'Tree-view folder structure with quick subfolder creation and navigation',
   pluginUsageStats: 'Plugin Command Usage Statistics',
   pluginUsageStatsDesc: 'View which plugins you use most frequently based on command usage',
   noPluginUsageData: 'No plugin usage data available yet',

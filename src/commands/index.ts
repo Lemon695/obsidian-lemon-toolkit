@@ -43,6 +43,7 @@ import { showPluginUsageStats } from "./pluginUsageStats";
 import { openPluginManager } from "./pluginManager";
 import { showOutline, copyOutline } from "./outline";
 import { createDatedUuidFileInCurrentFolder } from "./createDatedUuidFileInCurrentFolder";
+import { openFolderManager } from "./folderManager";
 import LemonToolkitPlugin from "../main";
 import { t } from "../i18n/legacy";
 
@@ -359,5 +360,12 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "create-file-with-date-uuid",
 		name: t('createDatedUuidFileInCurrentFolder'),
 		callback: trackCommand(plugin, "create-file-with-date-uuid", t('createDatedUuidFileInCurrentFolder'), () => createDatedUuidFileInCurrentFolder(plugin)),
+	});
+
+	// Folder manager
+	plugin.addCommand({
+		id: "open-folder-manager",
+		name: t('openFolderManager'),
+		callback: trackCommand(plugin, "open-folder-manager", t('openFolderManager'), () => openFolderManager(plugin)),
 	});
 }

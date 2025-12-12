@@ -116,6 +116,7 @@ const efficiencyTranslations = {
   efficiencyDescCopyOutline: '复制文档结构层级',
   efficiencyDescShowPluginUsageStats: '插件使用统计分析',
   efficiencyDescOpenPluginManager: '高级插件管理界面',
+  efficiencyDescOpenFolderManager: '树形文件夹结构，快速创建子文件夹和导航',
   pluginUsageStats: '插件命令使用统计',
   pluginUsageStatsDesc: '查看基于命令使用情况的插件使用频率',
   noPluginUsageData: '暂无插件使用数据',

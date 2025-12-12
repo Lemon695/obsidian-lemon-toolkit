@@ -73,7 +73,8 @@ export class StatisticsModal extends Modal {
 			'open-plugin-manager': 'openPluginManager',
 			'show-outline': 'showOutline',
 			'copy-outline': 'copyOutline',
-			'create-file-with-date-uuid': 'createDatedUuidFileInCurrentFolder'
+			'create-file-with-date-uuid': 'createDatedUuidFileInCurrentFolder',
+			'open-folder-manager': 'openFolderManager'
 		};
 		const i18nKey = idToKeyMap[commandId];
 		

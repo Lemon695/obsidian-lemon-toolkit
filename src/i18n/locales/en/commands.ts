@@ -18,6 +18,7 @@ const commandsTranslations = {
   viewCurrentTags: 'View current tags',
   insertTags: 'Insert tags',
   openCommandPalette: 'Open command palette',
+  openFolderManager: 'Open folder manager',
   openSettings: 'Open settings',
   openFileInfo: 'Open file info',
   editFrontmatter: 'Edit frontmatter',

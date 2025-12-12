@@ -18,6 +18,7 @@ const commandsTranslations = {
   viewCurrentTags: '查看当前标签',
   insertTags: '插入标签',
   openCommandPalette: '打开命令面板',
+  openFolderManager: '打开文件夹管理器',
   openSettings: '打开设置',
   openFileInfo: '打开文件信息',
   editFrontmatter: '编辑 Frontmatter',

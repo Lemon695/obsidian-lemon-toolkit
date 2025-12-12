@@ -427,6 +427,84 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		commandTimeSeconds: 8,
 		descriptionKey: 'efficiencyDescSelectTable',
 		categoryKey: 'efficiencyCategoryTableEditor'
+	},
+
+	// Global Navigation
+	'open-global-command-palette': {
+		commandId: 'open-global-command-palette',
+		manualTimeSeconds: 4,
+		// 手动操作：Obsidian 有 Cmd+P，但显示所有命令（包括核心命令）
+		// 替代方案：Cmd+P → 输入插件名过滤 (2秒) → 找到目标命令 (2秒) = 4秒
+		// 本插件：直接显示所有插件命令，按使用频率排序，支持固定常用命令
+		commandTimeSeconds: 1,
+		descriptionKey: 'efficiencyDescOpenGlobalCommandPalette',
+		categoryKey: 'efficiencyCategoryNavigation'
+	},
+
+	// File Naming
+	'sync-heading-with-filename': {
+		commandId: 'sync-heading-with-filename',
+		manualTimeSeconds: 12,
+		// 手动操作：Obsidian 没有自动同步功能
+		// 替代方案：复制H1标题 (2秒) → 右键文件 (1秒) → 重命名 (1秒) → 粘贴 (1秒) → 清理格式 (4秒) → 确认 (1秒) → 处理特殊字符 (2秒) = 12秒
+		// 本插件：一键将H1标题同步为文件名，自动处理特殊字符和格式
+		commandTimeSeconds: 1,
+		descriptionKey: 'efficiencyDescSyncHeadingWithFilename',
+		categoryKey: 'efficiencyCategoryFileOps'
+	},
+	'rename-file': {
+		commandId: 'rename-file',
+		manualTimeSeconds: 8,
+		// 手动操作：Obsidian 有重命名功能，但没有智能建议
+		// 替代方案：右键文件 (1秒) → 重命名 (1秒) → 思考新名称 (4秒) → 输入 (2秒) = 8秒
+		// 本插件：提供智能重命名建议（基于内容、标签、历史等），减少思考时间
+		commandTimeSeconds: 3,
+		descriptionKey: 'efficiencyDescRenameFile',
+		categoryKey: 'efficiencyCategoryFileOps'
+	},
+
+	// Document Structure
+	'show-outline': {
+		commandId: 'show-outline',
+		manualTimeSeconds: 6,
+		// 手动操作：Obsidian 有大纲面板，但需要手动打开
+		// 替代方案：打开大纲面板 (2秒) → 等待加载 (1秒) → 浏览结构 (3秒) = 6秒
+		// 本插件：一键显示文档大纲弹窗，包含层级结构和跳转功能
+		commandTimeSeconds: 1,
+		descriptionKey: 'efficiencyDescShowOutline',
+		categoryKey: 'efficiencyCategoryContentOps'
+	},
+	'copy-outline': {
+		commandId: 'copy-outline',
+		manualTimeSeconds: 15,
+		// 手动操作：Obsidian 没有复制大纲功能
+		// 替代方案：手动浏览文档 (5秒) → 记录所有标题 (8秒) → 整理格式 (2秒) = 15秒
+		// 本插件：一键复制文档大纲，包含层级缩进和链接
+		commandTimeSeconds: 1,
+		descriptionKey: 'efficiencyDescCopyOutline',
+		categoryKey: 'efficiencyCategoryContentOps'
+	},
+
+	// Plugin Management
+	'show-plugin-usage-stats': {
+		commandId: 'show-plugin-usage-stats',
+		manualTimeSeconds: 20,
+		// 手动操作：Obsidian 没有插件使用统计功能
+		// 替代方案：手动记录命令使用 (10秒) → 计算频率 (5秒) → 分析效率 (5秒) = 20秒
+		// 本插件：自动统计所有命令使用情况，显示时间节省和效率分析
+		commandTimeSeconds: 2,
+		descriptionKey: 'efficiencyDescShowPluginUsageStats',
+		categoryKey: 'efficiencyCategoryPluginManagement'
+	},
+	'open-plugin-manager': {
+		commandId: 'open-plugin-manager',
+		manualTimeSeconds: 8,
+		// 手动操作：Obsidian 有插件管理，但需要多步操作
+		// 替代方案：Cmd+, → 第三方插件 (2秒) → 浏览已安装插件 (3秒) → 找到目标插件 (3秒) = 8秒
+		// 本插件：一键打开插件管理界面，显示详细信息和快速操作
+		commandTimeSeconds: 1,
+		descriptionKey: 'efficiencyDescOpenPluginManager',
+		categoryKey: 'efficiencyCategoryPluginManagement'
 	}
 };
 

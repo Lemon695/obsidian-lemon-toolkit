@@ -58,7 +58,14 @@ export class StatisticsModal extends Modal {
 			'select-code-blocks': 'selectCodeBlocks',
 			'edit-table': 'editTable',
 			'create-table': 'createTable',
-			'select-table-to-edit': 'selectTableToEdit'
+			'select-table-to-edit': 'selectTableToEdit',
+			'open-global-command-palette': 'openGlobalCommandPalette',
+			'sync-heading-with-filename': 'syncHeadingWithFilename',
+			'rename-file': 'renameFile',
+			'show-plugin-usage-stats': 'showPluginUsageStats',
+			'open-plugin-manager': 'openPluginManager',
+			'show-outline': 'showOutline',
+			'copy-outline': 'copyOutline'
 		};
 		const i18nKey = idToKeyMap[commandId];
 		return i18nKey ? t(i18nKey as any) : commandId;

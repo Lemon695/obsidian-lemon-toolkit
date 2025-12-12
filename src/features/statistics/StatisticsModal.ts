@@ -23,6 +23,13 @@ export class StatisticsModal extends Modal {
 	 * Get translated command name from command ID
 	 */
 	private getTranslatedCommandName(commandId: string): string {
+		// First, try to get the command from Obsidian's command registry
+		const command = (this.app as any).commands?.commands?.[commandId];
+		if (command?.name) {
+			return command.name;
+		}
+
+		// Fallback to our plugin's command mappings
 		const idToKeyMap: Record<string, string> = {
 			'copy-relative-path': 'copyRelativePath',
 			'copy-absolute-path': 'copyAbsolutePath',
@@ -65,10 +72,36 @@ export class StatisticsModal extends Modal {
 			'show-plugin-usage-stats': 'showPluginUsageStats',
 			'open-plugin-manager': 'openPluginManager',
 			'show-outline': 'showOutline',
-			'copy-outline': 'copyOutline'
+			'copy-outline': 'copyOutline',
+			'create-file-with-date-uuid': 'createDatedUuidFileInCurrentFolder'
 		};
 		const i18nKey = idToKeyMap[commandId];
-		return i18nKey ? t(i18nKey as any) : commandId;
+		
+		if (i18nKey) {
+			return t(i18nKey as any);
+		}
+		
+		// If no translation found, return a cleaned up version of the command ID
+		return this.formatCommandId(commandId);
+	}
+
+	/**
+	 * Format command ID for display when no translation is available
+	 */
+	private formatCommandId(commandId: string): string {
+		// Remove plugin prefix and convert to readable format
+		let formatted = commandId;
+		
+		// Remove common prefixes
+		formatted = formatted.replace(/^(app|editor|workspace|file-explorer|command-palette|switcher|bookmarks):/g, '');
+		
+		// Convert kebab-case to title case
+		formatted = formatted
+			.split('-')
+			.map(word => word.charAt(0).toUpperCase() + word.slice(1))
+			.join(' ');
+		
+		return formatted;
 	}
 
 	onOpen(): void {
@@ -386,7 +419,7 @@ export class StatisticsModal extends Modal {
 			const sorted = [...stats].sort((a, b) => {
 				switch (sortBy) {
 					case 'name':
-						return a.commandName.localeCompare(b.commandName);
+						return this.getTranslatedCommandName(a.commandId).localeCompare(this.getTranslatedCommandName(b.commandId));
 					case 'lastUsed':
 						return b.lastUsed - a.lastUsed;
 					case 'uses':

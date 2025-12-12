@@ -48,6 +48,7 @@ const commandsTranslations = {
   openGlobalCommandPalette: '打开全局命令面板',
   showOutline: '显示文档大纲',
   copyOutline: '复制文档大纲',
+  selectTableToEdit: '选择表格编辑',
   createDatedUuidFileInCurrentFolder: '在当前文件夹创建日期-UUID文件',
 };
 

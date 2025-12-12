@@ -57,7 +57,8 @@ export class StatisticsModal extends Modal {
 			'select-code-lines': 'selectCodeLines',
 			'select-code-blocks': 'selectCodeBlocks',
 			'edit-table': 'editTable',
-			'create-table': 'createTable'
+			'create-table': 'createTable',
+			'select-table-to-edit': 'selectTableToEdit'
 		};
 		const i18nKey = idToKeyMap[commandId];
 		return i18nKey ? t(i18nKey as any) : commandId;

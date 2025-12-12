@@ -48,6 +48,7 @@ const commandsTranslations = {
   openGlobalCommandPalette: 'Open global command palette',
   showOutline: 'Show document outline',
   copyOutline: 'Copy document outline',
+  selectTableToEdit: 'Select table to edit',
   createDatedUuidFileInCurrentFolder: 'Create a date-UUID named file in the current folder',
 };
 

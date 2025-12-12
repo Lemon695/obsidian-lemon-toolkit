@@ -2,6 +2,7 @@ import { Editor, EditorPosition, Notice } from "obsidian";
 import LemonToolkitPlugin from "../../main";
 import { TableEditorModal } from "./TableEditorModal";
 import { t } from "../../i18n/legacy";
+import type { TableInfo } from "../table-selector/TableScanner";
 
 interface TableCell {
 	content: string;
@@ -41,6 +42,43 @@ export class TableEditorManager {
 				await this.applyTableChanges(editor, updatedData, cursor);
 			}
 		);
+
+		modal.open();
+	}
+
+	/**
+	 * Open table editor for a specific table (used by table selector)
+	 */
+	async openEditorForTable(editor: Editor, tableInfo: TableInfo, onComplete?: () => void): Promise<void> {
+		const tableData = this.parseTableFromInfo(tableInfo);
+		
+		if (!tableData) {
+			new Notice(t('errorParsingTable'));
+			return;
+		}
+
+		const modal = new TableEditorModal(
+			this.plugin.app,
+			tableData,
+			async (updatedData: TableData) => {
+				await this.applyTableChanges(editor, updatedData, { line: tableInfo.startLine, ch: 0 });
+				// Move cursor to the edited table
+				editor.setCursor({ line: tableInfo.startLine, ch: 0 });
+				// Notify completion (for table selector to stay open)
+				if (onComplete) {
+					onComplete();
+				}
+			}
+		);
+
+		// Override the modal's close method to call onComplete when cancelled
+		const originalClose = modal.close.bind(modal);
+		modal.close = () => {
+			originalClose();
+			if (onComplete) {
+				onComplete();
+			}
+		};
 
 		modal.open();
 	}
@@ -159,6 +197,14 @@ export class TableEditorManager {
 	 */
 	private isTableLine(line: string): boolean {
 		return line.includes("|") && line.trim().length > 0;
+	}
+
+	/**
+	 * Parse table from TableInfo (used by table selector)
+	 */
+	private parseTableFromInfo(tableInfo: TableInfo): TableData | null {
+		const lines = tableInfo.rawContent.split('\n');
+		return this.parseTable(lines, tableInfo.startLine);
 	}
 
 	/**

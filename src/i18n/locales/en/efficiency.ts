@@ -107,6 +107,7 @@ const efficiencyTranslations = {
   efficiencyDescTextSelectionActions: 'Quick actions for selected text',
   efficiencyDescEditTable: 'Visual table editor with Excel-like features',
   efficiencyDescCreateTable: 'Create new table with visual editor',
+  efficiencyDescSelectTable: 'Quick table selection from document overview',
   pluginUsageStats: 'Plugin Command Usage Statistics',
   pluginUsageStatsDesc: 'View which plugins you use most frequently based on command usage',
   noPluginUsageData: 'No plugin usage data available yet',

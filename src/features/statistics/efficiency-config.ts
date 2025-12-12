@@ -416,6 +416,17 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		commandTimeSeconds: 5,
 		descriptionKey: 'efficiencyDescCreateTable',
 		categoryKey: 'efficiencyCategoryTableEditor'
+	},
+	'select-table-to-edit': {
+		commandId: 'select-table-to-edit',
+		manualTimeSeconds: 45,
+		// 手动操作：在长文档中找到要编辑的表格
+		// 典型场景：5页文档包含3个表格，需要编辑第1个表格，当前在第4个表格位置
+		// 操作步骤：滚动到文档顶部 (10秒) → 浏览查找目标表格 (20秒) → 定位到表格位置 (5秒) → 执行编辑命令 (10秒) = 45秒
+		// 本插件：弹窗显示所有表格预览，直接选择目标表格
+		commandTimeSeconds: 8,
+		descriptionKey: 'efficiencyDescSelectTable',
+		categoryKey: 'efficiencyCategoryTableEditor'
 	}
 };
 

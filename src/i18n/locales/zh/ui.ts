@@ -58,6 +58,17 @@ const uiTranslations = {
   location: '位置',
   root: '根目录',
   refresh: '刷新',
+  searchTables: '搜索表格...',
+  noTablesFound: '未找到表格',
+  tableNumber: '表格 {number}',
+  emptyTable: '空表格',
+  tableSize: '{columns} 列，{rows} 行',
+  errorOpeningTable: '打开表格时出错',
+  errorParsingTable: '解析表格时出错',
+  tableHeaders: '表头：',
+  sampleData: '示例数据：',
+  noHeaders: '无表头',
+  andMoreRows: '还有 {count} 行',
   minute: '分钟',
 };
 

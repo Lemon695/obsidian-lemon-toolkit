@@ -107,6 +107,7 @@ const efficiencyTranslations = {
   efficiencyDescTextSelectionActions: '选中文本快速操作',
   efficiencyDescEditTable: 'Excel 风格可视化表格编辑器',
   efficiencyDescCreateTable: '可视化编辑器创建新表格',
+  efficiencyDescSelectTable: '文档表格快速选择预览',
   pluginUsageStats: '插件命令使用统计',
   pluginUsageStatsDesc: '查看基于命令使用情况的插件使用频率',
   noPluginUsageData: '暂无插件使用数据',

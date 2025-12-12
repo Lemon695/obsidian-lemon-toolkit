@@ -38,6 +38,7 @@ import {
 	selectCodeBlocks,
 } from "./smartCopy";
 import { openTableEditor, createTable } from "./tableEditor";
+import { openTableSelector } from "./tableSelectorCommand";
 import { showPluginUsageStats } from "./pluginUsageStats";
 import { openPluginManager } from "./pluginManager";
 import { showOutline, copyOutline } from "./outline";
@@ -316,6 +317,13 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "create-table",
 		name: t('createTable'),
 		editorCallback: trackEditorCommand(plugin, "create-table", t('createTable'), (editor) => createTable(plugin, editor)),
+	});
+
+	// Table selector
+	plugin.addCommand({
+		id: "select-table-to-edit",
+		name: t('selectTableToEdit'),
+		editorCallback: trackEditorCommand(plugin, "select-table-to-edit", t('selectTableToEdit'), (editor) => openTableSelector(plugin, editor)),
 	});
 
 	// Plugin usage stats

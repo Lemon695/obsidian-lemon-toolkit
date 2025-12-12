@@ -72,9 +72,9 @@ export class RenameFilenameSuggestionEngine {
 			}
 			if (inCodeBlock) continue;
 
-			const match = line.match(/^#\s+(.+)$/);
+			const match = line.match(/^(#{1,6})\s+(.+)$/);
 			if (match) {
-				return match[1].trim();
+				return match[2].trim();
 			}
 		}
 

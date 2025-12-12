@@ -12,6 +12,12 @@ import { H1TitleStrategy } from "./features/rename/strategies/H1TitleStrategy";
 import { H1WithHistoricalSuffixStrategy } from "./features/rename/strategies/H1WithHistoricalSuffixStrategy";
 import { H1WithHistoricalPrefixStrategy } from "./features/rename/strategies/H1WithHistoricalPrefixStrategy";
 import { SmartVersionStrategy } from "./features/rename/strategies/SmartVersionStrategy";
+import { TagDrivenStrategy } from "./features/rename/strategies/TagDrivenStrategy";
+import { PathContextStrategy } from "./features/rename/strategies/PathContextStrategy";
+import { TimeIntelligenceStrategy } from "./features/rename/strategies/TimeIntelligenceStrategy";
+import { LinkRelationshipStrategy } from "./features/rename/strategies/LinkRelationshipStrategy";
+import { FolderNameStrategy } from "./features/rename/strategies/FolderNameStrategy";
+import { KeywordExtractionStrategy } from "./features/rename/strategies/KeywordExtractionStrategy";
 import { FolderMoveHistoryManager } from "./features/move/FolderMoveHistoryManager";
 import { TagUsageHistoryManager } from "./features/tags/TagUsageHistoryManager";
 import { CommandHistoryManager } from "./features/commands/CommandHistoryManager";
@@ -70,9 +76,15 @@ export default class LemonToolkitPlugin extends Plugin {
 		// Initialize rename suggestion engine
 		this.renameSuggestionEngine = new RenameFilenameSuggestionEngine(this.app);
 		this.renameSuggestionEngine.registerStrategy(new H1TitleStrategy());
+		this.renameSuggestionEngine.registerStrategy(new TagDrivenStrategy());
 		this.renameSuggestionEngine.registerStrategy(new H1WithHistoricalSuffixStrategy());
+		this.renameSuggestionEngine.registerStrategy(new PathContextStrategy());
+		this.renameSuggestionEngine.registerStrategy(new TimeIntelligenceStrategy());
 		this.renameSuggestionEngine.registerStrategy(new H1WithHistoricalPrefixStrategy());
+		this.renameSuggestionEngine.registerStrategy(new LinkRelationshipStrategy());
+		this.renameSuggestionEngine.registerStrategy(new FolderNameStrategy());
 		this.renameSuggestionEngine.registerStrategy(new SmartVersionStrategy());
+		this.renameSuggestionEngine.registerStrategy(new KeywordExtractionStrategy());
 		
 		// Initialize folder move history manager
 		this.folderMoveHistoryManager = new FolderMoveHistoryManager(this);

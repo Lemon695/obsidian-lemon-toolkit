@@ -44,6 +44,13 @@ export const translations = {
 		showOutline: 'Show document outline',
 		copyOutline: 'Copy document outline',
 
+		// Rename Modal
+		renameSmartSuggestions: 'Smart Suggestions',
+		renameQuickActions: 'Quick Actions',
+		renameSuggestionCount: 'Suggestion count',
+		renameSuggestionCountDesc: 'Number of filename suggestions to show (5-30)',
+		renameSettings: 'Rename Settings',
+
 		// Outline
 		outlineTitle: 'Document Outline',
 		outlineEmpty: 'No headings found in this document',
@@ -694,6 +701,13 @@ export const translations = {
 		openGlobalCommandPalette: '打开全局命令面板',
 		showOutline: '显示文档大纲',
 		copyOutline: '复制文档大纲',
+
+		// 重命名弹窗
+		renameSmartSuggestions: '智能建议',
+		renameQuickActions: '快捷操作',
+		renameSuggestionCount: '建议数量',
+		renameSuggestionCountDesc: '显示的文件名建议数量（5-30）',
+		renameSettings: '重命名设置',
 
 		// 大纲
 		outlineTitle: '文档大纲',

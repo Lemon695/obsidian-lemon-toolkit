@@ -293,6 +293,31 @@ export class LemonToolkitSettingTab extends PluginSettingTab {
 			<strong>Example:</strong> ${this.getMomentExample()}
 		`;
 
+		// Rename settings
+		containerEl.createEl("h3", { text: t('renameSettings') });
+
+		const renameSetting = new Setting(containerEl)
+			.setName(t('renameSuggestionCount'))
+			.setDesc(t('renameSuggestionCountDesc'));
+
+		const countDisplay = renameSetting.controlEl.createDiv({ cls: "setting-item-description" });
+		countDisplay.style.marginTop = "8px";
+		countDisplay.style.fontSize = "0.9em";
+		countDisplay.style.color = "var(--text-accent)";
+		countDisplay.textContent = `${this.plugin.settings.renameSuggestionCount} ${t('suggestions').toLowerCase()}`;
+
+		renameSetting.addSlider((slider) =>
+			slider
+				.setLimits(5, 30, 1)
+				.setValue(this.plugin.settings.renameSuggestionCount)
+				.setDynamicTooltip()
+				.onChange(async (value) => {
+					this.plugin.settings.renameSuggestionCount = value;
+					await this.plugin.saveSettings();
+					countDisplay.textContent = `${value} ${t('suggestions').toLowerCase()}`;
+				})
+		);
+
 		// Statistics settings
 		containerEl.createEl("h3", { text: t('statisticsSettings') });
 

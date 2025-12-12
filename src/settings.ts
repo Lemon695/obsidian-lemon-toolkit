@@ -40,6 +40,7 @@ export interface LemonToolkitSettings {
 		showTypeIcons: boolean;
 	};
 	momentLoggerFormat: string;
+	renameSuggestionCount: number;
 }
 
 export const DEFAULT_SETTINGS: LemonToolkitSettings = {
@@ -67,4 +68,5 @@ export const DEFAULT_SETTINGS: LemonToolkitSettings = {
 		showTypeIcons: true,
 	},
 	momentLoggerFormat: "YYYY-MM-DD HH:mm:ss",
+	renameSuggestionCount: 20,
 };

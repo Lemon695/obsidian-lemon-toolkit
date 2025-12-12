@@ -11,18 +11,19 @@ export async function renameFile(plugin: LemonToolkitPlugin): Promise<void> {
 	}
 
 	const historicalPatterns = plugin.renameHistoryManager.getHistoricalPatterns();
+	const maxSuggestions = plugin.settings.renameSuggestionCount || 20;
 	const smartSuggestions = await plugin.renameSuggestionEngine.generateSuggestions(
 		file,
 		historicalPatterns,
-		10
+		maxSuggestions
 	);
 
-	const legacySuggestions = plugin.renameHistoryManager.getSuggestions(file.basename, 5);
+	const legacySuggestions = plugin.renameHistoryManager.getSuggestions(file.basename, Math.floor(maxSuggestions / 3));
 
 	const allSuggestions = [...smartSuggestions, ...legacySuggestions]
 		.filter((s, i, arr) => arr.findIndex(x => x.value === s.value) === i)
 		.sort((a, b) => b.score - a.score)
-		.slice(0, 15);
+		.slice(0, maxSuggestions);
 
 	new RenameFileModal(
 		plugin.app, 

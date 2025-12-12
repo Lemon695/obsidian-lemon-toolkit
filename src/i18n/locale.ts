@@ -43,6 +43,7 @@ export const translations = {
 		openGlobalCommandPalette: 'Open global command palette',
 		showOutline: 'Show document outline',
 		copyOutline: 'Copy document outline',
+		createDatedUuidFileInCurrentFolder: 'Create a date-UUID named file in the current folder',
 
 		// Rename Modal
 		renameSmartSuggestions: 'Smart Suggestions',
@@ -231,6 +232,7 @@ export const translations = {
 		efficiencyDescMoveFile: 'Move file with smart folder suggestions',
 		efficiencyDescDeletePermanently: 'Delete file permanently',
 		efficiencyDescDeleteToTrash: 'Move file to trash',
+		efficiencyDescCreateFileWithDateUuid: 'Create file with standardized date-UUID naming',
 		efficiencyDescCopyRelativePath: 'Copy relative path to clipboard',
 		efficiencyDescCopyAbsolutePath: 'Copy absolute path to clipboard',
 		efficiencyDescCopyFileName: 'Copy file name with extension',
@@ -372,6 +374,8 @@ export const translations = {
 		loggedText: 'Logged: {text}',
 		createdNoteWithName: 'Created note: {name}',
 		failedToCreateNote: 'Failed to create note: {error}',
+		createdFileWithDateUuid: 'Created file: {name}',
+		failedToCreateFileWithDateUuid: 'Failed to create file: {error}',
 		removedLinkSyntax: 'Removed link syntax',
 		wrappedAsLink: 'Wrapped as link',
 		wrappedAsCallout: 'Wrapped as {type} callout',
@@ -701,6 +705,7 @@ export const translations = {
 		openGlobalCommandPalette: '打开全局命令面板',
 		showOutline: '显示文档大纲',
 		copyOutline: '复制文档大纲',
+		createDatedUuidFileInCurrentFolder: '在当前文件夹创建日期-UUID文件',
 
 		// 重命名弹窗
 		renameSmartSuggestions: '智能建议',
@@ -889,6 +894,7 @@ export const translations = {
 		efficiencyDescMoveFile: '智能文件夹建议移动',
 		efficiencyDescDeletePermanently: '永久删除文件',
 		efficiencyDescDeleteToTrash: '移动文件到回收站',
+		efficiencyDescCreateFileWithDateUuid: '创建标准化日期-UUID命名的文件',
 		efficiencyDescCopyRelativePath: '复制相对路径到剪贴板',
 		efficiencyDescCopyAbsolutePath: '复制绝对路径到剪贴板',
 		efficiencyDescCopyFileName: '复制文件名（含扩展名）',
@@ -1030,6 +1036,8 @@ export const translations = {
 		loggedText: '已记录：{text}',
 		createdNoteWithName: '已创建笔记：{name}',
 		failedToCreateNote: '创建笔记失败：{error}',
+		createdFileWithDateUuid: '已创建文件：{name}',
+		failedToCreateFileWithDateUuid: '创建文件失败：{error}',
 		removedLinkSyntax: '已移除链接语法',
 		wrappedAsLink: '已包装为链接',
 		wrappedAsCallout: '已包装为 {type} 标注',

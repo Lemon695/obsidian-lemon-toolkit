@@ -41,6 +41,7 @@ import { openTableEditor, createTable } from "./tableEditor";
 import { showPluginUsageStats } from "./pluginUsageStats";
 import { openPluginManager } from "./pluginManager";
 import { showOutline, copyOutline } from "./outline";
+import { createDatedUuidFileInCurrentFolder } from "./createDatedUuidFileInCurrentFolder";
 import LemonToolkitPlugin from "../main";
 import { t } from "../i18n/locale";
 
@@ -343,5 +344,12 @@ export function registerCommands(plugin: LemonToolkitPlugin): void {
 		id: "copy-outline",
 		name: t('copyOutline'),
 		editorCallback: trackEditorCommand(plugin, "copy-outline", t('copyOutline'), (editor) => copyOutline(editor)),
+	});
+
+	// Create file with date-UUID
+	plugin.addCommand({
+		id: "create-file-with-date-uuid",
+		name: t('createDatedUuidFileInCurrentFolder'),
+		callback: trackCommand(plugin, "create-file-with-date-uuid", t('createDatedUuidFileInCurrentFolder'), () => createDatedUuidFileInCurrentFolder(plugin)),
 	});
 }

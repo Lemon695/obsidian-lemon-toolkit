@@ -81,6 +81,17 @@ export const DEFAULT_EFFICIENCY_CONFIG: Record<string, EfficiencyConfig> = {
 		descriptionKey: 'efficiencyDescDeleteToTrash',
 		categoryKey: 'efficiencyCategoryFileOps'
 	},
+	'create-file-with-date-uuid': {
+		commandId: 'create-file-with-date-uuid',
+		manualTimeSeconds: 15,
+		// 手动操作：Obsidian 原生创建文件需要手动命名
+		// 替代方案：Cmd+N 新建文件 (1秒) → 思考文件名 (5秒) → 输入日期格式 (4秒) → 添加唯一标识符 (3秒) → 确认 (2秒) = 15秒
+		// 本插件：一键创建带有标准化日期-UUID格式的文件，避免命名冲突
+		// 实际价值：标准化命名、避免重复、快速创建
+		commandTimeSeconds: 1,
+		descriptionKey: 'efficiencyDescCreateFileWithDateUuid',
+		categoryKey: 'efficiencyCategoryFileOps'
+	},
 
 	// Path Operations
 	'copy-relative-path': {
